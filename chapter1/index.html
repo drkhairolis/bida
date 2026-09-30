@@ -1,0 +1,1145 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 1 · Introduction to Business Analytics | BPMNK2033</title>
+<meta name="description" content="BPMNK2033 Business Intelligence & Data Analytics — Chapter 1: Introduction to Business Analytics. Interactive slides with games and spot quizzes.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --bg:#e9eef6; --paper:#ffffff; --ink:#0f172a; --muted:#475569; --soft:#64748b; --line:#e2e8f0; --line2:#cbd5e1;
+  --blue:#2563eb; --teal:#0d9488; --violet:#7c3aed; --amber:#d97706; --orange:#ea580c; --green:#16a34a;
+  --rose:#e11d48; --pink:#db2777; --cyan:#0891b2; --indigo:#4f46e5; --xl:#107c41;
+  --acc:var(--blue);
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --sans:'Plus Jakarta Sans',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+body{overflow:hidden;background:radial-gradient(1200px 600px at 10% 0%,#dbeafe 0,transparent 60%),radial-gradient(900px 600px at 100% 100%,#fce7f3 0,transparent 55%),var(--bg)}
+button{font-family:inherit}
+/* ---------- stage ---------- */
+#viewport{position:fixed;inset:0 0 58px 0;display:flex;align-items:center;justify-content:center}
+#deck{width:1280px;height:720px;position:relative;transform-origin:center center;flex:none}
+.slide{position:absolute;inset:0;background:var(--paper);border-radius:22px;box-shadow:0 30px 80px -30px rgba(15,23,42,.35),0 2px 6px rgba(15,23,42,.06);
+  padding:44px 56px 64px;overflow:hidden;opacity:0;visibility:hidden;transform:translateX(40px) scale(.985);transition:opacity .45s ease,transform .45s cubic-bezier(.2,.7,.2,1),visibility 0s .45s}
+.slide.active{opacity:1;visibility:visible;transform:none;transition:opacity .45s ease,transform .45s cubic-bezier(.2,.7,.2,1)}
+.slide.prev{transform:translateX(-40px) scale(.985)}
+.slide::before{content:"";position:absolute;left:0;top:0;right:0;height:6px;background:linear-gradient(90deg,var(--acc),color-mix(in srgb,var(--acc) 40%,#fff))}
+.slide::after{content:"";position:absolute;right:-120px;top:-120px;width:340px;height:340px;border-radius:50%;background:color-mix(in srgb,var(--acc) 9%,transparent);pointer-events:none}
+[data-acc=blue]{--acc:var(--blue)}[data-acc=teal]{--acc:var(--teal)}[data-acc=violet]{--acc:var(--violet)}[data-acc=amber]{--acc:var(--amber)}
+[data-acc=orange]{--acc:var(--orange)}[data-acc=green]{--acc:var(--green)}[data-acc=rose]{--acc:var(--rose)}[data-acc=pink]{--acc:var(--pink)}
+[data-acc=cyan]{--acc:var(--cyan)}[data-acc=indigo]{--acc:var(--indigo)}[data-acc=xl]{--acc:var(--xl)}
+.kicker{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--acc);margin-bottom:6px}
+.kicker::before{content:"";width:18px;height:3px;border-radius:2px;background:var(--acc)}
+h1,h2,h3{margin:0;letter-spacing:-.02em}
+h2{font-size:38px;font-weight:800;line-height:1.1;margin-bottom:18px}
+h2 .fn{font-family:var(--mono);color:var(--acc);font-weight:700}
+h3{font-size:18px;font-weight:700;margin-bottom:8px}
+p{margin:0 0 12px;line-height:1.55;font-size:17px;color:var(--muted)}
+.lead{font-size:19px;color:#334155}
+code,.code{font-family:var(--mono);font-size:.92em}
+.cols{display:grid;grid-template-columns:1fr 1.25fr;gap:32px;align-items:start}
+.cols.even{grid-template-columns:1fr 1fr}
+.cols.wide-r{grid-template-columns:.86fr 1.5fr}
+.syntax{font-family:var(--mono);font-size:17px;background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:12px;margin:4px 0 14px;line-height:1.5;overflow-x:auto}
+.syntax .f{color:#7dd3fc;font-weight:700}.syntax .a{color:#fcd34d}.syntax .o{color:#94a3b8}.syntax .s{color:#86efac}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px;box-shadow:0 1px 2px rgba(15,23,42,.04)}
+.tint{background:color-mix(in srgb,var(--acc) 7%,#fff);border-color:color-mix(in srgb,var(--acc) 25%,#fff)}
+.callout{border-left:4px solid var(--acc);background:color-mix(in srgb,var(--acc) 7%,#fff);padding:10px 14px;border-radius:0 12px 12px 0;font-size:15px;color:#334155;line-height:1.5;margin:10px 0}
+.callout b{color:var(--ink)}
+.callout.warn{--acc:var(--rose)}
+ul.tidy{margin:0;padding:0;list-style:none}
+ul.tidy li{position:relative;padding:6px 0 6px 26px;font-size:16.5px;line-height:1.45;color:#334155}
+ul.tidy li::before{content:"";position:absolute;left:4px;top:13px;width:10px;height:10px;border-radius:3px;background:var(--acc);transform:rotate(45deg)}
+.pill{display:inline-block;font-family:var(--mono);font-size:13px;font-weight:600;padding:3px 9px;border-radius:999px;background:color-mix(in srgb,var(--acc) 12%,#fff);color:color-mix(in srgb,var(--acc) 80%,#000);border:1px solid color-mix(in srgb,var(--acc) 30%,#fff)}
+.foot{position:absolute;left:56px;right:56px;bottom:18px;display:flex;justify-content:space-between;font-size:12px;color:var(--soft);pointer-events:none}
+table.mini{border-collapse:collapse;width:100%;font-size:15px}
+table.mini th,table.mini td{padding:7px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+table.mini th{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--soft);font-weight:700}
+table.mini td code{color:var(--acc);font-weight:600}
+/* ---------- chrome ---------- */
+#progress{position:fixed;left:0;top:0;height:4px;background:linear-gradient(90deg,var(--blue),var(--violet),var(--pink),var(--orange));width:0;transition:width .4s ease;z-index:30}
+#hud{position:fixed;right:16px;bottom:14px;display:flex;gap:8px;align-items:center;z-index:30}
+#hud button,#hud .count{height:38px;min-width:38px;border-radius:12px;border:1px solid var(--line2);background:rgba(255,255,255,.92);backdrop-filter:blur(6px);color:var(--ink);font-size:15px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:0 10px;box-shadow:0 4px 14px -6px rgba(15,23,42,.25)}
+#hud button:hover{border-color:var(--blue);color:var(--blue)}
+#hud .count{cursor:default;font-variant-numeric:tabular-nums;font-size:13px}
+#timer{font-variant-numeric:tabular-nums;font-size:13px!important}
+#timer.over{color:var(--rose)!important;border-color:var(--rose)!important}
+#menu{position:fixed;left:0;top:0;bottom:0;width:340px;background:#fff;box-shadow:20px 0 60px -20px rgba(15,23,42,.35);z-index:40;transform:translateX(-105%);transition:transform .3s ease;overflow-y:auto;padding:20px 14px}
+#menu.open{transform:none}
+#menu h4{margin:4px 10px 12px;font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--soft)}
+#menu a{display:flex;gap:10px;align-items:center;padding:8px 10px;border-radius:10px;color:var(--ink);text-decoration:none;font-size:14.5px;font-weight:500}
+#menu a:hover{background:#f1f5f9}
+#menu a.cur{background:#eff6ff;color:var(--blue);font-weight:700}
+#menu a .n{width:26px;height:26px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex:none}
+#scrim{position:fixed;inset:0;background:rgba(15,23,42,.25);z-index:35;display:none}
+#scrim.show{display:block}
+#help{position:fixed;left:16px;bottom:14px;font-size:12px;color:var(--soft);z-index:30;background:rgba(255,255,255,.8);padding:6px 10px;border-radius:10px;border:1px solid var(--line)}
+kbd{font-family:var(--mono);font-size:11px;border:1px solid var(--line2);border-bottom-width:2px;border-radius:5px;padding:0 5px;background:#fff;color:var(--ink)}
+/* ---------- title ---------- */
+.title-slide{background:linear-gradient(135deg,#0b3d2e 0%,#107c41 45%,#16a34a 100%)!important;color:#fff}
+.title-slide::before{display:none}
+.title-slide::after{background:rgba(255,255,255,.07);width:520px;height:520px;right:-160px;top:-160px}
+.title-slide .kicker{color:#bbf7d0}.title-slide .kicker::before{background:#bbf7d0}
+.title-slide h1{font-size:64px;line-height:1.02;font-weight:800;margin:14px 0 18px;max-width:700px}
+.title-slide h1 span{color:#bbf7d0}
+.title-slide p{color:#dcfce7;font-size:20px;max-width:600px}
+.title-meta{position:absolute;left:56px;bottom:56px;display:flex;gap:28px;font-size:14px;color:#dcfce7}
+.title-meta b{display:block;color:#fff;font-size:16px}
+.floaters{position:absolute;right:40px;top:120px;width:400px;height:480px}
+.floater{position:absolute;font-family:var(--mono);font-size:17px;font-weight:600;background:rgba(255,255,255,.96);color:#0f172a;padding:10px 14px;border-radius:12px;box-shadow:0 18px 40px -16px rgba(0,0,0,.45);animation:bob 6s ease-in-out infinite;white-space:nowrap}
+.floater i{font-style:normal;color:var(--xl)}
+.floater.b{animation-delay:-1.5s}.floater.c{animation-delay:-3s}.floater.d{animation-delay:-4.5s}.floater.e{animation-delay:-2.2s}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+/* ---------- agenda ---------- */
+.agenda{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;margin-top:22px}
+.ag{border-radius:16px;padding:16px 14px;color:#fff;min-height:250px;display:flex;flex-direction:column;position:relative;overflow:hidden;transition:transform .2s}
+.ag:hover{transform:translateY(-4px)}
+.ag .t{font-family:var(--mono);font-size:13px;opacity:.9}
+.ag .h{font-size:18px;font-weight:800;margin:8px 0 6px;line-height:1.2}
+.ag .d{font-size:13.5px;opacity:.95;line-height:1.45}
+.ag .m{margin-top:auto;font-size:30px;font-weight:800;opacity:.9}
+.ag .m small{font-size:13px;font-weight:600}
+.bar70{display:flex;height:14px;border-radius:8px;overflow:hidden;margin-top:18px}
+/* ---------- outcomes ---------- */
+.oc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:8px}
+.oc{border-radius:16px;padding:18px;border:1px solid var(--line);background:#fff;position:relative}
+.oc .num{width:34px;height:34px;border-radius:10px;color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;margin-bottom:10px}
+.oc h3{font-size:17px}
+.oc p{font-size:14.5px;margin:0}
+.oc .fns{margin-top:10px;display:flex;flex-wrap:wrap;gap:6px}
+/* ---------- anatomy ---------- */
+.anat{font-family:var(--mono);font-size:44px;font-weight:700;display:flex;flex-wrap:wrap;gap:2px;padding:26px 24px;background:#0f172a;border-radius:18px;color:#e2e8f0;margin:6px 0 16px}
+.anat span{padding:4px 6px;border-radius:8px;cursor:pointer;transition:background .15s,transform .15s;position:relative}
+.anat span:hover,.anat span.on{background:rgba(255,255,255,.12);transform:translateY(-2px)}
+.anat .p-eq{color:#fda4af}.anat .p-fn{color:#7dd3fc}.anat .p-br{color:#cbd5e1}.anat .p-rg{color:#fcd34d}.anat .p-cm{color:#94a3b8}.anat .p-tx{color:#86efac}.anat .p-lt{color:#c4b5fd}
+.anat.small{font-size:30px;padding:20px}
+.anat-explain{min-height:90px;display:flex;gap:14px;align-items:flex-start}
+.anat-explain .big{font-family:var(--mono);font-size:22px;font-weight:700;color:var(--acc);min-width:120px}
+/* ---------- sheet widget ---------- */
+.sheet-w{border:1px solid var(--line2);border-radius:14px;overflow:hidden;background:#fff;box-shadow:0 10px 30px -18px rgba(15,23,42,.35)}
+.sheet-w .fbar{display:flex;align-items:center;gap:0;border-bottom:1px solid var(--line2);background:#f8fafc}
+.sheet-w .fbar .nm{font-family:var(--mono);font-size:12.5px;color:var(--soft);width:56px;text-align:center;border-right:1px solid var(--line2);padding:10px 0;font-weight:600}
+.sheet-w .fbar .fx{font-family:Georgia,serif;font-style:italic;color:var(--xl);font-weight:700;padding:0 10px;font-size:16px}
+.sheet-w .fbar input{flex:1;border:0;outline:0;background:#fff;font-family:var(--mono);font-size:15px;padding:10px 12px;color:var(--ink);min-width:0;border-left:1px solid var(--line)}
+.sheet-w .fbar input:focus{box-shadow:inset 0 -2px 0 var(--xl)}
+.sheet-w .fbar button{border:0;background:var(--xl);color:#fff;font-weight:700;font-size:13px;padding:0 14px;align-self:stretch;cursor:pointer}
+.sheet-w .fbar button:hover{filter:brightness(1.1)}
+.sheet-w .presets{display:flex;flex-wrap:wrap;gap:6px;padding:8px 10px;border-bottom:1px solid var(--line);background:#fff}
+.sheet-w .presets button{font-family:var(--mono);font-size:12px;border:1px solid var(--line2);background:#f8fafc;border-radius:8px;padding:4px 8px;cursor:pointer;color:#334155;transition:all .15s}
+.sheet-w .presets button:hover,.sheet-w .presets button.on{border-color:var(--acc);color:var(--acc);background:color-mix(in srgb,var(--acc) 8%,#fff)}
+.sheet-w .out{display:flex;align-items:center;gap:12px;padding:9px 12px;border-bottom:1px solid var(--line);min-height:44px;background:linear-gradient(90deg,color-mix(in srgb,var(--acc) 6%,#fff),#fff)}
+.sheet-w .out .lbl{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--soft)}
+.sheet-w .out .val{font-family:var(--mono);font-size:20px;font-weight:700;color:var(--ink)}
+.sheet-w .out .val.err{color:var(--rose)}
+.sheet-w .out .msg{font-size:13px;color:var(--muted);line-height:1.35;flex:1}
+.sheet-w .out .msg.err{color:#9f1239}
+.sheet-w .hint{font-size:12.5px;color:#92400e;background:#fffbeb;border-bottom:1px solid #fde68a;padding:6px 12px;display:none}
+.sheet-w .hint.show{display:block}
+.sheet-w .opts{display:flex;gap:14px;align-items:center;padding:6px 12px;font-size:13px;color:var(--muted);border-bottom:1px solid var(--line)}
+.sheet-w .opts label{display:flex;gap:6px;align-items:center;cursor:pointer}
+.gridwrap{overflow:auto;max-height:396px}
+.slide[data-title="Formula playground"] .gridwrap{max-height:360px}
+table.grid{border-collapse:separate;border-spacing:0;font-size:12.5px;width:100%;font-variant-numeric:tabular-nums}
+table.grid th,table.grid td{border-right:1px solid #e5e7eb;border-bottom:1px solid #e5e7eb;padding:0 8px;height:17px;line-height:17px;white-space:nowrap;transition:background .2s,box-shadow .2s}
+table.grid thead th{position:sticky;top:0;background:#f1f5f9;color:#475569;font-weight:600;font-size:11.5px;text-align:center;z-index:2;height:22px}
+table.grid tbody th{background:#f1f5f9;color:#64748b;font-weight:600;font-size:11px;text-align:center;width:34px;position:sticky;left:0;z-index:1}
+table.grid td.num{text-align:right}
+table.grid td.hdr{font-weight:700;color:#0f172a;background:#f8fafc}
+table.grid td.used{background:color-mix(in srgb,var(--acc) 14%,#fff);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--acc) 40%,#fff)}
+table.grid td.hit{background:#fde68a!important;box-shadow:inset 0 0 0 2px #d97706!important;font-weight:700}
+table.grid td.scan{background:#bfdbfe!important}
+table.grid td.fillc{font-weight:700;text-align:center}
+table.grid td.good{color:#15803d;background:#f0fdf4}
+table.grid td.bad{color:#be123c;background:#fff1f2}
+table.grid td.neu{color:#1e3a8a;background:#eff6ff}
+table.grid td.f2{box-shadow:inset 0 0 0 2px var(--xl)!important}
+table.grid th.colsel{background:color-mix(in srgb,var(--acc) 22%,#f1f5f9);color:var(--ink)}
+.sheet-w.nogrid .gridwrap{display:none}
+/* ---------- quiz ---------- */
+.quiz{max-width:880px}
+.qhead{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.qdots{display:flex;gap:6px}
+.qdots i{width:28px;height:8px;border-radius:4px;background:var(--line)}
+.qdots i.cur{background:var(--acc)}.qdots i.ok{background:var(--green)}.qdots i.no{background:var(--rose)}
+.qscore{margin-left:auto;font-weight:700;color:var(--muted);font-size:14px}
+.qcard{border:1px solid var(--line);border-radius:18px;padding:22px 24px;background:#fff;box-shadow:0 14px 34px -22px rgba(15,23,42,.35)}
+.qcard .qq{font-size:22px;font-weight:700;line-height:1.35;margin-bottom:16px}
+.qcard .qq code{background:#f1f5f9;padding:1px 6px;border-radius:6px;color:#0f172a}
+.qopts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.qopt{text-align:left;border:2px solid var(--line);background:#fff;border-radius:14px;padding:12px 14px;font-size:16px;cursor:pointer;display:flex;gap:10px;align-items:flex-start;transition:all .15s;color:var(--ink);line-height:1.35}
+.qopt:hover:not(:disabled){border-color:var(--acc);background:color-mix(in srgb,var(--acc) 5%,#fff)}
+.qopt .L{flex:none;width:26px;height:26px;border-radius:8px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:var(--muted)}
+.qopt code{font-size:14.5px}
+.qopt.right{border-color:var(--green);background:#f0fdf4}.qopt.right .L{background:var(--green);color:#fff}
+.qopt.wrong{border-color:var(--rose);background:#fff1f2}.qopt.wrong .L{background:var(--rose);color:#fff}
+.qopt:disabled{cursor:default}
+.qwhy{margin-top:14px;font-size:15px;color:#334155;padding:10px 14px;border-radius:12px;background:#f8fafc;display:none;line-height:1.5}
+.qwhy.show{display:block}
+.qnav{display:flex;justify-content:flex-end;margin-top:14px;gap:10px}
+.btn{border:0;border-radius:12px;padding:10px 18px;font-weight:700;font-size:15px;cursor:pointer;background:var(--acc);color:#fff;box-shadow:0 8px 20px -10px var(--acc)}
+.btn.ghost{background:#fff;color:var(--acc);border:2px solid var(--acc);box-shadow:none}
+.btn:disabled{opacity:.4;cursor:default}
+.qdone{text-align:center;padding:26px}
+.qdone .big{font-size:64px;font-weight:800;color:var(--acc)}
+/* ---------- misc components ---------- */
+.ops{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.op{border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:#fff}
+.op b{font-family:var(--mono);font-size:22px;color:var(--acc)}
+.op span{display:block;font-size:13px;color:var(--muted)}
+.tt{border-collapse:collapse;font-size:15px;margin-top:6px}
+.tt th,.tt td{padding:6px 12px;border:1px solid var(--line);text-align:center}
+.tt th{background:#f8fafc;font-size:12.5px;color:var(--soft)}
+.T{color:var(--green);font-weight:800}.F{color:var(--rose);font-weight:800}
+.errgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.errc{border-radius:14px;padding:14px;border:1px solid var(--line);background:#fff;cursor:pointer;transition:transform .15s,box-shadow .15s}
+.errc:hover{transform:translateY(-3px);box-shadow:0 14px 30px -18px rgba(15,23,42,.4)}
+.errc .code{font-family:var(--mono);font-weight:800;font-size:20px;color:var(--rose)}
+.errc p{font-size:13.5px;margin:6px 0 0;line-height:1.45}
+.errc .try{font-family:var(--mono);font-size:12px;color:var(--soft);margin-top:8px;display:block}
+.recap{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.rc{border-radius:14px;padding:14px;color:#fff}
+.rc b{font-family:var(--mono);font-size:17px;display:block;margin-bottom:4px}
+.rc span{font-size:13.5px;opacity:.95;line-height:1.4;display:block}
+.build{display:flex;flex-direction:column;gap:10px}
+.build label{font-size:13px;font-weight:700;color:var(--soft);text-transform:uppercase;letter-spacing:.06em}
+.build select{font-family:var(--sans);font-size:15px;padding:9px 10px;border-radius:10px;border:1px solid var(--line2);background:#fff;width:100%}
+.vparts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:6px 0 10px}
+.vparts div{border-radius:10px;padding:8px 10px;font-size:13.5px;line-height:1.35;color:#334155;background:#f8fafc;border:1px solid var(--line)}
+.vparts b{font-family:var(--mono);display:block;font-size:13px}
+.dict td:first-child{font-family:var(--mono);font-weight:700;color:var(--acc);width:40px}
+.src{font-size:12px;color:var(--soft);margin-top:10px;line-height:1.4}
+.vh{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}
+.vh .card{font-size:14px;color:#334155;line-height:1.45}
+.arrowdemo{display:flex;gap:4px;margin:8px 0}
+.arrowdemo i{width:26px;height:18px;border-radius:4px;background:#e2e8f0}
+.arrowdemo i.k{background:var(--acc)}.arrowdemo i.r{background:#fcd34d}
+/* ---------- mobile: stacked scroll ---------- */
+body.mobile{overflow:auto}
+body.mobile #viewport{position:static;inset:auto;display:block;padding:12px 12px 90px}
+body.mobile #deck{width:auto;height:auto;transform:none!important}
+body.mobile .slide{position:relative;inset:auto;opacity:1;visibility:visible;transform:none;margin-bottom:16px;padding:28px 16px 40px;border-radius:18px}
+body.mobile .cols,body.mobile .cols.even,body.mobile .cols.wide-r,body.mobile .vh{grid-template-columns:minmax(0,1fr)!important;gap:18px}
+body.mobile .cols>*,body.mobile .vh>*,body.mobile .errgrid>*,body.mobile .oc-grid>*,body.mobile .qopts>*{min-width:0}
+body.mobile .slide{max-width:100%}
+body.mobile .sheet-w{max-width:100%}
+body.mobile .gridwrap{max-height:60vh;-webkit-overflow-scrolling:touch}
+body.mobile .gridwrap::before{content:"← swipe the table sideways to see all columns →";display:block;position:sticky;left:0;font-size:11px;color:#64748b;padding:4px 8px;background:#f8fafc;border-bottom:1px solid #e2e8f0}
+body.mobile .sheet-w .fbar input{font-size:16px}
+body.mobile table.grid{font-size:11px}
+body.mobile table.grid th,body.mobile table.grid td{padding:0 5px}
+body.mobile table.grid tbody th{width:24px}
+body.mobile .sheet-w .presets button{max-width:100%;white-space:normal;overflow-wrap:anywhere;text-align:left}
+body.mobile .sheet-w .out{flex-wrap:wrap}
+body.mobile .syntax{font-size:14px;white-space:pre-wrap;word-break:break-word}
+body.mobile .qcard{padding:16px}
+body.mobile .qcard .qq{font-size:18px}
+body.mobile .qopt span{min-width:0;overflow-wrap:anywhere}
+body.mobile .qopt code{white-space:normal;overflow-wrap:anywhere}
+body.mobile table.mini{font-size:14px}
+body.mobile table.mini td,body.mobile table.mini th{padding:6px}
+body.mobile .anat{font-size:22px;padding:14px}
+body.mobile .anat.small{font-size:16px}
+body.mobile p,body.mobile .callout,body.mobile li{overflow-wrap:anywhere}
+body.mobile .agenda{grid-template-columns:1fr 1fr}
+body.mobile .ag{min-height:0}
+body.mobile .oc-grid,body.mobile .errgrid,body.mobile .recap{grid-template-columns:1fr}
+body.mobile .qopts{grid-template-columns:1fr}
+body.mobile h2{font-size:28px}
+body.mobile .title-slide h1{font-size:40px}
+body.mobile .floaters{display:none}
+body.mobile .title-meta{position:static;margin-top:24px;flex-wrap:wrap}
+body.mobile .anat{font-size:24px}
+body.mobile .foot{position:static;margin-top:16px}
+body.mobile #help,body.mobile #hud .count,body.mobile #prevBtn,body.mobile #nextBtn,body.mobile #timer,body.mobile #fsBtn{display:none}
+body.mobile .ops{grid-template-columns:1fr 1fr}
+@media print{body{overflow:visible}#hud,#help,#progress,#menu{display:none}#viewport{position:static;display:block}#deck{transform:none!important;width:auto;height:auto}.slide{position:relative;opacity:1;visibility:visible;transform:none;page-break-after:always;box-shadow:none;border:1px solid #ddd;width:1280px;height:720px;margin:0 auto 20px}}
+
+/* ================= Chapter 1 components ================= */
+.title-slide.ch1{background:linear-gradient(135deg,#1e1b4b 0%,#4338ca 48%,#7c3aed 100%)!important}
+.title-slide.ch1 .kicker{color:#c7d2fe}.title-slide.ch1 .kicker::before{background:#c7d2fe}
+.title-slide.ch1 h1 span{color:#c4b5fd}
+.title-slide.ch1 p,.title-slide.ch1 .title-meta{color:#e0e7ff}
+.chips3{position:absolute;right:48px;top:120px;width:420px;display:flex;flex-direction:column;gap:18px}
+.chip3{background:rgba(255,255,255,.96);color:#0f172a;border-radius:16px;padding:16px 18px;box-shadow:0 18px 40px -16px rgba(0,0,0,.45);animation:bob 6s ease-in-out infinite}
+.chip3:nth-child(2){animation-delay:-2s;margin-left:40px}.chip3:nth-child(3){animation-delay:-4s;margin-left:80px}
+.chip3 b{display:block;font-size:13px;letter-spacing:.08em;text-transform:uppercase}
+.chip3 span{font-size:20px;font-weight:800}
+/* class data */
+.seg{display:inline-flex;background:#f1f5f9;border-radius:12px;padding:4px;gap:4px;margin-bottom:14px}
+.seg button{border:0;background:transparent;padding:8px 16px;border-radius:9px;font-weight:700;font-size:14px;cursor:pointer;color:var(--muted)}
+.seg button.on{background:#fff;color:var(--acc);box-shadow:0 2px 8px -2px rgba(15,23,42,.2)}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.kpi{border-radius:16px;padding:16px;background:#fff;border:1px solid var(--line)}
+.kpi .v{font-size:40px;font-weight:800;letter-spacing:-.02em;line-height:1;color:var(--c,var(--ink))}
+.kpi .v small{font-size:16px;color:var(--soft);font-weight:700}
+.kpi .l{font-size:13px;color:var(--soft);font-weight:600;margin-top:6px}
+.hbar{height:26px;border-radius:8px;overflow:hidden;display:flex;margin:6px 0 4px;background:#f1f5f9}
+.hbar i{display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:700;font-style:normal;transition:flex-basis .6s ease;white-space:nowrap;overflow:hidden}
+.gauge{position:relative;height:16px;border-radius:8px;background:linear-gradient(90deg,#fecaca,#fde68a 50%,#bbf7d0);margin:10px 0 4px}
+.gauge .mk{position:absolute;top:-6px;width:4px;height:28px;border-radius:2px;background:#0f172a;transition:left .6s ease}
+.gauge .rg{position:absolute;top:4px;height:8px;border-radius:4px;background:rgba(15,23,42,.25);transition:all .6s ease}
+.gscale{display:flex;justify-content:space-between;font-size:11px;color:var(--soft)}
+/* three drivers */
+.drivers{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.drv{border-radius:18px;padding:22px;color:#fff;min-height:230px;display:flex;flex-direction:column}
+.drv .ic{font-size:40px;margin-bottom:10px}
+.drv h3{font-size:21px;color:#fff}
+.drv p{color:rgba(255,255,255,.92);font-size:15px;margin:0}
+/* pyramid */
+.pyr{display:flex;flex-direction:column;align-items:center;gap:8px}
+.pyr button{border:0;color:#fff;font-weight:800;font-size:18px;padding:18px 0;cursor:pointer;border-radius:12px;transition:transform .15s,box-shadow .15s;font-family:var(--sans)}
+.pyr button:hover{transform:scale(1.03)}
+.pyr button.on{box-shadow:0 0 0 4px #fff,0 0 0 7px var(--c)}
+.pyr button small{display:block;font-size:12px;font-weight:600;opacity:.9}
+.lvl-info h3{font-size:24px;color:var(--c)}
+.lvl-info .row{display:grid;grid-template-columns:120px 1fr;gap:8px;padding:8px 0;border-bottom:1px solid var(--line);font-size:15.5px;color:#334155}
+.lvl-info .row b{color:var(--soft);font-size:12px;text-transform:uppercase;letter-spacing:.06em;padding-top:3px}
+/* sort game */
+.sort{display:flex;flex-direction:column;gap:7px}
+.mrctl .btn{white-space:nowrap}
+.sitem{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;border:1px solid var(--line);border-radius:14px;padding:8px 12px 8px 16px;background:#fff;transition:all .2s}
+.sitem .t{font-size:15.5px;line-height:1.4;color:#1e293b}
+.sitem .b{display:flex;gap:6px}
+.sitem .b button{border:2px solid var(--line);background:#fff;border-radius:10px;padding:6px 10px;font-size:13px;font-weight:700;cursor:pointer;color:var(--muted);transition:all .15s;white-space:nowrap}
+.sitem .b button:hover:not(:disabled){border-color:var(--bc);color:var(--bc)}
+.sitem .b button:disabled{cursor:default;opacity:.45}
+.sitem .b button.pick{opacity:1;background:var(--bc);border-color:var(--bc);color:#fff}
+.sitem.ok{border-color:#86efac;background:#f0fdf4}.sitem.no{border-color:#fda4af;background:#fff1f2}
+.sitem .fb{grid-column:1/-1;font-size:13.5px;color:#475569;display:none}
+.sitem.ok .fb,.sitem.no .fb{display:block}
+.sortbar{display:flex;align-items:center;gap:12px;margin-bottom:10px;font-weight:700;color:var(--muted);font-size:14px}
+.sortbar .btn{padding:6px 12px;font-size:13px}
+/* stepper */
+.steps{display:flex;gap:8px;margin:6px 0 14px}
+.steps button{flex:1;border:2px solid var(--line);background:#fff;border-radius:14px;padding:12px 10px;cursor:pointer;text-align:left;transition:all .15s;font-family:var(--sans)}
+.steps button .n{display:inline-flex;width:28px;height:28px;border-radius:50%;background:#e2e8f0;color:var(--muted);font-weight:800;align-items:center;justify-content:center;font-size:14px;margin-bottom:6px}
+.steps button .s{display:block;font-size:14px;font-weight:700;color:var(--ink);line-height:1.3}
+.steps button.on{border-color:var(--acc);background:color-mix(in srgb,var(--acc) 7%,#fff)}
+.steps button.on .n,.steps button.done .n{background:var(--acc);color:#fff}
+.stepout{min-height:120px}
+.approaches{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:10px}
+.approaches div{border-radius:12px;padding:10px 12px;border:1px solid var(--line);font-size:14px;color:#334155;background:#fff}
+.approaches div b{display:block;font-size:15px;color:var(--ink)}
+.approaches div.data{border-color:var(--acc);background:color-mix(in srgb,var(--acc) 8%,#fff)}
+/* definition hero */
+.defn{font-size:30px;font-weight:700;line-height:1.35;letter-spacing:-.01em;color:#1e293b;padding:26px 30px;border-radius:20px;background:linear-gradient(135deg,color-mix(in srgb,var(--acc) 10%,#fff),#fff);border:1px solid color-mix(in srgb,var(--acc) 25%,#fff);margin:4px 0 18px}
+.defn mark{background:linear-gradient(transparent 60%,#fde68a 60%);color:inherit;padding:0 2px}
+.four{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.four div{border-radius:14px;padding:14px;background:#fff;border:1px solid var(--line);font-size:14.5px;color:#334155;line-height:1.45}
+.four div .ic{font-size:26px;display:block;margin-bottom:6px}
+/* DPP */
+.dpp{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.dcol{border-radius:18px;padding:20px;color:#fff;position:relative;overflow:hidden}
+.dcol .q{font-size:13px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;opacity:.9}
+.dcol h3{font-size:26px;color:#fff;margin:6px 0 8px}
+.dcol .big{font-size:21px;font-weight:700;line-height:1.3;margin-bottom:12px}
+.dcol ul{margin:0;padding-left:18px;font-size:14.5px;line-height:1.6;opacity:.95}
+.dcol .eg{margin-top:12px;background:rgba(255,255,255,.16);border-radius:12px;padding:10px 12px;font-size:14px;line-height:1.45}
+.arrowrow{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:14px;font-size:14px;color:var(--muted);font-weight:600;align-items:center}
+.arrowrow span{padding:6px 12px;border-radius:999px;background:#f1f5f9}
+/* technique cards */
+.tech{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tech div{border:1px solid var(--line);border-radius:12px;padding:11px 13px;background:#fff;font-size:14px;color:#334155;line-height:1.45}
+.tech div b{display:block;color:var(--acc);font-size:15px;margin-bottom:2px}
+/* chart */
+.chartbox{border:1px solid var(--line);border-radius:16px;padding:14px;background:#fff}
+.chartbox svg{width:100%;height:auto;display:block}
+.chartbox .cap{font-size:12.5px;color:var(--soft);margin-top:6px}
+/* rule demo */
+.rule{border:1px solid var(--line);border-radius:18px;padding:18px;background:#fff}
+.rule input[type=range]{width:100%;accent-color:var(--acc)}
+.rule .flow{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:8px;align-items:center;margin-top:12px}
+.rule .box{border-radius:12px;padding:12px;text-align:center;font-size:13px;color:var(--muted);background:#f8fafc;border:1px solid var(--line);min-height:92px;display:flex;flex-direction:column;justify-content:center}
+.rule .box b{display:block;font-size:22px;color:var(--ink);margin-top:4px}
+.rule .box.dec{background:color-mix(in srgb,var(--acc) 10%,#fff);border-color:var(--acc)}
+.rule .box.dec b{color:var(--acc);font-size:18px}
+.rule .ar{font-size:22px;color:var(--soft)}
+/* coverage table */
+.cov{width:100%;border-collapse:collapse;font-size:13.5px}
+.cov th,.cov td{padding:5px 8px;border-bottom:1px solid var(--line);text-align:left}
+.cov th{font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--soft)}
+.cov td.d{text-align:center;width:90px}
+.cov td.d i{display:inline-block;width:12px;height:12px;border-radius:50%}
+.cov tr{transition:opacity .25s,background .25s}
+.cov tr.dim{opacity:.22}
+.cov tr.hl{background:#f8fafc}
+/* four Vs */
+.vs{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;perspective:1000px}
+.vcard{height:300px;position:relative;cursor:pointer;transform-style:preserve-3d;transition:transform .6s}
+.vcard.flip{transform:rotateY(180deg)}
+.vcard .fc{position:absolute;inset:0;border-radius:18px;padding:22px;backface-visibility:hidden;-webkit-backface-visibility:hidden;display:flex;flex-direction:column}
+.vcard .front{color:#fff}
+.vcard .front .L{font-size:84px;font-weight:800;line-height:1;opacity:.95}
+.vcard .front h3{font-size:24px;color:#fff;margin-top:auto}
+.vcard .front p{color:rgba(255,255,255,.9);font-size:14px;margin:4px 0 0}
+.vcard .back{transform:rotateY(180deg);background:#fff;border:2px solid var(--c)}
+.vcard .back h3{color:var(--c)}
+.vcard .back p{font-size:14.5px;margin:0 0 8px;color:#334155}
+.vcard .back .eg{margin-top:auto;font-size:13.5px;background:#f8fafc;border-radius:10px;padding:10px;color:#334155}
+/* mapreduce */
+.mr{display:grid;grid-template-columns:1.1fr auto 1fr auto 1fr auto .9fr;gap:8px;align-items:stretch;margin-top:8px}
+.mr .col{border:1px solid var(--line);border-radius:14px;padding:10px;background:#fff;min-height:300px}
+.mr .col h4{margin:0 0 8px;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--soft)}
+.mr .ar{align-self:center;font-size:22px;color:var(--line2)}
+.mr .doc{font-size:13px;background:#f8fafc;border-radius:8px;padding:7px 9px;margin-bottom:6px;color:#334155;line-height:1.4}
+.kv{display:inline-block;font-family:var(--mono);font-size:12px;padding:3px 7px;border-radius:7px;margin:0 4px 5px 0;background:color-mix(in srgb,var(--kc) 14%,#fff);color:color-mix(in srgb,var(--kc) 85%,#000);border:1px solid color-mix(in srgb,var(--kc) 35%,#fff);opacity:0;transform:translateY(6px);transition:all .3s}
+.kv.show{opacity:1;transform:none}
+.mrctl{display:flex;gap:8px;align-items:center;margin-top:12px}
+.mrctl .st{font-size:14px;color:var(--muted);font-weight:600}
+/* venn */
+.venn{position:relative;width:100%;max-width:440px;aspect-ratio:1.1;margin:0 auto}
+.venn .c{position:absolute;width:58%;aspect-ratio:1;border-radius:50%;display:flex;text-align:center;font-weight:800;font-size:16px;mix-blend-mode:multiply;padding:20% 12%}
+.venn .c.bot{align-items:flex-end;justify-content:center;padding:0 0 16% 0}
+.venn .ctr{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:#0f172a;color:#fff;font-weight:800;font-size:14px;padding:8px 12px;border-radius:12px;white-space:nowrap}
+/* tabs */
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.tabs button{border:2px solid var(--line);background:#fff;border-radius:999px;padding:8px 14px;font-weight:700;font-size:14px;cursor:pointer;color:var(--muted);display:inline-flex;gap:6px;align-items:center;transition:all .15s;font-family:var(--sans)}
+.tabs button:hover{border-color:var(--tc);color:var(--tc)}
+.tabs button.on{background:var(--tc);border-color:var(--tc);color:#fff}
+.tabpanel{border-radius:18px;border:1px solid var(--line);background:#fff;padding:20px 22px;min-height:330px}
+.tabpanel h3{font-size:24px;color:var(--tc)}
+.tabpanel .lead{font-size:16.5px}
+.dppmini{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px}
+.dppmini div{border-radius:12px;padding:12px;font-size:14px;line-height:1.45;color:#334155;border-top:4px solid var(--dc);background:#f8fafc}
+.dppmini div b{display:block;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--dc);margin-bottom:4px}
+/* dilemma */
+.dilemma{border-radius:18px;padding:18px 20px;background:#0f172a;color:#e2e8f0}
+.dilemma h3{color:#fff;font-size:19px}
+.dilemma p{color:#cbd5e1;font-size:15.5px}
+.dchoice{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}
+.dchoice button{border:2px solid #334155;background:#1e293b;color:#e2e8f0;border-radius:14px;padding:12px;font-size:14.5px;text-align:left;cursor:pointer;line-height:1.4;font-family:var(--sans)}
+.dchoice button:hover{border-color:#a5b4fc}
+.dchoice button.on{border-color:#a5b4fc;background:#312e81}
+.dout{margin-top:12px;font-size:14.5px;line-height:1.5;color:#e0e7ff;display:none;background:rgba(165,180,252,.12);border-radius:12px;padding:10px 12px}
+.dout.show{display:block}
+/* ethics chips */
+.echips{display:flex;flex-wrap:wrap;gap:10px;margin:6px 0 14px}
+.echip{border-radius:14px;padding:10px 16px;font-weight:800;font-size:17px;cursor:pointer;border:2px solid color-mix(in srgb,var(--tc) 35%,#fff);background:color-mix(in srgb,var(--tc) 8%,#fff);color:color-mix(in srgb,var(--tc) 85%,#000);transition:all .15s;font-family:var(--sans)}
+.echip:hover,.echip.on{background:var(--tc);color:#fff;border-color:var(--tc)}
+.eout{min-height:70px;font-size:17px;color:#334155;line-height:1.5;padding:14px 16px;border-radius:14px;background:#f8fafc}
+.law{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.law .card h3{display:flex;gap:8px;align-items:center}
+.law .card ul{margin:6px 0 0;padding-left:18px;font-size:14.5px;color:#334155;line-height:1.55}
+.flag{font-size:22px}
+/* mobile */
+body.mobile .kpis,body.mobile .drivers,body.mobile .four,body.mobile .dpp,body.mobile .tech,body.mobile .law,body.mobile .dppmini,body.mobile .dchoice,body.mobile .approaches{grid-template-columns:minmax(0,1fr)}
+body.mobile .kpis{grid-template-columns:1fr 1fr}
+body.mobile .vs{grid-template-columns:1fr 1fr}
+body.mobile .vcard{height:280px}
+body.mobile .steps{flex-direction:column}
+body.mobile .sitem{grid-template-columns:minmax(0,1fr)}
+body.mobile .sitem .b{flex-wrap:wrap}
+body.mobile .mr{grid-template-columns:minmax(0,1fr)}
+body.mobile .mr .ar{transform:rotate(90deg);justify-self:center}
+body.mobile .mr .col{min-height:0}
+body.mobile .chips3{display:none}
+body.mobile .defn{font-size:21px;padding:18px}
+body.mobile .rule .flow{grid-template-columns:minmax(0,1fr)}
+body.mobile .rule .ar{transform:rotate(90deg);justify-self:center}
+body.mobile .cov{font-size:12px}
+body.mobile .cov td.d{width:auto}
+body.mobile .tabpanel{min-height:0}
+body.mobile .kpi .v{font-size:32px}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+<div id="viewport"><div id="deck">
+
+<!-- 1 TITLE -->
+<section class="slide title-slide ch1" data-title="Introduction to Business Analytics" data-acc="indigo">
+  <div class="kicker">BPMNK2033 · Chapter 1</div>
+  <h1>Introduction to <span>Business Analytics</span></h1>
+  <p>How organisations turn data into insight and better decisions, and what it takes to do that well and ethically.</p>
+  <div class="chips3">
+    <div class="chip3"><b style="color:#2563eb">Descriptive</b><span>What happened?</span></div>
+    <div class="chip3"><b style="color:#ea580c">Predictive</b><span>What will happen?</span></div>
+    <div class="chip3"><b style="color:#16a34a">Prescriptive</b><span>What should we do?</span></div>
+  </div>
+  <div class="title-meta">
+    <div><b>Business Intelligence &amp; Data Analytics</b>School of Business Management, UUM</div>
+    <div><b>Dr. Khairol Anuar Ishak</b>Session A261 · Sep Sem 2026/2027</div>
+    <div><b>Navigate</b><kbd>→</kbd> <kbd>Space</kbd> next · <kbd>M</kbd> menu · <kbd>F</kbd> full screen</div>
+  </div>
+</section>
+
+<!-- 2 PLAN -->
+<section class="slide" data-title="Today's plan (70 minutes)" data-acc="indigo">
+  <div class="kicker">Roadmap</div>
+  <h2>Today's plan: 70 minutes</h2>
+  <p class="lead">Six short sections. Each ends with something for <b>you</b> to do: sort, classify, vote or answer.</p>
+  <div class="agenda">
+    <div class="ag" style="background:linear-gradient(160deg,#4f46e5,#6366f1)"><span class="t">00–07</span><div class="h">Warm-up</div><div class="d">Our class, described with data.</div><div class="m">7<small> min</small></div></div>
+    <div class="ag" style="background:linear-gradient(160deg,#0891b2,#06b6d4)"><span class="t">07–17</span><div class="h">1.1 Decisions</div><div class="d">Three levels, five steps.</div><div class="m">10<small> min</small></div></div>
+    <div class="ag" style="background:linear-gradient(160deg,#7c3aed,#8b5cf6)"><span class="t">17–22</span><div class="h">1.2 Analytics defined</div><div class="d">Definition + quick check.</div><div class="m">5<small> min</small></div></div>
+    <div class="ag" style="background:linear-gradient(160deg,#2563eb,#3b82f6)"><span class="t">22–40</span><div class="h">1.3 D · P · P</div><div class="d">Descriptive, predictive, prescriptive + game.</div><div class="m">18<small> min</small></div></div>
+    <div class="ag" style="background:linear-gradient(160deg,#ea580c,#f97316)"><span class="t">40–50</span><div class="h">1.4 Big data</div><div class="d">4 Vs, MapReduce, cloud, AI.</div><div class="m">10<small> min</small></div></div>
+    <div class="ag" style="background:linear-gradient(160deg,#db2777,#ec4899)"><span class="t">50–65</span><div class="h">1.5–1.6 Practice &amp; ethics</div><div class="d">Industries, law, ethics dilemma.</div><div class="m">15<small> min</small></div></div>
+    <div class="ag" style="background:linear-gradient(160deg,#16a34a,#22c55e)"><span class="t">65–70</span><div class="h">Exit ticket</div><div class="d">5 questions.</div><div class="m">5<small> min</small></div></div>
+  </div>
+  <div class="bar70"><i style="flex:7;background:#6366f1"></i><i style="flex:10;background:#06b6d4"></i><i style="flex:5;background:#8b5cf6"></i><i style="flex:18;background:#3b82f6"></i><i style="flex:10;background:#f97316"></i><i style="flex:15;background:#ec4899"></i><i style="flex:5;background:#22c55e"></i></div>
+</section>
+
+<!-- 3 LO -->
+<section class="slide" data-title="Learning objectives" data-acc="violet">
+  <div class="kicker">By the end of this lecture</div>
+  <h2>You will be able to…</h2>
+  <div class="oc-grid" style="grid-template-columns:1fr 1fr">
+    <div class="oc"><div class="num" style="background:var(--cyan)">1</div><h3>LO 1-1 · Classify decisions</h3><p>Tell strategic, tactical and operational decisions apart.</p></div>
+    <div class="oc"><div class="num" style="background:var(--violet)">2</div><h3>LO 1-2 · Walk the decision process</h3><p>Describe the five steps from problem to choice.</p></div>
+    <div class="oc"><div class="num" style="background:var(--blue)">3</div><h3>LO 1-3 · Name the analytics type</h3><p>Spot examples of descriptive, predictive and prescriptive analytics.</p></div>
+    <div class="oc"><div class="num" style="background:var(--pink)">4</div><h3>LO 1-4 · Apply it to business</h3><p>Describe how analytics supports decisions in finance, HR, marketing, health care, supply chains and more.</p></div>
+  </div>
+  <div class="callout" style="--acc:var(--violet);margin-top:18px"><b>Chapter map:</b> 1.1 Decision making · 1.2 Business analytics defined · 1.3 Types of analytics · 1.4 Big data, cloud &amp; AI · 1.5 Analytics in practice · 1.6 Legal &amp; ethical issues</div>
+</section>
+
+<!-- 4 CLASS DATA -->
+<section class="slide" data-title="Warm-up: our class in data" data-acc="indigo">
+  <div class="kicker">Warm-up · descriptive analytics in action</div>
+  <h2>Who are we? You answered, the data describes</h2>
+  <div class="seg" id="grpSeg"><button type="button" data-g="C" class="on">Group C</button><button type="button" data-g="D">Group D</button><button type="button" data-g="ALL">Both groups</button></div>
+  <div class="kpis">
+    <div class="kpi" style="--c:var(--indigo)"><div class="v" id="kN">70</div><div class="l">Students who responded</div></div>
+    <div class="kpi" style="--c:var(--violet)"><div class="v" id="kAI">7.72<small> /10</small></div><div class="l">Mean AI-readiness score</div></div>
+    <div class="kpi" style="--c:var(--cyan)"><div class="v" id="kSD">1.29</div><div class="l">Standard deviation (spread)</div></div>
+    <div class="kpi" style="--c:var(--pink)"><div class="v" id="kInt">2</div><div class="l">International students</div></div>
+  </div>
+  <div class="cols even" style="margin-top:18px">
+    <div class="card"><h3>Gender mix</h3><div class="hbar"><i id="bF" style="flex-basis:70%;background:var(--pink)">49 F</i><i id="bM" style="flex-basis:30%;background:var(--blue)">21 M</i></div>
+      <p style="font-size:13px;margin:0">Self-reported in the enrolment survey.</p></div>
+    <div class="card"><h3>AI-readiness: mean and range</h3><div class="gauge"><span class="rg" id="gR"></span><span class="mk" id="gM"></span></div><div class="gscale"><span>0</span><span>2.5</span><span>5</span><span>7.5</span><span>10</span></div>
+      <p style="font-size:13px;margin:6px 0 0" id="gTxt">Lowest 4.75 · highest 10.0</p></div>
+  </div>
+  <div class="callout">This slide <b>describes what has already happened</b>: counts, averages, spread and a chart. That is <b>descriptive analytics</b>, the first of the three types you'll meet today.</div>
+</section>
+
+<!-- 5 DRIVERS -->
+<section class="slide" data-title="Why analytics exploded" data-acc="blue">
+  <div class="kicker">Introduction</div>
+  <h2>Why analytics has taken off</h2>
+  <p class="lead">Three developments together pushed analytics into almost every business function:</p>
+  <div class="drivers">
+    <div class="drv" style="background:linear-gradient(160deg,#2563eb,#60a5fa)"><div class="ic">🗄️</div><h3>1 · More data</h3><p>Organisations now track and store huge volumes of data: transactions, sensors, apps, social media and more.</p></div>
+    <div class="drv" style="background:linear-gradient(160deg,#7c3aed,#a78bfa)"><div class="ic">🧠</div><h3>2 · Better methods</h3><p>New methods for pulling knowledge out of data: statistics, data mining, machine learning and optimisation.</p></div>
+    <div class="drv" style="background:linear-gradient(160deg,#ea580c,#fb923c)"><div class="ic">⚡</div><h3>3 · Computing power</h3><p>Cheap, fast processing and cloud platforms make heavy analysis possible on demand.</p></div>
+  </div>
+  <div class="callout" style="margin-top:16px"><b>Think:</b> which of these three do you use every day without noticing? (Hint: every tap in Shopee, Grab or TikTok is data.)</div>
+</section>
+
+<!-- 6 LEVELS -->
+<section class="slide" data-title="1.1 Three levels of decisions" data-acc="cyan">
+  <div class="kicker">1.1 · Decision making</div>
+  <h2>Managers make decisions at three levels</h2>
+  <div class="cols even">
+    <div class="pyr" id="pyr">
+      <button type="button" data-l="s" style="width:48%;background:#4f46e5;--c:#4f46e5" class="on">Strategic<small>top management</small></button>
+      <button type="button" data-l="t" style="width:74%;background:#0891b2;--c:#0891b2">Tactical<small>middle management</small></button>
+      <button type="button" data-l="o" style="width:100%;background:#16a34a;--c:#16a34a">Operational<small>operations managers · frontline</small></button>
+    </div>
+    <div class="lvl-info" id="lvlInfo"></div>
+  </div>
+  <p style="font-size:14px;margin-top:14px">Click a level of the pyramid.</p>
+</section>
+
+<!-- 7 SORT GAME LEVELS -->
+<section class="slide" data-title="Game: sort the decisions" data-acc="cyan">
+  <div class="kicker">Your turn · LO 1-1</div>
+  <h2>Strategic, tactical or operational?</h2>
+  <div class="sort" data-sort="levels"></div>
+</section>
+
+<!-- 8 PROCESS -->
+<section class="slide" data-title="1.1 The decision-making process" data-acc="violet">
+  <div class="kicker">1.1 · Decision making · LO 1-2</div>
+  <h2>Five steps from problem to decision</h2>
+  <p style="margin-bottom:8px">Case: <b>a Kedah coffee chain is deciding where to open its next outlet.</b> Click each step.</p>
+  <div class="steps" id="steps"></div>
+  <div class="card tint stepout" id="stepOut"></div>
+  <h3 style="margin-top:16px">Common ways people decide</h3>
+  <div class="approaches">
+    <div><b>Tradition</b>“We have always done it this way.”</div>
+    <div><b>Intuition</b>Gut feeling and experience.</div>
+    <div><b>Rules of thumb</b>Simple shortcuts, e.g. “near a school = busy”.</div>
+    <div class="data"><b>📊 Relevant data</b>Facts and analysis: the focus of this course.</div>
+  </div>
+</section>
+
+<!-- 9 DEFINED -->
+<section class="slide" data-title="1.2 Business analytics defined" data-acc="violet">
+  <div class="kicker">1.2 · Definition</div>
+  <h2>What is business analytics?</h2>
+  <div class="defn">Business analytics is the <mark>scientific process</mark> of transforming <mark>data into insight</mark> for making <mark>better decisions</mark>.</div>
+  <p>Decisions based on data and facts are usually seen as <b>more objective</b> than tradition, intuition or rules of thumb. Analytics tools help us to:</p>
+  <div class="four">
+    <div><span class="ic">💡</span><b>Create insight</b><br>from raw data</div>
+    <div><span class="ic">📈</span><b>Forecast</b><br>more accurately, so plans are better</div>
+    <div><span class="ic">⚖️</span><b>Quantify risk</b><br>and uncertainty</div>
+    <div><span class="ic">🎯</span><b>Find better alternatives</b><br>through analysis and optimisation</div>
+  </div>
+</section>
+
+<!-- 10 QC1 -->
+<section class="slide" data-title="Quick check #1" data-acc="cyan">
+  <div class="kicker">Quick check · 3 questions</div>
+  <h2>Quick check #1: decisions &amp; definition</h2>
+  <div class="quiz" data-quiz="q1"></div>
+</section>
+
+<!-- 11 DPP OVERVIEW -->
+<section class="slide" data-title="1.3 Three types of analytics" data-acc="blue">
+  <div class="kicker">1.3 · A categorisation of analytical methods · LO 1-3</div>
+  <h2>Three types of analytics: one question each</h2>
+  <div class="dpp">
+    <div class="dcol" style="background:linear-gradient(160deg,#1d4ed8,#3b82f6)"><div class="q">Descriptive</div><div class="big">What happened?</div>
+      <ul><li>Queries &amp; reports</li><li>Descriptive statistics</li><li>Charts &amp; dashboards</li><li>Clustering, association rules</li></ul>
+      <div class="eg">🛒 “Sales at the Sintok outlet fell 12% last month.”</div></div>
+    <div class="dcol" style="background:linear-gradient(160deg,#c2410c,#f97316)"><div class="q">Predictive</div><div class="big">What will happen?</div>
+      <ul><li>Regression &amp; time series</li><li>Supervised learning</li><li>Simulation</li></ul>
+      <div class="eg">🔮 “Next month we'll sell about 4,200 cups.”</div></div>
+    <div class="dcol" style="background:linear-gradient(160deg,#15803d,#22c55e)"><div class="q">Prescriptive</div><div class="big">What should we do?</div>
+      <ul><li>Rule-based models</li><li>Optimisation</li><li>Simulation optimisation</li><li>Decision analysis</li></ul>
+      <div class="eg">✅ “Order 38 kg of beans and add one barista on Fridays.”</div></div>
+  </div>
+  <div class="arrowrow"><span>Hindsight</span>→<span>Foresight</span>→<span>Action</span><span style="background:none">· more complexity, more value</span></div>
+</section>
+
+<!-- 12 DESCRIPTIVE -->
+<section class="slide" data-title="Descriptive analytics" data-acc="blue">
+  <div class="kicker">1.3 · Type 1 of 3</div>
+  <h2>Descriptive analytics: what happened?</h2>
+  <div class="cols">
+    <div>
+      <p class="lead">Techniques that <b>describe the past</b>. It's where almost every analysis starts, and it's what Chapter 2 (Excel) and your dashboards do.</p>
+      <div class="callout"><b>Unsupervised learning</b> finds patterns <i>without</i> a target to predict:<br>• <b>Cluster analysis</b>: groups similar customers (similarity)<br>• <b>Association rules</b>: “people who buy X also buy Y” (correlation)</div>
+    </div>
+    <div class="tech">
+      <div><b>Data query</b>Ask a database for records with certain characteristics, e.g. all orders above RM100 in September.</div>
+      <div><b>Report</b>The output of a query, often with statistics and charts.</div>
+      <div><b>Descriptive statistics</b>Mean, median, spread. Our warm-up slide!</div>
+      <div><b>Data visualisation</b>Charts that reveal patterns and outliers.</div>
+      <div><b>Data dashboard</b>Tables, charts, maps and KPIs that <b>update</b> as new data arrives.</div>
+      <div><b>Spreadsheet models</b>Basic what-happened models in Excel.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 13 PREDICTIVE -->
+<section class="slide" data-title="Predictive analytics" data-acc="orange">
+  <div class="kicker">1.3 · Type 2 of 3</div>
+  <h2>Predictive analytics: what will happen?</h2>
+  <div class="cols">
+    <div>
+      <p class="lead">Uses <b>models built from past data</b> to predict the future, or to measure how one variable affects another.</p>
+      <ul class="tidy">
+        <li><b>Linear regression</b>: how price affects demand</li>
+        <li><b>Time series analysis</b>: forecasting from trends and seasons</li>
+        <li><b>Supervised learning</b>: learns from past examples with a known outcome (e.g. which customers churned)</li>
+        <li><b>Simulation</b>: uses probability to model uncertainty</li>
+      </ul>
+    </div>
+    <div class="chartbox">
+      <svg viewBox="0 0 560 300" id="fcChart" role="img" aria-label="Monthly sales with forecast"></svg>
+      <div style="display:flex;gap:8px;align-items:center;margin-top:8px"><button class="btn" type="button" id="fcBtn">Show forecast →</button><span class="cap" id="fcCap">Monthly cups sold, Jan–Sep. What comes next?</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 14 PRESCRIPTIVE -->
+<section class="slide" data-title="Prescriptive analytics" data-acc="green">
+  <div class="kicker">1.3 · Type 3 of 3</div>
+  <h2>Prescriptive analytics: what should we do?</h2>
+  <div class="cols">
+    <div>
+      <p class="lead">A prediction is <b>not</b> a decision. <b>Prescriptive = predictive model + a rule</b> (or an optimisation) that recommends an action.</p>
+      <div class="tech" style="grid-template-columns:1fr">
+        <div><b>Optimisation models</b>Best decision within constraints, e.g. staff rosters or delivery routes.</div>
+        <div><b>Simulation optimisation</b>Optimisation under uncertainty.</div>
+        <div><b>Decision analysis &amp; utility theory</b>Best strategy under uncertain futures, reflecting attitude to risk.</div>
+      </div>
+      <p style="font-size:14px;margin-top:10px">Other examples: investment portfolios (finance), supply network design (operations), price markdowns (retail).</p>
+    </div>
+    <div class="rule">
+      <h3>Try a rule-based model</h3>
+      <label style="font-size:14px;color:var(--muted)">Predicted demand next week (cups): <b id="rDem">900</b></label>
+      <input type="range" id="rSlider" min="300" max="1500" step="50" value="900">
+      <div class="flow">
+        <div class="box">Predictive model<b id="rPred">900</b>cups forecast</div><div class="ar">→</div>
+        <div class="box">Rule<b style="font-size:14px">If forecast &gt; stock, reorder the gap + 10% buffer</b></div><div class="ar">→</div>
+        <div class="box dec">Decision<b id="rDec">Reorder 330 cups' worth</b></div>
+      </div>
+      <p style="font-size:13px;margin:10px 0 0">Current stock covers 500 cups. Move the slider and watch the recommendation change.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 15 SORT DPP -->
+<section class="slide" data-title="Game: which type of analytics?" data-acc="blue">
+  <div class="kicker">Your turn · LO 1-3</div>
+  <h2>Descriptive, predictive or prescriptive?</h2>
+  <div class="sort" data-sort="types"></div>
+</section>
+
+<!-- 16 COVERAGE -->
+<section class="slide" data-title="The road ahead: textbook coverage" data-acc="indigo">
+  <div class="kicker">1.3 · Coverage of business analytics</div>
+  <h2>The road ahead: where each topic fits</h2>
+  <div class="cols wide-r" style="grid-template-columns:.7fr 1.5fr">
+    <div>
+      <p>The textbook (Camm et al., <i>Business Analytics</i>, 5e) covers all three types. Filter to see which chapters build which skill.</p>
+      <div class="tabs" id="covTabs">
+        <button type="button" class="on" data-f="all" style="--tc:#475569">All</button>
+        <button type="button" data-f="0" style="--tc:#2563eb">Descriptive</button>
+        <button type="button" data-f="1" style="--tc:#ea580c">Predictive</button>
+        <button type="button" data-f="2" style="--tc:#16a34a">Prescriptive</button>
+      </div>
+      <div class="callout" style="--acc:var(--indigo)">Chapter 2 of our course (Excel formulas) sits firmly in <b>descriptive</b> territory: the foundation for everything after.</div>
+    </div>
+    <div><table class="cov" id="covTbl"></table></div>
+  </div>
+</section>
+
+<!-- 17 BIG DATA 4V -->
+<section class="slide" data-title="1.4 Big data & the four Vs" data-acc="orange">
+  <div class="kicker">1.4 · Big data</div>
+  <h2>Big data: the four Vs</h2>
+  <p><b>Big data</b> is any data set too large or complex for standard processing and typical desktop software. IBM describes it with four Vs. <b>Click a card to flip it.</b></p>
+  <div class="vs">
+    <div class="vcard" style="--c:#2563eb"><div class="fc front" style="background:linear-gradient(160deg,#1d4ed8,#60a5fa)"><div class="L">V</div><h3>Volume</h3><p>How much?</p></div>
+      <div class="fc back"><h3>Volume</h3><p>The sheer <b>amount</b> of data generated and stored.</p><div class="eg">🛒 Every transaction at every outlet, every day, for years.</div></div></div>
+    <div class="vcard" style="--c:#ea580c"><div class="fc front" style="background:linear-gradient(160deg,#c2410c,#fb923c)"><div class="L">V</div><h3>Velocity</h3><p>How fast?</p></div>
+      <div class="fc back"><h3>Velocity</h3><p>The <b>speed</b> at which new data arrives and must be processed.</p><div class="eg">🚗 Grab tracks thousands of drivers' GPS positions every few seconds.</div></div></div>
+    <div class="vcard" style="--c:#7c3aed"><div class="fc front" style="background:linear-gradient(160deg,#6d28d9,#a78bfa)"><div class="L">V</div><h3>Variety</h3><p>How many kinds?</p></div>
+      <div class="fc back"><h3>Variety</h3><p>Many <b>formats</b>: tables, text, images, audio, video, sensor logs.</p><div class="eg">💬 Customer reviews, photos and ratings in one app.</div></div></div>
+    <div class="vcard" style="--c:#16a34a"><div class="fc front" style="background:linear-gradient(160deg,#15803d,#4ade80)"><div class="L">V</div><h3>Veracity</h3><p>How trustworthy?</p></div>
+      <div class="fc back"><h3>Veracity</h3><p>The <b>quality and reliability</b> of the data: errors, bias, missing values.</p><div class="eg">🤔 Fake reviews, typos, or a form where someone entered their age as 200.</div></div></div>
+  </div>
+</section>
+
+<!-- 18 MAPREDUCE -->
+<section class="slide" data-title="Hadoop & MapReduce" data-acc="orange">
+  <div class="kicker">1.4 · Big data technologies</div>
+  <h2>Hadoop &amp; MapReduce: divide and conquer</h2>
+  <p><b>Hadoop</b> is open-source software that stores and processes big data across many computers. <b>MapReduce</b> is its programming model: <b>map</b> splits the work, <b>reduce</b> combines the results. Try it by counting words in customer reviews:</p>
+  <div class="mr">
+    <div class="col"><h4>Input (3 computers)</h4><div class="doc">💻1 “great coffee great price”</div><div class="doc">💻2 “slow service great coffee”</div><div class="doc">💻3 “great price slow wifi”</div></div>
+    <div class="ar">→</div>
+    <div class="col"><h4>① Map</h4><div id="mrMap"></div></div>
+    <div class="ar">→</div>
+    <div class="col"><h4>② Shuffle (group)</h4><div id="mrShuf"></div></div>
+    <div class="ar">→</div>
+    <div class="col"><h4>③ Reduce</h4><div id="mrRed"></div></div>
+  </div>
+  <div class="mrctl"><button class="btn" type="button" id="mrBtn">Run Map ▶</button><button class="btn ghost" type="button" id="mrReset">Reset</button><span class="st" id="mrSt">Each computer works on its own piece at the same time.</span></div>
+</section>
+
+<!-- 19 CLOUD -->
+<section class="slide" data-title="Cloud computing & data security" data-acc="cyan">
+  <div class="kicker">1.4 · The cloud</div>
+  <h2>Cloud computing &amp; data security</h2>
+  <div class="cols even">
+    <div class="card tint">
+      <h3>☁️ Cloud computing</h3>
+      <p>Using data and software on servers <b>outside</b> the organisation, over the internet. Think Google Drive, Microsoft 365, AWS.</p>
+      <ul class="tidy"><li>Makes storing and processing massive data <b>feasible and cost-effective</b></li><li>Pay for what you use; scale up in minutes</li><li>You already use it: your UUM Google and Microsoft accounts</li></ul>
+    </div>
+    <div class="card" style="--acc:var(--rose)">
+      <h3>🔒 Data security</h3>
+      <p>Protecting stored data from <b>destructive forces</b> and <b>unauthorised users</b>, such as hackers.</p>
+      <ul class="tidy"><li>Confidential data in the cloud must be protected</li><li>Access control, encryption, backups</li><li>A breach damages customers, trust and the firm's reputation</li></ul>
+    </div>
+  </div>
+  <div class="callout warn" style="margin-top:14px"><b>Discuss (1 min):</b> Would you store your company's customer list in a free cloud app? What would you check first?</div>
+</section>
+
+<!-- 20 AI & DS -->
+<section class="slide" data-title="AI & data scientists" data-acc="violet">
+  <div class="kicker">1.4 · Artificial intelligence</div>
+  <h2>Artificial intelligence &amp; the data scientist</h2>
+  <div class="cols even">
+    <div>
+      <p class="lead"><b>AI</b> uses big data and computers to make decisions that used to need human intelligence.</p>
+      <ul class="tidy"><li>Facial recognition at security checkpoints</li><li>Self-driving vehicles</li><li>Generative AI assistants like Gemini, ChatGPT, Copilot and Claude, which most of you already use</li></ul>
+      <div class="callout" style="--acc:var(--violet)">Big data created strong demand for <b>data scientists</b>: analysts trained in <b>computer science</b> and <b>statistics</b> who can process and analyse massive data. Qualified people are in short supply, which is an opportunity for you.</div>
+    </div>
+    <div>
+      <div class="venn">
+        <div class="c" style="left:0;top:0;background:#c7d2fe;justify-content:flex-start;padding-left:14%">Computer<br>science</div>
+        <div class="c" style="right:0;top:0;background:#fbcfe8;justify-content:flex-end;padding-right:16%">Statistics</div>
+        <div class="c bot" style="left:21%;bottom:0;background:#bbf7d0">Business<br>knowledge</div>
+        <div class="ctr">Data scientist</div>
+      </div>
+      <p class="src" style="text-align:center">Business-savvy analysts, the BBA advantage, sit where all three overlap.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 21 QC2 -->
+<section class="slide" data-title="Quick check #2" data-acc="orange">
+  <div class="kicker">Quick check · 3 questions</div>
+  <h2>Quick check #2: types &amp; big data</h2>
+  <div class="quiz" data-quiz="q2"></div>
+</section>
+
+<!-- 22 PRACTICE -->
+<section class="slide" data-title="1.5 Analytics in practice" data-acc="pink">
+  <div class="kicker">1.5 · Business analytics in practice · LO 1-4</div>
+  <h2>Analytics across the organisation</h2>
+  <div class="tabs" id="appTabs"></div>
+  <div class="tabpanel" id="appPanel"></div>
+</section>
+
+<!-- 23 ETHICS -->
+<section class="slide" data-title="1.6 Ethical issues" data-acc="rose">
+  <div class="kicker">1.6 · Ethics</div>
+  <h2>Ethics: data is about people</h2>
+  <div class="cols even">
+    <div>
+      <ul class="tidy">
+        <li>Customers trade their <b>data</b> for <b>benefits</b> (discounts, convenience). They should understand that trade-off.</li>
+        <li>The terms are set in an <b>agreement</b> between customer and company, and the company must honour it.</li>
+        <li>Firms must protect data from <b>data breaches</b>, meaning unauthorised use of data. This is a major concern for every company.</li>
+        <li>Models built on data must be used <b>fairly and responsibly</b>.</li>
+      </ul>
+    </div>
+    <div class="dilemma">
+      <h3>🤔 Dilemma: you decide</h3>
+      <p>You run analytics for a café loyalty app. Marketing wants to sell members' purchase histories to an insurance company that will use it to price health policies. It's legal under the sign-up terms, which few people read.</p>
+      <div class="dchoice"><button type="button" data-d="a">A · Go ahead: it's allowed and brings revenue.</button><button type="button" data-d="b">B · Push back: members wouldn't reasonably expect this.</button></div>
+      <div class="dout" id="dOut"></div>
+    </div>
+  </div>
+</section>
+
+<!-- 24 LAW -->
+<section class="slide" data-title="1.6 Legal issues: GDPR & PDPA" data-acc="rose">
+  <div class="kicker">1.6 · Legal issues</div>
+  <h2>The law: consent, purpose and control</h2>
+  <div class="law">
+    <div class="card"><h3><span class="flag">🇪🇺</span> GDPR (European Union, since May 2018)</h3>
+      <p style="font-size:14.5px">One of the strictest privacy laws in the world. It requires that:</p>
+      <ul><li>requests for consent are <b>easy to understand and access</b></li><li>the <b>intended use</b> of data is stated, and consent is easy to <b>withdraw</b></li><li>individuals can get a <b>copy</b> of their data and demand it be <b>erased</b></li></ul></div>
+    <div class="card"><h3><span class="flag">🇲🇾</span> PDPA 2010 (Malaysia)</h3>
+      <p style="font-size:14.5px">Malaysia's Personal Data Protection Act governs how businesses handle personal data in commercial transactions.</p>
+      <ul><li>Amended in <b>2024</b>, with new duties phased in during <b>2025</b></li><li>Includes <b>data-breach notification</b>, appointing a <b>Data Protection Officer</b>, and a right to <b>data portability</b></li></ul></div>
+  </div>
+  <div class="callout warn" style="margin-top:16px"><b>Your responsibility:</b> analytics professionals must understand the laws on <b>collecting, storing and using</b> personal data wherever they work.</div>
+</section>
+
+<!-- 25 INFORMS -->
+<section class="slide" data-title="INFORMS ethics guidelines" data-acc="indigo">
+  <div class="kicker">1.6 · Professional ethics</div>
+  <h2>INFORMS ethics guidelines: how analysts should behave</h2>
+  <div class="tabs" id="ethTabs"></div>
+  <div class="echips" id="ethChips"></div>
+  <div class="eout" id="ethOut">Click a word to see what it means in practice.</div>
+  <p class="src">Source: INFORMS (Institute for Operations Research and the Management Sciences) Ethics Guidelines, as summarised in Camm et al., <i>Business Analytics</i>, 5e.</p>
+</section>
+
+<!-- 26 EXIT -->
+<section class="slide" data-title="Exit ticket" data-acc="violet">
+  <div class="kicker">Exit ticket · 5 questions</div>
+  <h2>Exit ticket: how much stuck?</h2>
+  <div class="quiz" data-quiz="exit"></div>
+</section>
+
+<!-- 27 SUMMARY -->
+<section class="slide" data-title="Summary & next steps" data-acc="indigo">
+  <div class="kicker">Summary</div>
+  <h2>Key takeaways</h2>
+  <div class="recap">
+    <div class="rc" style="background:#0891b2"><b>3 decision levels</b><span>Strategic · tactical · operational</span></div>
+    <div class="rc" style="background:#7c3aed"><b>5-step process</b><span>Problem → criteria → alternatives → evaluate → choose</span></div>
+    <div class="rc" style="background:#4f46e5"><b>Business analytics</b><span>Scientific process: data → insight → better decisions</span></div>
+    <div class="rc" style="background:#2563eb"><b>Descriptive</b><span>What happened?</span></div>
+    <div class="rc" style="background:#ea580c"><b>Predictive</b><span>What will happen?</span></div>
+    <div class="rc" style="background:#16a34a"><b>Prescriptive</b><span>What should we do?</span></div>
+    <div class="rc" style="background:#c2410c"><b>Big data · cloud · AI</b><span>4 Vs, Hadoop/MapReduce, data scientists</span></div>
+    <div class="rc" style="background:#e11d48"><b>Law &amp; ethics</b><span>Consent, security, GDPR/PDPA, INFORMS</span></div>
+  </div>
+  <div class="cols even" style="margin-top:20px">
+    <div class="card tint"><h3>📝 Before next class</h3><p style="margin:0">Take the <b>Chapter 1 online quiz</b> on the course site (10 questions, 5 minutes, one attempt).</p></div>
+    <a class="card" href="../chapter2/" style="text-decoration:none;display:block"><h3>➡️ Next: Chapter 2</h3><p style="margin:0">Basic Excel formulas and functions: descriptive analytics, hands-on.</p></a>
+  </div>
+</section>
+
+</div></div>
+
+<nav id="menu" aria-label="Slides"><h4>Chapter 1 · Slides</h4><div id="menuList"></div></nav>
+<div id="scrim"></div>
+<div id="help"><kbd>←</kbd><kbd>→</kbd> navigate · <kbd>M</kbd> menu · <kbd>F</kbd> full screen · <kbd>T</kbd> timer</div>
+<div id="hud">
+  <button id="menuBtn" title="Slide menu (M)" aria-label="Menu">☰</button>
+  <button id="timer" title="Lecture timer: click to start/pause, double-click to reset (T)">▶ 00:00</button>
+  <button id="fsBtn" title="Full screen (F)" aria-label="Full screen">⛶</button>
+  <button id="prevBtn" aria-label="Previous">‹</button>
+  <span class="count" id="count">1 / 27</span>
+  <button id="nextBtn" aria-label="Next">›</button>
+</div>
+
+<script>
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+
+/* ---------- class data (enrolment survey, aggregates only) ---------- */
+const GRP={
+  C:{n:70,ai:7.72,sd:1.29,lo:4.75,hi:10,intl:2,f:49,m:21},
+  D:{n:63,ai:7.39,sd:1.49,lo:4.33,hi:10,intl:3,f:39,m:24}
+};
+GRP.ALL={n:133,ai:+((7.72*70+7.39*63)/133).toFixed(2),sd:null,lo:4.33,hi:10,intl:5,f:88,m:45};
+function showGrp(g){
+  const d=GRP[g];
+  document.querySelectorAll("#grpSeg button").forEach(b=>b.classList.toggle("on",b.dataset.g===g));
+  document.getElementById("kN").textContent=d.n;
+  document.getElementById("kAI").innerHTML=d.ai.toFixed(2)+"<small> /10</small>";
+  document.getElementById("kSD").textContent=d.sd===null?"C 1.29 · D 1.49":d.sd.toFixed(2);
+  document.getElementById("kSD").style.fontSize=d.sd===null?"24px":"";
+  document.getElementById("kInt").textContent=d.intl;
+  const fp=d.f/(d.f+d.m)*100;
+  const bF=document.getElementById("bF"),bM=document.getElementById("bM");
+  bF.style.flexBasis=fp+"%";bF.textContent=d.f+" F";bM.style.flexBasis=(100-fp)+"%";bM.textContent=d.m+" M";
+  document.getElementById("gM").style.left=`calc(${d.ai*10}% - 2px)`;
+  const r=document.getElementById("gR");r.style.left=d.lo*10+"%";r.style.width=(d.hi-d.lo)*10+"%";
+  document.getElementById("gTxt").textContent=`Lowest ${d.lo.toFixed(2)} · mean ${d.ai.toFixed(2)} · highest ${d.hi.toFixed(1)} (grey bar = range, black marker = mean)`;
+}
+document.querySelectorAll("#grpSeg button").forEach(b=>b.onclick=()=>showGrp(b.dataset.g));
+showGrp("C");
+
+/* ---------- pyramid ---------- */
+const LVL={
+  s:{c:"#4f46e5",n:"Strategic",who:"Top management (CEO, board)",what:"Overall direction of the organisation: goals and aspirations for the future",hz:"Long term (years)",eg:"Should our coffee chain expand into Penang, or stay in Kedah?"},
+  t:{c:"#0891b2",n:"Tactical",who:"Middle management",what:"<b>How</b> to achieve the goals set by the strategy",hz:"Medium term (months to a year)",eg:"Which three towns get new outlets next year, and what marketing budget does each get?"},
+  o:{c:"#16a34a",n:"Operational",who:"Operations managers, closest to the customer",what:"How the firm runs <b>day to day</b>",hz:"Short term (daily / weekly)",eg:"How many baristas do we roster this Friday, and how many kg of beans do we order?"}
+};
+function showLvl(k){const d=LVL[k];document.querySelectorAll("#pyr button").forEach(b=>b.classList.toggle("on",b.dataset.l===k));
+  document.getElementById("lvlInfo").innerHTML=`<h3 style="--c:${d.c};color:${d.c}">${d.n} decisions</h3>
+  <div class="row"><b>Who</b><span>${d.who}</span></div><div class="row"><b>About</b><span>${d.what}</span></div>
+  <div class="row"><b>Time horizon</b><span>${d.hz}</span></div><div class="row"><b>Example</b><span>☕ ${d.eg}</span></div>`}
+document.querySelectorAll("#pyr button").forEach(b=>b.onclick=()=>showLvl(b.dataset.l));showLvl("s");
+
+/* ---------- sort games ---------- */
+const SORTS={
+  levels:{cats:[["S","Strategic","#4f46e5"],["T","Tactical","#0891b2"],["O","Operational","#16a34a"]],items:[
+    ["Petronas decides to invest heavily in renewable energy over the next decade.","S","Long-term direction of the whole organisation."],
+    ["A supermarket manager decides how many cashiers to open this evening.","O","Day-to-day running, closest to the customer."],
+    ["A bank's regional office chooses which branches get a new digital-banking campaign this year.","T","How to implement the strategy, set by middle management."],
+    ["AirAsia's board decides whether to launch long-haul routes to Europe.","S","A top-level choice about where the company is going."],
+    ["A warehouse supervisor re-routes today's deliveries around a flooded road.","O","An immediate, daily operational decision."],
+    ["A hotel chain's marketing manager sets next quarter's promotion calendar for its Langkawi properties.","T","A medium-term plan to achieve the strategic goals."]
+  ]},
+  types:{cats:[["D","Descriptive","#2563eb"],["P","Predictive","#ea580c"],["R","Prescriptive","#16a34a"]],items:[
+    ["A dashboard shows last month's sales by outlet.","D","It summarises what already happened."],
+    ["A model estimates how many students will enrol in BPMNK2033 next semester.","P","It forecasts the future from past data."],
+    ["An optimisation model picks the delivery route with the lowest fuel cost.","R","It recommends the best action within constraints."],
+    ["Cluster analysis groups Shopee customers into five shopping segments.","D","Unsupervised learning finds patterns in past data. It's descriptive."],
+    ["A bank's model flags which loan applicants are likely to default.","P","Supervised learning predicts an outcome."],
+    ["If predicted stock-out risk is above 20%, the system automatically places an order.","R","Prediction + rule = prescriptive (rule-based model)."]
+  ]}
+};
+function buildSort(el){
+  const S=SORTS[el.dataset.sort];let score=0,done=0;
+  const bar=document.createElement("div");bar.className="sortbar";bar.innerHTML=`<span class="sc">Score 0 / ${S.items.length}</span><button class="btn ghost" type="button">Reset</button>`;
+  el.before(bar);
+  bar.querySelector("button").onclick=()=>{score=0;done=0;render()};
+  function render(){el.innerHTML="";bar.querySelector(".sc").textContent=`Score 0 / ${S.items.length}`;
+    S.items.forEach(([t,a,why])=>{const it=document.createElement("div");it.className="sitem";
+      it.innerHTML=`<div class="t">${t}</div><div class="b">${S.cats.map(([k,n,c])=>`<button type="button" data-k="${k}" style="--bc:${c}">${n}</button>`).join("")}</div><div class="fb"></div>`;
+      it.querySelectorAll("button").forEach(b=>b.onclick=()=>{
+        const ok=b.dataset.k===a;if(ok)score++;done++;
+        it.querySelectorAll("button").forEach(x=>{x.disabled=true;if(x.dataset.k===a)x.classList.add("pick")});
+        it.classList.add(ok?"ok":"no");
+        it.querySelector(".fb").innerHTML=(ok?"✅ ":"❌ Answer: <b>"+S.cats.find(c=>c[0]===a)[1]+"</b>. ")+why;
+        bar.querySelector(".sc").textContent=`Score ${score} / ${S.items.length}`+(done===S.items.length?(score===S.items.length?" · Perfect! 🎉":" · Done"):"");
+      });el.appendChild(it)})}
+  render();
+}
+document.querySelectorAll(".sort").forEach(buildSort);
+
+/* ---------- decision process stepper ---------- */
+const STEPS=[
+  ["Identify & define the problem","We want to grow revenue by 20% in two years. Opening one more outlet is the plan. <b>Where</b> should it go?"],
+  ["Determine the criteria","How will we judge each location? <b>Expected footfall, rent per month, competition nearby, parking, and distance from our roasting kitchen.</b>"],
+  ["Determine the alternatives","Shortlist: <b>① Sintok (near UUM) ② Changlun town ③ Alor Setar city centre ④ Jitra highway stop</b>."],
+  ["Evaluate the alternatives","Collect data (footfall counts, rental quotes, competitor map) and score each site. <b>This is where analytics does the heavy lifting.</b>"],
+  ["Choose an alternative","Pick the best-scoring site, e.g. <b>Sintok</b>: high student footfall and low rent. Then implement it and monitor the results."]
+];
+(function(){const box=document.getElementById("steps"),out=document.getElementById("stepOut");
+  box.innerHTML=STEPS.map((s,i)=>`<button type="button" data-i="${i}"><span class="n">${i+1}</span><span class="s">${s[0]}</span></button>`).join("");
+  const show=i=>{box.querySelectorAll("button").forEach((b,j)=>{b.classList.toggle("on",j===i);b.classList.toggle("done",j<i)});
+    out.innerHTML=`<h3>Step ${i+1}: ${STEPS[i][0]}</h3><p style="margin:0;font-size:17px">${STEPS[i][1]}</p>`};
+  box.querySelectorAll("button").forEach(b=>b.onclick=()=>show(+b.dataset.i));show(0)})();
+
+/* ---------- forecast chart ---------- */
+(function(){const svg=document.getElementById("fcChart");
+  const hist=[3200,3350,3500,3300,3650,3800,3700,3950,4050],fc=[4150,4250,4350];
+  const mon=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  const X=i=>50+i*44,Y=v=>260-(v-3000)/1600*220;
+  let g=`<g font-family="Plus Jakarta Sans,sans-serif" font-size="11" fill="#64748b">`;
+  [3000,3400,3800,4200,4600].forEach(v=>{g+=`<line x1="44" x2="545" y1="${Y(v)}" y2="${Y(v)}" stroke="#e2e8f0"/><text x="40" y="${Y(v)+4}" text-anchor="end">${v.toLocaleString()}</text>`});
+  mon.forEach((m,i)=>g+=`<text x="${X(i)}" y="282" text-anchor="middle">${m}</text>`);g+="</g>";
+  const hp=hist.map((v,i)=>`${X(i)},${Y(v)}`).join(" ");
+  g+=`<polyline points="${hp}" fill="none" stroke="#2563eb" stroke-width="3" stroke-linejoin="round"/>`;
+  hist.forEach((v,i)=>g+=`<circle cx="${X(i)}" cy="${Y(v)}" r="4" fill="#2563eb"/>`);
+  const fp=[[8,hist[8]],...fc.map((v,i)=>[9+i,v])];
+  const up=fp.map(([i,v])=>`${X(i)},${Y(v+ (i-8)*90)}`).join(" "),lo=fp.slice().reverse().map(([i,v])=>`${X(i)},${Y(v-(i-8)*90)}`).join(" ");
+  g+=`<g id="fcG" style="opacity:0;transition:opacity .6s"><polygon points="${up} ${lo}" fill="#fed7aa" opacity=".6"/><polyline points="${fp.map(([i,v])=>`${X(i)},${Y(v)}`).join(" ")}" fill="none" stroke="#ea580c" stroke-width="3" stroke-dasharray="7 6"/>${fc.map((v,i)=>`<circle cx="${X(9+i)}" cy="${Y(v)}" r="4" fill="#ea580c"/>`).join("")}<text x="${X(11)}" y="${Y(fc[2])-18}" text-anchor="middle" font-size="12" font-weight="700" fill="#c2410c" font-family="Plus Jakarta Sans,sans-serif">Forecast</text></g>`;
+  svg.innerHTML=g;
+  const btn=document.getElementById("fcBtn");let on=false;
+  btn.onclick=()=>{on=!on;document.getElementById("fcG").style.opacity=on?1:0;btn.textContent=on?"Hide forecast":"Show forecast →";
+    document.getElementById("fcCap").innerHTML=on?"A time-series model extends the trend: about <b>4,150 → 4,350</b> cups. The shaded band shows uncertainty, which grows the further ahead we look.":"Monthly cups sold, Jan–Sep. What comes next?"}})();
+
+/* ---------- rule demo ---------- */
+(function(){const s=document.getElementById("rSlider"),STOCK=500;
+  const upd=()=>{const f=+s.value;document.getElementById("rDem").textContent=f;document.getElementById("rPred").textContent=f;
+    const d=document.getElementById("rDec");
+    if(f>STOCK){const q=Math.ceil((f-STOCK)*1.1/10)*10;d.textContent=`Reorder ${q} cups' worth`}else d.textContent="No order needed"};
+  s.oninput=upd;upd()})();
+
+/* ---------- coverage table ---------- */
+(function(){const rows=[[1,"Introduction",[1,1,1]],[2,"Descriptive Statistics",[1,0,0]],[3,"Data Visualization",[1,0,0]],[4,"Data Wrangling",[1,0,0]],[5,"Probability: Modeling Uncertainty",[1,0,0]],[6,"Descriptive Data Mining",[1,0,0]],[7,"Statistical Inference",[0,1,0]],[8,"Linear Regression",[0,1,0]],[9,"Time Series & Forecasting",[0,1,0]],[10,"Predictive Data Mining: Regression",[0,1,0]],[11,"Predictive Data Mining: Classification",[0,1,0]],[12,"Spreadsheet Models",[1,1,1]],[13,"Monte Carlo Simulation",[0,1,1]],[14,"Linear Optimization Models",[0,0,1]],[15,"Integer Optimization Models",[0,0,1]],[16,"Nonlinear Optimization Models",[0,0,1]],[17,"Decision Analysis",[0,0,1]]];
+  const C=["#2563eb","#ea580c","#16a34a"],t=document.getElementById("covTbl");
+  t.innerHTML=`<tr><th>Ch</th><th>Title</th><th style="text-align:center">Descr.</th><th style="text-align:center">Pred.</th><th style="text-align:center">Presc.</th></tr>`+
+    rows.map(([n,ti,d])=>`<tr data-d="${d.join("")}"><td>${n}</td><td>${ti}</td>${d.map((x,i)=>`<td class="d">${x?`<i style="background:${C[i]}"></i>`:""}</td>`).join("")}</tr>`).join("");
+  document.querySelectorAll("#covTabs button").forEach(b=>b.onclick=()=>{document.querySelectorAll("#covTabs button").forEach(x=>x.classList.toggle("on",x===b));
+    const f=b.dataset.f;t.querySelectorAll("tr[data-d]").forEach(r=>{const on=f==="all"||r.dataset.d[+f]==="1";r.classList.toggle("dim",!on);r.classList.toggle("hl",on&&f!=="all")})})})();
+
+/* ---------- flip cards ---------- */
+document.querySelectorAll(".vcard").forEach(c=>c.onclick=()=>c.classList.toggle("flip"));
+
+/* ---------- MapReduce ---------- */
+(function(){const docs=[["great","coffee","great","price"],["slow","service","great","coffee"],["great","price","slow","wifi"]];
+  const KC={great:"#16a34a",coffee:"#7c3aed",price:"#2563eb",slow:"#e11d48",service:"#ea580c",wifi:"#0891b2"};
+  const M=document.getElementById("mrMap"),Sh=document.getElementById("mrShuf"),R=document.getElementById("mrRed"),btn=document.getElementById("mrBtn"),st=document.getElementById("mrSt");
+  let stage=0;const chip=(t,k)=>`<span class="kv" style="--kc:${KC[k]}">${t}</span>`;
+  const reveal=el=>{[...el.querySelectorAll(".kv")].forEach((c,i)=>setTimeout(()=>c.classList.add("show"),60*i))};
+  function reset(){stage=0;M.innerHTML=Sh.innerHTML=R.innerHTML="";btn.textContent="Run Map ▶";btn.disabled=false;st.textContent="Each computer works on its own piece at the same time."}
+  btn.onclick=()=>{
+    if(stage===0){M.innerHTML=docs.map((d,i)=>`<div style="margin-bottom:6px"><b style="font-size:12px;color:#64748b">💻${i+1}</b><br>${d.map(w=>chip(`(${w}, 1)`,w)).join("")}</div>`).join("");reveal(M);
+      btn.textContent="Shuffle ▶";st.innerHTML="<b>Map:</b> each computer turns every word into a <b>(key, 1)</b> pair, in parallel."}
+    else if(stage===1){const g={};docs.flat().forEach(w=>(g[w]=g[w]||[]).push(1));
+      Sh.innerHTML=Object.entries(g).map(([w,a])=>`<div>${chip(`${w}: [${a.join(",")}]`,w)}</div>`).join("");reveal(Sh);
+      btn.textContent="Reduce ▶";st.innerHTML="<b>Shuffle:</b> all pairs with the same key are sent to the same place."}
+    else if(stage===2){const g={};docs.flat().forEach(w=>g[w]=(g[w]||0)+1);
+      R.innerHTML=Object.entries(g).sort((a,b)=>b[1]-a[1]).map(([w,n])=>`<div>${chip(`${w} = ${n}`,w)}</div>`).join("");reveal(R);
+      btn.textContent="Done ✓";btn.disabled=true;st.innerHTML="<b>Reduce:</b> each group is summed. “great” appears 4 times. The same idea scales to billions of reviews across thousands of machines."}
+    stage++};
+  document.getElementById("mrReset").onclick=reset;reset()})();
+
+/* ---------- applications tabs ---------- */
+const APPS=[
+  ["💹","Finance","#2563eb","The financial sector relies heavily on all three types of analytics.",["Dashboards monitor stock returns, trading volumes, market returns and volatility.","Forecast financial performance and assess the risk of portfolios and projects; price derivatives.","Build optimal investment portfolios, allocate assets and plan capital budgets."]],
+  ["👥","Human resources","#7c3aed","HR makes sure the organisation has the right skills, hires top talent, keeps it, and meets its diversity goals.",["Track headcount, turnover and diversity against targets.","Google's “people analytics” forecasts employee turnover and retention.","Recommend hiring and development actions based on what makes great leaders and productive teams."]],
+  ["📣","Marketing","#db2777","One of the fastest-growing areas. Scanner and social-media data show how consumers really behave.",["Analyse sales and customer segments; <b>sentiment analysis</b> listens to “the voice of the customer”.","Predict which customers respond to which ads.","Optimise ad spend so campaigns reach the right audience efficiently."]],
+  ["🏥","Health care","#e11d48","Health care is under pressure to cut costs while giving better treatment.",["Monitor patient flow, staff use and inventory.","Predict patient admissions and demand for beds and staff.","Optimise scheduling and purchasing. The most important use is supporting <b>diagnosis and treatment</b>."]],
+  ["🚚","Supply chain","#ea580c","Logistics firms like UPS and FedEx profit from optimal sorting, scheduling and routing. COVID-19 made supply-chain resilience a priority.",["Monitor supply-chain performance.","Quantify the risk of disruption.","Scenario analysis prepares plans that can cope with major disruption."]],
+  ["🏛️","Government &amp; nonprofits","#0891b2","Improve effectiveness and accountability to citizens and donors.",["Monitor agency performance and track donor behaviour.","Tax agencies use data mining to flag questionable tax returns; forecast donations.","Allocate scarce resources and budgets optimally."]],
+  ["⚽","Sports","#16a34a","Teams use analytics both on and off the field.",["Assess player statistics for drafts and contracts.","Conjoint analysis of fan surveys predicts demand for premium seating.","Change ticket prices dynamically throughout the season."]],
+  ["🌐","Web","#4f46e5","Analysing online activity: website visits, social media, clicks.",["Track visits, clicks and conversions.","Predict which page or ad design works best.","Online experiments (A/B tests) choose the best site layout, ad placement and social strategy, with little risk to the business."]]
+];
+(function(){const T=document.getElementById("appTabs"),P=document.getElementById("appPanel");
+  T.innerHTML=APPS.map((a,i)=>`<button type="button" data-i="${i}" style="--tc:${a[2]}">${a[0]} ${a[1]}</button>`).join("");
+  const show=i=>{const a=APPS[i];T.querySelectorAll("button").forEach((b,j)=>b.classList.toggle("on",j===i));P.style.setProperty("--tc",a[2]);
+    P.innerHTML=`<h3>${a[0]} ${a[1]} analytics</h3><p class="lead">${a[3]}</p><div class="dppmini">
+      <div style="--dc:#2563eb"><b>Descriptive</b>${a[4][0]}</div><div style="--dc:#ea580c"><b>Predictive</b>${a[4][1]}</div><div style="--dc:#16a34a"><b>Prescriptive</b>${a[4][2]}</div></div>`};
+  T.querySelectorAll("button").forEach(b=>b.onclick=()=>show(+b.dataset.i));show(0)})();
+
+/* ---------- dilemma ---------- */
+document.querySelectorAll(".dchoice button").forEach(b=>b.onclick=()=>{document.querySelectorAll(".dchoice button").forEach(x=>x.classList.toggle("on",x===b));
+  const o=document.getElementById("dOut");o.classList.add("show");
+  o.innerHTML=b.dataset.d==="a"?"<b>Legal isn't the same as ethical.</b> INFORMS asks analysts to stay <b>alert to unintended consequences</b>. Members could face higher premiums, and trust in the brand could collapse if the deal became public. Under consent rules like GDPR and PDPA, consent should be <b>clear and specific</b>, not buried in the fine print.":"<b>Most analysts would agree.</b> You're being <b>accountable</b> and <b>alert to unintended consequences</b> (INFORMS). A better option: ask members for <b>clear, opt-in consent</b>, or don't share at all. Protecting trust protects the business too."});
+
+/* ---------- INFORMS ---------- */
+const ETH={
+  "Society":["#4f46e5",{Accountable:"Own your professional actions and the impact of your work.",Forthcoming:"Be open about assumptions, interests, sponsors, motivations, limitations and conflicts of interest.",Honest:"Report results honestly, even when they don't give the outcome people wanted.",Objective:"Assess facts regardless of your personal opinions or beliefs.",Respectful:"Respect other people's viewpoints and values.",Responsible:"Take on work that benefits science, organisations and society."}],
+  "Organizations":["#db2777",{Accurate:"Make accurate claims, reports and presentations.",Alert:"Watch for unintended or negative consequences of your recommendations.",Informed:"Keep up with developments in your field.",Questioning:"Ask whether there is a more effective or efficient way to reach the goal.",Realistic:"Don't over-promise. Admit when the best option is to stop a project.",Rigorous:"Follow proper professional practice in developing and reporting work."}],
+  "The profession":["#16a34a",{Cooperative:"Share best practices and ideas with colleagues, young professionals and students.",Impartial:"Praise or criticise others' work fairly, setting personal interests aside.",Inclusive:"Include all colleagues. Reject discrimination and harassment in any form.",Tolerant:"Accept well-conducted work even when its findings differ from yours.",Truthful:"Give credit when your work builds on others' ideas.",Vigilant:"Speak out against actions that damage the profession."}]
+};
+(function(){const T=document.getElementById("ethTabs"),C=document.getElementById("ethChips"),O=document.getElementById("ethOut");const keys=Object.keys(ETH);
+  T.innerHTML=keys.map((k,i)=>`<button type="button" data-k="${k}" style="--tc:${ETH[k][0]}">Relative to ${k.toLowerCase()}</button>`).join("");
+  const show=k=>{const [c,m]=ETH[k];T.querySelectorAll("button").forEach(b=>b.classList.toggle("on",b.dataset.k===k));
+    C.style.setProperty("--tc",c);C.innerHTML=Object.keys(m).map(w=>`<button type="button" class="echip" style="--tc:${c}">${w}</button>`).join("");
+    O.innerHTML=`Analytics professionals should aspire to be… <b>click a word</b>.`;
+    C.querySelectorAll(".echip").forEach(b=>{const f=()=>{C.querySelectorAll(".echip").forEach(x=>x.classList.toggle("on",x===b));O.innerHTML=`<b style="color:${c}">${b.textContent}:</b> ${m[b.textContent]}`};b.onclick=f;b.onmouseenter=f})};
+  T.querySelectorAll("button").forEach(b=>b.onclick=()=>show(b.dataset.k));show(keys[0])})();
+
+/* ---------- quizzes ---------- */
+const QUIZ={
+  q1:[
+    {q:"A café manager decides how many staff to roster <b>this Saturday</b>. What level of decision is this?",o:["Strategic","Tactical","Operational","Prescriptive"],a:2,w:"Day-to-day running, closest to the customer: operational. (Prescriptive is a type of analytics, not a decision level.)"},
+    {q:"Which is the <b>first</b> step of the decision-making process?",o:["Evaluate the alternatives","Identify and define the problem","Determine the criteria","Choose an alternative"],a:1,w:"You can't solve a problem you haven't defined. Then come criteria → alternatives → evaluate → choose."},
+    {q:"Business analytics is best defined as…",o:["Using software to store data","The scientific process of transforming data into insight for better decisions","Making decisions based on experience and intuition","Building computer hardware for big data"],a:1,w:"The key words are <b>scientific process</b>, <b>data → insight</b> and <b>better decisions</b>."}
+  ],
+  q2:[
+    {q:"A retailer uses a model to <b>forecast next month's demand</b>. This is…",o:["Descriptive analytics","Predictive analytics","Prescriptive analytics","Data security"],a:1,w:"A forecast of the future from past data is predictive. Adding a rule that decides the order quantity would make it prescriptive."},
+    {q:"Which statement about prescriptive analytics is <b>correct</b>?",o:["It only describes past data","A prescriptive model is a predictive model combined with a rule or optimisation","It is the same as a data dashboard","It cannot handle uncertainty"],a:1,w:"Prescriptive = prediction + rule (or optimisation). Simulation optimisation even handles uncertainty."},
+    {q:"Grab receiving thousands of GPS updates every few seconds best illustrates which V of big data?",o:["Volume","Velocity","Variety","Veracity"],a:1,w:"<b>Velocity</b> is the speed at which data arrives and must be processed."}
+  ],
+  exit:[
+    {q:"The board of a Malaysian airline decides whether to enter the European market. This decision is…",o:["Operational","Tactical","Strategic","Descriptive"],a:2,w:"It sets the overall, long-term direction of the organisation: strategic."},
+    {q:"<b>Cluster analysis</b> that groups customers by similar buying behaviour is an example of…",o:["Descriptive analytics (unsupervised learning)","Predictive analytics (supervised learning)","Prescriptive analytics (optimisation)","Cloud computing"],a:0,w:"Unsupervised learning finds patterns in data without a target to predict, so it's descriptive."},
+    {q:"In MapReduce, what does the <b>reduce</b> step do?",o:["Splits the data across computers","Deletes duplicate records","Combines the grouped results into a final answer","Encrypts the data"],a:2,w:"Map turns each piece into key-value pairs in parallel. Reduce combines them, e.g. sums the counts for each word."},
+    {q:"Under the GDPR, individuals have the right to…",o:["Sell their data to any company","Get a copy of their data and ask for it to be erased","Access other people's data","Refuse all cloud storage"],a:1,w:"GDPR gives rights to a copy of your data and to erasure, plus clear, withdrawable consent."},
+    {q:"An analyst reports results honestly even though they don't support what the manager hoped. Which INFORMS value is this?",o:["Cooperative","Honest","Inclusive","Vigilant"],a:1,w:"Being <b>honest</b> means reporting results truthfully, even when they don't give the desired outcome."}
+  ]
+};
+function buildQuiz(el){
+  const qs=QUIZ[el.dataset.quiz];let i=0,score=0;const res=[];
+  function render(){
+    if(i>=qs.length){const pct=Math.round(score/qs.length*100);
+      el.innerHTML=`<div class="qcard qdone"><div class="big">${score} / ${qs.length}</div><p class="lead">${pct===100?"Perfect! You've got Chapter 1 nailed.":pct>=60?"Good work. Review the ones you missed before the online quiz.":"Worth another look. Revisit the slides, then try again."}</p><div class="qnav" style="justify-content:center"><button class="btn ghost" type="button">Try again</button></div></div>`;
+      el.querySelector("button").onclick=()=>{i=0;score=0;res.length=0;render()};return}
+    const q=qs[i],L="ABCD";
+    el.innerHTML=`<div class="qhead"><div class="qdots">${qs.map((_,k)=>`<i class="${res[k]===true?"ok":res[k]===false?"no":k===i?"cur":""}"></i>`).join("")}</div><div class="qscore">Question ${i+1} of ${qs.length} · Score ${score}</div></div>
+      <div class="qcard"><div class="qq">${q.q}</div><div class="qopts">${q.o.map((o,k)=>`<button class="qopt" type="button" data-k="${k}"><span class="L">${L[k]}</span><span>${o}</span></button>`).join("")}</div>
+      <div class="qwhy"></div><div class="qnav"><button class="btn" type="button" disabled>${i===qs.length-1?"See score":"Next question"} →</button></div></div>`;
+    const why=el.querySelector(".qwhy"),nx=el.querySelector(".qnav .btn");
+    el.querySelectorAll(".qopt").forEach(b=>b.onclick=()=>{const k=+b.dataset.k,ok=k===q.a;if(ok)score++;res[i]=ok;
+      el.querySelectorAll(".qopt").forEach(x=>{x.disabled=true;if(+x.dataset.k===q.a)x.classList.add("right")});if(!ok)b.classList.add("wrong");
+      why.innerHTML=(ok?"✅ <b>Correct.</b> ":"❌ <b>Not quite.</b> ")+q.w;why.classList.add("show");
+      el.querySelector(".qscore").textContent=`Question ${i+1} of ${qs.length} · Score ${score}`;el.querySelectorAll(".qdots i")[i].className=ok?"ok":"no";nx.disabled=false;nx.focus()});
+    nx.onclick=()=>{i++;render()}}
+  render()}
+document.querySelectorAll(".quiz").forEach(buildQuiz);
+
+/* ---------- deck ---------- */
+const slides=[...document.querySelectorAll(".slide")],deck=document.getElementById("deck"),menuList=document.getElementById("menuList");
+const accOf=s=>getComputedStyle(s).getPropertyValue("--acc").trim()||"#4f46e5";
+slides.forEach((s,i)=>{
+  if(!s.classList.contains("title-slide")){const f=document.createElement("div");f.className="foot";f.innerHTML=`<span>BPMNK2033 · Chapter 1 · Introduction to Business Analytics</span><span>${i+1}</span>`;s.appendChild(f)}
+  const a=document.createElement("a");a.href="#"+(i+1);a.innerHTML=`<span class="n" style="background:${accOf(s)}">${i+1}</span>${esc(s.dataset.title||"Slide "+(i+1))}`;
+  a.onclick=e=>{e.preventDefault();go(i);toggleMenu(false)};menuList.appendChild(a)});
+let cur=-1;
+function go(n){n=Math.max(0,Math.min(slides.length-1,n));if(n===cur)return;
+  slides.forEach((s,i)=>{s.classList.toggle("active",i===n);s.classList.toggle("prev",i<n)});cur=n;
+  document.getElementById("count").textContent=`${n+1} / ${slides.length}`;
+  document.getElementById("progress").style.width=((n+1)/slides.length*100)+"%";
+  menuList.querySelectorAll("a").forEach((a,i)=>a.classList.toggle("cur",i===n));
+  if(location.hash!=="#"+(n+1))history.replaceState(null,"","#"+(n+1));
+  if(!timerStarted&&n>0)startTimer()}
+function fit(){const mobile=window.innerWidth<760;document.body.classList.toggle("mobile",mobile);
+  if(mobile){deck.style.transform="";return}
+  const sc=Math.min(window.innerWidth/1320,(window.innerHeight-70)/736);deck.style.transform=`scale(${sc})`}
+window.addEventListener("resize",fit);
+document.addEventListener("keydown",e=>{if(e.target.matches("input,select,textarea"))return;if(document.body.classList.contains("mobile"))return;const k=e.key;
+  if(["ArrowRight","PageDown"," "].includes(k)){e.preventDefault();go(cur+1)}else if(["ArrowLeft","PageUp"].includes(k)){e.preventDefault();go(cur-1)}
+  else if(k==="Home")go(0);else if(k==="End")go(slides.length-1);else if(k==="m"||k==="M")toggleMenu();else if(k==="f"||k==="F")toggleFs();else if(k==="t"||k==="T")toggleTimer();else if(k==="Escape")toggleMenu(false)});
+document.getElementById("prevBtn").onclick=()=>go(cur-1);document.getElementById("nextBtn").onclick=()=>go(cur+1);
+document.getElementById("menuBtn").onclick=()=>toggleMenu();document.getElementById("scrim").onclick=()=>toggleMenu(false);document.getElementById("fsBtn").onclick=toggleFs;
+function toggleMenu(v){const m=document.getElementById("menu");const on=v===undefined?!m.classList.contains("open"):v;m.classList.toggle("open",on);document.getElementById("scrim").classList.toggle("show",on)}
+function toggleFs(){if(!document.fullscreenElement)document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen().catch(()=>{});else document.exitFullscreen()}
+let tx=null;document.addEventListener("touchstart",e=>{if(e.target.closest(".quiz,.sort,input,.tabs,.mr,.vs"))return;tx=e.touches[0].clientX},{passive:true});
+document.addEventListener("touchend",e=>{if(tx===null||document.body.classList.contains("mobile"))return;const dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>60)go(cur+(dx<0?1:-1));tx=null});
+const LIMIT=70*60;let tStart=0,tAcc=0,tRun=false,timerStarted=false;const tEl=document.getElementById("timer");
+function startTimer(){timerStarted=true;if(!tRun){tRun=true;tStart=Date.now()}}
+function toggleTimer(){timerStarted=true;if(tRun){tAcc+=Date.now()-tStart;tRun=false}else{tRun=true;tStart=Date.now()}paint()}
+function paint(){const s=Math.floor((tAcc+(tRun?Date.now()-tStart:0))/1000);tEl.textContent=(tRun?"⏸ ":"▶ ")+String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0");tEl.classList.toggle("over",s>LIMIT)}
+setInterval(paint,1000);tEl.onclick=toggleTimer;tEl.ondblclick=()=>{tAcc=0;tRun=false;paint()};
+fit();const h=parseInt(location.hash.slice(1),10);go(isNaN(h)?0:h-1);
+window.addEventListener("hashchange",()=>{const n=parseInt(location.hash.slice(1),10);if(!isNaN(n))go(n-1)});
+</script>
+</body>
+</html>

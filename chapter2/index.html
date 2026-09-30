@@ -1,0 +1,1132 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 2 · Basic Excel Formulas | BPMNK2033</title>
+<meta name="description" content="BPMNK2033 Business Intelligence & Data Analytics — Chapter 2: Basic Excel Formulas and Functions. Interactive slides with a live formula playground.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#e9eef6; --paper:#ffffff; --ink:#0f172a; --muted:#475569; --soft:#64748b; --line:#e2e8f0; --line2:#cbd5e1;
+  --blue:#2563eb; --teal:#0d9488; --violet:#7c3aed; --amber:#d97706; --orange:#ea580c; --green:#16a34a;
+  --rose:#e11d48; --pink:#db2777; --cyan:#0891b2; --indigo:#4f46e5; --xl:#107c41;
+  --acc:var(--blue);
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --sans:'Plus Jakarta Sans',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+body{overflow:hidden;background:radial-gradient(1200px 600px at 10% 0%,#dbeafe 0,transparent 60%),radial-gradient(900px 600px at 100% 100%,#fce7f3 0,transparent 55%),var(--bg)}
+button{font-family:inherit}
+/* ---------- stage ---------- */
+#viewport{position:fixed;inset:0 0 58px 0;display:flex;align-items:center;justify-content:center}
+#deck{width:1280px;height:720px;position:relative;transform-origin:center center;flex:none}
+.slide{position:absolute;inset:0;background:var(--paper);border-radius:22px;box-shadow:0 30px 80px -30px rgba(15,23,42,.35),0 2px 6px rgba(15,23,42,.06);
+  padding:44px 56px 64px;overflow:hidden;opacity:0;visibility:hidden;transform:translateX(40px) scale(.985);transition:opacity .45s ease,transform .45s cubic-bezier(.2,.7,.2,1),visibility 0s .45s}
+.slide.active{opacity:1;visibility:visible;transform:none;transition:opacity .45s ease,transform .45s cubic-bezier(.2,.7,.2,1)}
+.slide.prev{transform:translateX(-40px) scale(.985)}
+.slide::before{content:"";position:absolute;left:0;top:0;right:0;height:6px;background:linear-gradient(90deg,var(--acc),color-mix(in srgb,var(--acc) 40%,#fff))}
+.slide::after{content:"";position:absolute;right:-120px;top:-120px;width:340px;height:340px;border-radius:50%;background:color-mix(in srgb,var(--acc) 9%,transparent);pointer-events:none}
+[data-acc=blue]{--acc:var(--blue)}[data-acc=teal]{--acc:var(--teal)}[data-acc=violet]{--acc:var(--violet)}[data-acc=amber]{--acc:var(--amber)}
+[data-acc=orange]{--acc:var(--orange)}[data-acc=green]{--acc:var(--green)}[data-acc=rose]{--acc:var(--rose)}[data-acc=pink]{--acc:var(--pink)}
+[data-acc=cyan]{--acc:var(--cyan)}[data-acc=indigo]{--acc:var(--indigo)}[data-acc=xl]{--acc:var(--xl)}
+.kicker{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--acc);margin-bottom:6px}
+.kicker::before{content:"";width:18px;height:3px;border-radius:2px;background:var(--acc)}
+h1,h2,h3{margin:0;letter-spacing:-.02em}
+h2{font-size:38px;font-weight:800;line-height:1.1;margin-bottom:18px}
+h2 .fn{font-family:var(--mono);color:var(--acc);font-weight:700}
+h3{font-size:18px;font-weight:700;margin-bottom:8px}
+p{margin:0 0 12px;line-height:1.55;font-size:17px;color:var(--muted)}
+.lead{font-size:19px;color:#334155}
+code,.code{font-family:var(--mono);font-size:.92em}
+.cols{display:grid;grid-template-columns:1fr 1.25fr;gap:32px;align-items:start}
+.cols.even{grid-template-columns:1fr 1fr}
+.cols.wide-r{grid-template-columns:.86fr 1.5fr}
+.syntax{font-family:var(--mono);font-size:17px;background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:12px;margin:4px 0 14px;line-height:1.5;overflow-x:auto}
+.syntax .f{color:#7dd3fc;font-weight:700}.syntax .a{color:#fcd34d}.syntax .o{color:#94a3b8}.syntax .s{color:#86efac}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px;box-shadow:0 1px 2px rgba(15,23,42,.04)}
+.tint{background:color-mix(in srgb,var(--acc) 7%,#fff);border-color:color-mix(in srgb,var(--acc) 25%,#fff)}
+.callout{border-left:4px solid var(--acc);background:color-mix(in srgb,var(--acc) 7%,#fff);padding:10px 14px;border-radius:0 12px 12px 0;font-size:15px;color:#334155;line-height:1.5;margin:10px 0}
+.callout b{color:var(--ink)}
+.callout.warn{--acc:var(--rose)}
+ul.tidy{margin:0;padding:0;list-style:none}
+ul.tidy li{position:relative;padding:6px 0 6px 26px;font-size:16.5px;line-height:1.45;color:#334155}
+ul.tidy li::before{content:"";position:absolute;left:4px;top:13px;width:10px;height:10px;border-radius:3px;background:var(--acc);transform:rotate(45deg)}
+.pill{display:inline-block;font-family:var(--mono);font-size:13px;font-weight:600;padding:3px 9px;border-radius:999px;background:color-mix(in srgb,var(--acc) 12%,#fff);color:color-mix(in srgb,var(--acc) 80%,#000);border:1px solid color-mix(in srgb,var(--acc) 30%,#fff)}
+.foot{position:absolute;left:56px;right:56px;bottom:18px;display:flex;justify-content:space-between;font-size:12px;color:var(--soft);pointer-events:none}
+table.mini{border-collapse:collapse;width:100%;font-size:15px}
+table.mini th,table.mini td{padding:7px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+table.mini th{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--soft);font-weight:700}
+table.mini td code{color:var(--acc);font-weight:600}
+/* ---------- chrome ---------- */
+#progress{position:fixed;left:0;top:0;height:4px;background:linear-gradient(90deg,var(--blue),var(--violet),var(--pink),var(--orange));width:0;transition:width .4s ease;z-index:30}
+#hud{position:fixed;right:16px;bottom:14px;display:flex;gap:8px;align-items:center;z-index:30}
+#hud button,#hud .count{height:38px;min-width:38px;border-radius:12px;border:1px solid var(--line2);background:rgba(255,255,255,.92);backdrop-filter:blur(6px);color:var(--ink);font-size:15px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:0 10px;box-shadow:0 4px 14px -6px rgba(15,23,42,.25)}
+#hud button:hover{border-color:var(--blue);color:var(--blue)}
+#hud .count{cursor:default;font-variant-numeric:tabular-nums;font-size:13px}
+#timer{font-variant-numeric:tabular-nums;font-size:13px!important}
+#timer.over{color:var(--rose)!important;border-color:var(--rose)!important}
+#menu{position:fixed;left:0;top:0;bottom:0;width:340px;background:#fff;box-shadow:20px 0 60px -20px rgba(15,23,42,.35);z-index:40;transform:translateX(-105%);transition:transform .3s ease;overflow-y:auto;padding:20px 14px}
+#menu.open{transform:none}
+#menu h4{margin:4px 10px 12px;font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--soft)}
+#menu a{display:flex;gap:10px;align-items:center;padding:8px 10px;border-radius:10px;color:var(--ink);text-decoration:none;font-size:14.5px;font-weight:500}
+#menu a:hover{background:#f1f5f9}
+#menu a.cur{background:#eff6ff;color:var(--blue);font-weight:700}
+#menu a .n{width:26px;height:26px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex:none}
+#scrim{position:fixed;inset:0;background:rgba(15,23,42,.25);z-index:35;display:none}
+#scrim.show{display:block}
+#help{position:fixed;left:16px;bottom:14px;font-size:12px;color:var(--soft);z-index:30;background:rgba(255,255,255,.8);padding:6px 10px;border-radius:10px;border:1px solid var(--line)}
+kbd{font-family:var(--mono);font-size:11px;border:1px solid var(--line2);border-bottom-width:2px;border-radius:5px;padding:0 5px;background:#fff;color:var(--ink)}
+/* ---------- title ---------- */
+.title-slide{background:linear-gradient(135deg,#0b3d2e 0%,#107c41 45%,#16a34a 100%)!important;color:#fff}
+.title-slide::before{display:none}
+.title-slide::after{background:rgba(255,255,255,.07);width:520px;height:520px;right:-160px;top:-160px}
+.title-slide .kicker{color:#bbf7d0}.title-slide .kicker::before{background:#bbf7d0}
+.title-slide h1{font-size:64px;line-height:1.02;font-weight:800;margin:14px 0 18px;max-width:700px}
+.title-slide h1 span{color:#bbf7d0}
+.title-slide p{color:#dcfce7;font-size:20px;max-width:600px}
+.title-meta{position:absolute;left:56px;bottom:56px;display:flex;gap:28px;font-size:14px;color:#dcfce7}
+.title-meta b{display:block;color:#fff;font-size:16px}
+.floaters{position:absolute;right:40px;top:120px;width:400px;height:480px}
+.floater{position:absolute;font-family:var(--mono);font-size:17px;font-weight:600;background:rgba(255,255,255,.96);color:#0f172a;padding:10px 14px;border-radius:12px;box-shadow:0 18px 40px -16px rgba(0,0,0,.45);animation:bob 6s ease-in-out infinite;white-space:nowrap}
+.floater i{font-style:normal;color:var(--xl)}
+.floater.b{animation-delay:-1.5s}.floater.c{animation-delay:-3s}.floater.d{animation-delay:-4.5s}.floater.e{animation-delay:-2.2s}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+/* ---------- agenda ---------- */
+.agenda{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;margin-top:22px}
+.ag{border-radius:16px;padding:16px 14px;color:#fff;min-height:250px;display:flex;flex-direction:column;position:relative;overflow:hidden;transition:transform .2s}
+.ag:hover{transform:translateY(-4px)}
+.ag .t{font-family:var(--mono);font-size:13px;opacity:.9}
+.ag .h{font-size:18px;font-weight:800;margin:8px 0 6px;line-height:1.2}
+.ag .d{font-size:13.5px;opacity:.95;line-height:1.45}
+.ag .m{margin-top:auto;font-size:30px;font-weight:800;opacity:.9}
+.ag .m small{font-size:13px;font-weight:600}
+.bar70{display:flex;height:14px;border-radius:8px;overflow:hidden;margin-top:18px}
+/* ---------- outcomes ---------- */
+.oc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:8px}
+.oc{border-radius:16px;padding:18px;border:1px solid var(--line);background:#fff;position:relative}
+.oc .num{width:34px;height:34px;border-radius:10px;color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;margin-bottom:10px}
+.oc h3{font-size:17px}
+.oc p{font-size:14.5px;margin:0}
+.oc .fns{margin-top:10px;display:flex;flex-wrap:wrap;gap:6px}
+/* ---------- anatomy ---------- */
+.anat{font-family:var(--mono);font-size:44px;font-weight:700;display:flex;flex-wrap:wrap;gap:2px;padding:26px 24px;background:#0f172a;border-radius:18px;color:#e2e8f0;margin:6px 0 16px}
+.anat span{padding:4px 6px;border-radius:8px;cursor:pointer;transition:background .15s,transform .15s;position:relative}
+.anat span:hover,.anat span.on{background:rgba(255,255,255,.12);transform:translateY(-2px)}
+.anat .p-eq{color:#fda4af}.anat .p-fn{color:#7dd3fc}.anat .p-br{color:#cbd5e1}.anat .p-rg{color:#fcd34d}.anat .p-cm{color:#94a3b8}.anat .p-tx{color:#86efac}.anat .p-lt{color:#c4b5fd}
+.anat.small{font-size:30px;padding:20px}
+.anat-explain{min-height:90px;display:flex;gap:14px;align-items:flex-start}
+.anat-explain .big{font-family:var(--mono);font-size:22px;font-weight:700;color:var(--acc);min-width:120px}
+/* ---------- sheet widget ---------- */
+.sheet-w{border:1px solid var(--line2);border-radius:14px;overflow:hidden;background:#fff;box-shadow:0 10px 30px -18px rgba(15,23,42,.35)}
+.sheet-w .fbar{display:flex;align-items:center;gap:0;border-bottom:1px solid var(--line2);background:#f8fafc}
+.sheet-w .fbar .nm{font-family:var(--mono);font-size:12.5px;color:var(--soft);width:56px;text-align:center;border-right:1px solid var(--line2);padding:10px 0;font-weight:600}
+.sheet-w .fbar .fx{font-family:Georgia,serif;font-style:italic;color:var(--xl);font-weight:700;padding:0 10px;font-size:16px}
+.sheet-w .fbar input{flex:1;border:0;outline:0;background:#fff;font-family:var(--mono);font-size:15px;padding:10px 12px;color:var(--ink);min-width:0;border-left:1px solid var(--line)}
+.sheet-w .fbar input:focus{box-shadow:inset 0 -2px 0 var(--xl)}
+.sheet-w .fbar button{border:0;background:var(--xl);color:#fff;font-weight:700;font-size:13px;padding:0 14px;align-self:stretch;cursor:pointer}
+.sheet-w .fbar button:hover{filter:brightness(1.1)}
+.sheet-w .presets{display:flex;flex-wrap:wrap;gap:6px;padding:8px 10px;border-bottom:1px solid var(--line);background:#fff}
+.sheet-w .presets button{font-family:var(--mono);font-size:12px;border:1px solid var(--line2);background:#f8fafc;border-radius:8px;padding:4px 8px;cursor:pointer;color:#334155;transition:all .15s}
+.sheet-w .presets button:hover,.sheet-w .presets button.on{border-color:var(--acc);color:var(--acc);background:color-mix(in srgb,var(--acc) 8%,#fff)}
+.sheet-w .out{display:flex;align-items:center;gap:12px;padding:9px 12px;border-bottom:1px solid var(--line);min-height:44px;background:linear-gradient(90deg,color-mix(in srgb,var(--acc) 6%,#fff),#fff)}
+.sheet-w .out .lbl{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--soft)}
+.sheet-w .out .val{font-family:var(--mono);font-size:20px;font-weight:700;color:var(--ink)}
+.sheet-w .out .val.err{color:var(--rose)}
+.sheet-w .out .msg{font-size:13px;color:var(--muted);line-height:1.35;flex:1}
+.sheet-w .out .msg.err{color:#9f1239}
+.sheet-w .hint{font-size:12.5px;color:#92400e;background:#fffbeb;border-bottom:1px solid #fde68a;padding:6px 12px;display:none}
+.sheet-w .hint.show{display:block}
+.sheet-w .opts{display:flex;gap:14px;align-items:center;padding:6px 12px;font-size:13px;color:var(--muted);border-bottom:1px solid var(--line)}
+.sheet-w .opts label{display:flex;gap:6px;align-items:center;cursor:pointer}
+.gridwrap{overflow:auto;max-height:396px}
+.slide[data-title="Formula playground"] .gridwrap{max-height:360px}
+table.grid{border-collapse:separate;border-spacing:0;font-size:12.5px;width:100%;font-variant-numeric:tabular-nums}
+table.grid th,table.grid td{border-right:1px solid #e5e7eb;border-bottom:1px solid #e5e7eb;padding:0 8px;height:17px;line-height:17px;white-space:nowrap;transition:background .2s,box-shadow .2s}
+table.grid thead th{position:sticky;top:0;background:#f1f5f9;color:#475569;font-weight:600;font-size:11.5px;text-align:center;z-index:2;height:22px}
+table.grid tbody th{background:#f1f5f9;color:#64748b;font-weight:600;font-size:11px;text-align:center;width:34px;position:sticky;left:0;z-index:1}
+table.grid td.num{text-align:right}
+table.grid td.hdr{font-weight:700;color:#0f172a;background:#f8fafc}
+table.grid td.used{background:color-mix(in srgb,var(--acc) 14%,#fff);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--acc) 40%,#fff)}
+table.grid td.hit{background:#fde68a!important;box-shadow:inset 0 0 0 2px #d97706!important;font-weight:700}
+table.grid td.scan{background:#bfdbfe!important}
+table.grid td.fillc{font-weight:700;text-align:center}
+table.grid td.good{color:#15803d;background:#f0fdf4}
+table.grid td.bad{color:#be123c;background:#fff1f2}
+table.grid td.neu{color:#1e3a8a;background:#eff6ff}
+table.grid td.f2{box-shadow:inset 0 0 0 2px var(--xl)!important}
+table.grid th.colsel{background:color-mix(in srgb,var(--acc) 22%,#f1f5f9);color:var(--ink)}
+.sheet-w.nogrid .gridwrap{display:none}
+/* ---------- quiz ---------- */
+.quiz{max-width:880px}
+.qhead{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.qdots{display:flex;gap:6px}
+.qdots i{width:28px;height:8px;border-radius:4px;background:var(--line)}
+.qdots i.cur{background:var(--acc)}.qdots i.ok{background:var(--green)}.qdots i.no{background:var(--rose)}
+.qscore{margin-left:auto;font-weight:700;color:var(--muted);font-size:14px}
+.qcard{border:1px solid var(--line);border-radius:18px;padding:22px 24px;background:#fff;box-shadow:0 14px 34px -22px rgba(15,23,42,.35)}
+.qcard .qq{font-size:22px;font-weight:700;line-height:1.35;margin-bottom:16px}
+.qcard .qq code{background:#f1f5f9;padding:1px 6px;border-radius:6px;color:#0f172a}
+.qopts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.qopt{text-align:left;border:2px solid var(--line);background:#fff;border-radius:14px;padding:12px 14px;font-size:16px;cursor:pointer;display:flex;gap:10px;align-items:flex-start;transition:all .15s;color:var(--ink);line-height:1.35}
+.qopt:hover:not(:disabled){border-color:var(--acc);background:color-mix(in srgb,var(--acc) 5%,#fff)}
+.qopt .L{flex:none;width:26px;height:26px;border-radius:8px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:var(--muted)}
+.qopt code{font-size:14.5px}
+.qopt.right{border-color:var(--green);background:#f0fdf4}.qopt.right .L{background:var(--green);color:#fff}
+.qopt.wrong{border-color:var(--rose);background:#fff1f2}.qopt.wrong .L{background:var(--rose);color:#fff}
+.qopt:disabled{cursor:default}
+.qwhy{margin-top:14px;font-size:15px;color:#334155;padding:10px 14px;border-radius:12px;background:#f8fafc;display:none;line-height:1.5}
+.qwhy.show{display:block}
+.qnav{display:flex;justify-content:flex-end;margin-top:14px;gap:10px}
+.btn{border:0;border-radius:12px;padding:10px 18px;font-weight:700;font-size:15px;cursor:pointer;background:var(--acc);color:#fff;box-shadow:0 8px 20px -10px var(--acc)}
+.btn.ghost{background:#fff;color:var(--acc);border:2px solid var(--acc);box-shadow:none}
+.btn:disabled{opacity:.4;cursor:default}
+.qdone{text-align:center;padding:26px}
+.qdone .big{font-size:64px;font-weight:800;color:var(--acc)}
+/* ---------- misc components ---------- */
+.ops{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.op{border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:#fff}
+.op b{font-family:var(--mono);font-size:22px;color:var(--acc)}
+.op span{display:block;font-size:13px;color:var(--muted)}
+.tt{border-collapse:collapse;font-size:15px;margin-top:6px}
+.tt th,.tt td{padding:6px 12px;border:1px solid var(--line);text-align:center}
+.tt th{background:#f8fafc;font-size:12.5px;color:var(--soft)}
+.T{color:var(--green);font-weight:800}.F{color:var(--rose);font-weight:800}
+.errgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.errc{border-radius:14px;padding:14px;border:1px solid var(--line);background:#fff;cursor:pointer;transition:transform .15s,box-shadow .15s}
+.errc:hover{transform:translateY(-3px);box-shadow:0 14px 30px -18px rgba(15,23,42,.4)}
+.errc .code{font-family:var(--mono);font-weight:800;font-size:20px;color:var(--rose)}
+.errc p{font-size:13.5px;margin:6px 0 0;line-height:1.45}
+.errc .try{font-family:var(--mono);font-size:12px;color:var(--soft);margin-top:8px;display:block}
+.recap{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.rc{border-radius:14px;padding:14px;color:#fff}
+.rc b{font-family:var(--mono);font-size:17px;display:block;margin-bottom:4px}
+.rc span{font-size:13.5px;opacity:.95;line-height:1.4;display:block}
+.build{display:flex;flex-direction:column;gap:10px}
+.build label{font-size:13px;font-weight:700;color:var(--soft);text-transform:uppercase;letter-spacing:.06em}
+.build select{font-family:var(--sans);font-size:15px;padding:9px 10px;border-radius:10px;border:1px solid var(--line2);background:#fff;width:100%}
+.vparts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:6px 0 10px}
+.vparts div{border-radius:10px;padding:8px 10px;font-size:13.5px;line-height:1.35;color:#334155;background:#f8fafc;border:1px solid var(--line)}
+.vparts b{font-family:var(--mono);display:block;font-size:13px}
+.dict td:first-child{font-family:var(--mono);font-weight:700;color:var(--acc);width:40px}
+.src{font-size:12px;color:var(--soft);margin-top:10px;line-height:1.4}
+.vh{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}
+.vh .card{font-size:14px;color:#334155;line-height:1.45}
+.arrowdemo{display:flex;gap:4px;margin:8px 0}
+.arrowdemo i{width:26px;height:18px;border-radius:4px;background:#e2e8f0}
+.arrowdemo i.k{background:var(--acc)}.arrowdemo i.r{background:#fcd34d}
+/* ---------- mobile: stacked scroll ---------- */
+body.mobile{overflow:auto}
+body.mobile #viewport{position:static;inset:auto;display:block;padding:12px 12px 90px}
+body.mobile #deck{width:auto;height:auto;transform:none!important}
+body.mobile .slide{position:relative;inset:auto;opacity:1;visibility:visible;transform:none;margin-bottom:16px;padding:28px 16px 40px;border-radius:18px}
+body.mobile .cols,body.mobile .cols.even,body.mobile .cols.wide-r,body.mobile .vh{grid-template-columns:1fr;gap:18px}
+body.mobile .agenda{grid-template-columns:1fr 1fr}
+body.mobile .ag{min-height:0}
+body.mobile .oc-grid,body.mobile .errgrid,body.mobile .recap{grid-template-columns:1fr}
+body.mobile .qopts{grid-template-columns:1fr}
+body.mobile h2{font-size:28px}
+body.mobile .title-slide h1{font-size:40px}
+body.mobile .floaters{display:none}
+body.mobile .title-meta{position:static;margin-top:24px;flex-wrap:wrap}
+body.mobile .anat{font-size:24px}
+body.mobile .foot{position:static;margin-top:16px}
+body.mobile #help,body.mobile #hud .count,body.mobile #prevBtn,body.mobile #nextBtn,body.mobile #timer,body.mobile #fsBtn{display:none}
+body.mobile .ops{grid-template-columns:1fr 1fr}
+@media print{body{overflow:visible}#hud,#help,#progress,#menu{display:none}#viewport{position:static;display:block}#deck{transform:none!important;width:auto;height:auto}.slide{position:relative;opacity:1;visibility:visible;transform:none;page-break-after:always;box-shadow:none;border:1px solid #ddd;width:1280px;height:720px;margin:0 auto 20px}}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+<div id="viewport"><div id="deck">
+
+<!-- 1 TITLE -->
+<section class="slide title-slide" data-title="Basic Excel Formulas & Functions" data-acc="xl">
+  <div class="kicker">BPMNK2033 · Chapter 2</div>
+  <h1>Basic Excel <span>Formulas</span> &amp; Functions</h1>
+  <p>From raw numbers to real answers — summarise, decide, count and look up data using the <b style="color:#fff">Top-20 Vehicles 2021</b> dataset.</p>
+  <div class="floaters">
+    <div class="floater" style="left:10px;top:0">=<i>SUM</i>(D2:D21)</div>
+    <div class="floater b" style="left:170px;top:88px">=<i>MAX</i>(D2:D21)</div>
+    <div class="floater c" style="left:0;top:190px">=<i>IF</i>(D2&gt;E2,"GROWTH","DECLINE")</div>
+    <div class="floater d" style="left:120px;top:290px">=<i>COUNTIF</i>(B2:B21,"Toyota")</div>
+    <div class="floater e" style="left:30px;top:390px">=<i>VLOOKUP</i>("Honda Civic",C2:E21,2,FALSE)</div>
+  </div>
+  <div class="title-meta">
+    <div><b>Business Intelligence &amp; Data Analytics</b>School of Business Management, UUM</div>
+    <div><b>Dr. Khairol Anuar Ishak</b>Session A261 · Sep Sem 2026/2027</div>
+    <div><b>Navigate</b><kbd>→</kbd> <kbd>Space</kbd> next · <kbd>M</kbd> menu · <kbd>F</kbd> full screen</div>
+  </div>
+</section>
+
+<!-- 2 PLAN -->
+<section class="slide" data-title="Today's plan (70 minutes)" data-acc="indigo">
+  <div class="kicker">Roadmap</div>
+  <h2>Today's plan — 70 minutes</h2>
+  <p class="lead">Short explanations, then <b>you try every function live</b> on these slides. Keep Excel open and follow along.</p>
+  <div class="agenda">
+    <div class="ag" style="background:linear-gradient(160deg,#4f46e5,#6366f1)"><span class="t">00–05</span><div class="h">Warm-up &amp; dataset</div><div class="d">Meet the Top-20 vehicles data.</div><div class="m">5<small> min</small></div></div>
+    <div class="ag" style="background:linear-gradient(160deg,#0891b2,#06b6d4)"><span class="t">05–12</span><div class="h">Formula anatomy</div><div class="d">=, functions, arguments, ranges.</div><div class="m">7<small> min</small></div></div>
+    <div class="ag" style="background:linear-gradient(160deg,#2563eb,#3b82f6)"><span class="t">12–27</span><div class="h">Summarise</div><div class="d">SUM · MIN · MAX · AVERAGE + quick check.</div><div class="m">15<small> min</small></div></div>
+    <div class="ag" style="background:linear-gradient(160deg,#ea580c,#f97316)"><span class="t">27–42</span><div class="h">Decide</div><div class="d">IF · AND · OR + quick check.</div><div class="m">15<small> min</small></div></div>
+    <div class="ag" style="background:linear-gradient(160deg,#16a34a,#22c55e)"><span class="t">42–50</span><div class="h">Count</div><div class="d">COUNT · COUNTA · COUNTIF.</div><div class="m">8<small> min</small></div></div>
+    <div class="ag" style="background:linear-gradient(160deg,#db2777,#ec4899)"><span class="t">50–62</span><div class="h">Look up</div><div class="d">VLOOKUP · HLOOKUP · errors.</div><div class="m">12<small> min</small></div></div>
+    <div class="ag" style="background:linear-gradient(160deg,#7c3aed,#8b5cf6)"><span class="t">62–70</span><div class="h">Exit ticket</div><div class="d">5-question check + your exercise.</div><div class="m">8<small> min</small></div></div>
+  </div>
+  <div class="bar70"><i style="flex:5;background:#6366f1"></i><i style="flex:7;background:#06b6d4"></i><i style="flex:15;background:#3b82f6"></i><i style="flex:15;background:#f97316"></i><i style="flex:8;background:#22c55e"></i><i style="flex:12;background:#ec4899"></i><i style="flex:8;background:#8b5cf6"></i></div>
+</section>
+
+<!-- 3 OUTCOMES -->
+<section class="slide" data-title="Learning outcomes" data-acc="violet">
+  <div class="kicker">By the end of this lecture</div>
+  <h2>You will be able to…</h2>
+  <div class="oc-grid">
+    <div class="oc"><div class="num" style="background:var(--cyan)">1</div><h3>Write formulas correctly</h3><p>Use =, brackets, commas, cell references and ranges without errors.</p></div>
+    <div class="oc"><div class="num" style="background:var(--blue)">2</div><h3>Summarise data</h3><p>Find totals, extremes and typical values.</p><div class="fns"><span class="pill" style="--acc:var(--blue)">SUM</span><span class="pill" style="--acc:var(--teal)">MIN</span><span class="pill" style="--acc:var(--teal)">MAX</span><span class="pill" style="--acc:var(--violet)">AVERAGE</span></div></div>
+    <div class="oc"><div class="num" style="background:var(--orange)">3</div><h3>Make decisions</h3><p>Label and flag records based on conditions.</p><div class="fns"><span class="pill" style="--acc:var(--orange)">IF</span><span class="pill" style="--acc:var(--amber)">AND</span><span class="pill" style="--acc:var(--rose)">OR</span></div></div>
+    <div class="oc"><div class="num" style="background:var(--green)">4</div><h3>Count what matters</h3><p>Count numbers, entries and records that meet a rule.</p><div class="fns"><span class="pill" style="--acc:var(--green)">COUNT</span><span class="pill" style="--acc:var(--green)">COUNTA</span><span class="pill" style="--acc:var(--green)">COUNTIF</span></div></div>
+    <div class="oc"><div class="num" style="background:var(--pink)">5</div><h3>Retrieve values</h3><p>Pull a matching value from a table automatically.</p><div class="fns"><span class="pill" style="--acc:var(--pink)">VLOOKUP</span><span class="pill" style="--acc:var(--pink)">HLOOKUP</span></div></div>
+    <div class="oc"><div class="num" style="background:var(--rose)">6</div><h3>Fix common errors</h3><p>Read and repair #NAME?, #VALUE!, #N/A and #REF!.</p></div>
+  </div>
+  <div class="callout" style="--acc:var(--violet);margin-top:18px"><b>Why it matters in BI:</b> every dashboard, KPI and report is built on formulas like these. Get the formula right and the insight follows.</div>
+</section>
+
+<!-- 4 DATASET -->
+<section class="slide" data-title="Meet the dataset" data-acc="xl">
+  <div class="kicker">Dataset · top20vehicles2021</div>
+  <h2>Meet the dataset</h2>
+  <div class="cols wide-r">
+    <div>
+      <p class="lead">The 20 best-selling vehicle models of 2021, with unit sales for 2021 and 2020.</p>
+      <table class="mini dict">
+        <tr><th>Col</th><th>Field</th><th>Type</th></tr>
+        <tr><td>A</td><td>Rank (2021)</td><td>Number</td></tr>
+        <tr><td>B</td><td>Make (brand)</td><td>Text</td></tr>
+        <tr><td>C</td><td>Model</td><td>Text</td></tr>
+        <tr><td>D</td><td>Sales 2021 (units)</td><td>Number</td></tr>
+        <tr><td>E</td><td>Sales 2020 (units)</td><td>Number</td></tr>
+      </table>
+      <div class="callout"><b>Think first:</b> Which models <i>grew</i> in 2021? How many sold more than 250,000? By the end of today, formulas will answer these in seconds.</div>
+      <p class="src">Row 1 holds headers, so data sits in rows 2–21. Figures are approximate U.S. unit sales compiled from public industry reports, for teaching use.</p>
+    </div>
+    <div><div class="sheet" data-cols="A-E" data-formula="=D2" data-presets="=D2|=C2|=E21|=B5"></div></div>
+  </div>
+</section>
+
+<!-- 5 ANATOMY -->
+<section class="slide" data-title="Anatomy of a formula" data-acc="cyan">
+  <div class="kicker">Foundations</div>
+  <h2>Anatomy of a formula</h2>
+  <p>Click or hover each part.</p>
+  <div class="anat" data-anat="a1">
+    <span class="p-eq" data-k="eq">=</span><span class="p-fn" data-k="fn">SUM</span><span class="p-br" data-k="br">(</span><span class="p-rg" data-k="rg">D2:D21</span><span class="p-br" data-k="br">)</span>
+  </div>
+  <div class="anat small" data-anat="a1">
+    <span class="p-eq" data-k="eq">=</span><span class="p-fn" data-k="fn">IF</span><span class="p-br" data-k="br">(</span><span class="p-lt" data-k="lt">D2&gt;E2</span><span class="p-cm" data-k="cm">,</span><span class="p-tx" data-k="tx">"GROWTH"</span><span class="p-cm" data-k="cm">,</span><span class="p-tx" data-k="tx">"DECLINE"</span><span class="p-br" data-k="br">)</span>
+  </div>
+  <div class="card tint anat-explain" id="anatOut"><div class="big">=</div><div><h3>Equals sign</h3><p style="margin:0">Every formula starts with <code>=</code>. Without it, Excel treats what you type as plain text.</p></div></div>
+</section>
+
+<!-- 6 REFERENCES -->
+<section class="slide" data-title="Cell references & ranges" data-acc="cyan">
+  <div class="kicker">Foundations</div>
+  <h2>Cell references &amp; ranges</h2>
+  <div class="cols wide-r">
+    <div>
+      <table class="mini">
+        <tr><th>You type</th><th>Meaning</th></tr>
+        <tr><td><code>D2</code></td><td>One cell: column D, row 2</td></tr>
+        <tr><td><code>D2:D21</code></td><td>Range — the colon means <b>“to”</b></td></tr>
+        <tr><td><code>B2:E2</code></td><td>A row range (one record)</td></tr>
+        <tr><td><code>C2:E6</code></td><td>A block: 3 columns × 5 rows</td></tr>
+        <tr><td><code>$D$2</code></td><td>Absolute — stays fixed when copied</td></tr>
+      </table>
+      <div class="callout"><b>Relative vs absolute:</b> copy <code>=D2&gt;E2</code> down one row and Excel changes it to <code>=D3&gt;E3</code>. Add <code>$</code> to lock a reference: <code>$D$2</code> never moves.</div>
+      <p style="font-size:15px">Type a range in the formula bar → the cells light up.</p>
+    </div>
+    <div><div class="sheet" data-cols="A-E" data-formula="=D2:D21" data-presets="=D2:D21|=B2:E2|=C2:E6|=A1:E1"></div></div>
+  </div>
+</section>
+
+<!-- 7 SUM -->
+<section class="slide" data-title="SUM" data-acc="blue">
+  <div class="kicker">Summarise · 1 of 3</div>
+  <h2><span class="fn">SUM</span> — add it all up</h2>
+  <div class="cols wide-r">
+    <div>
+      <div class="syntax"><span class="o">=</span><span class="f">SUM</span><span class="o">(</span><span class="a">number1</span><span class="o">, [</span><span class="a">number2</span><span class="o">], …)</span></div>
+      <p>Adds values. Give it a range, single cells, or a mix: <code>=SUM(D2:D21)</code>, <code>=SUM(D2,D5,D9)</code>.</p>
+      <ul class="tidy">
+        <li>Total 2021 sales of the top 20: <code>=SUM(D2:D21)</code></li>
+        <li><b>Your turn:</b> total for 2020?</li>
+        <li>Did the top 20 grow overall? Subtract the two totals.</li>
+      </ul>
+      <div class="callout"><b>Shortcut:</b> select the cell below a column and press <kbd>Alt</kbd>+<kbd>=</kbd> (AutoSum).</div>
+    </div>
+    <div><div class="sheet" data-cols="A-E" data-formula="=SUM(D2:D21)" data-presets="=SUM(D2:D21)|=SUM(E2:E21)|=SUM(D2:D21)-SUM(E2:E21)|=SUM(D2:D4)|=SUM(D2,D5,D9)"></div></div>
+  </div>
+</section>
+
+<!-- 8 MIN MAX -->
+<section class="slide" data-title="MIN & MAX" data-acc="teal">
+  <div class="kicker">Summarise · 2 of 3</div>
+  <h2><span class="fn">MIN</span> &amp; <span class="fn">MAX</span> — find the extremes</h2>
+  <div class="cols wide-r">
+    <div>
+      <div class="syntax"><span class="o">=</span><span class="f">MIN</span><span class="o">(</span><span class="a">range</span><span class="o">)</span>  <span class="o">=</span><span class="f">MAX</span><span class="o">(</span><span class="a">range</span><span class="o">)</span></div>
+      <p><b>MIN</b> returns the smallest value; <b>MAX</b> returns the largest. The matching cell is highlighted in <span style="background:#fde68a;padding:0 4px;border-radius:4px">yellow</span>.</p>
+      <ul class="tidy">
+        <li>Lowest 2021 sales in the top 20?</li>
+        <li>Highest 2020 sales?</li>
+        <li><b>Range</b> (spread) = <code>MAX − MIN</code></li>
+      </ul>
+      <div class="callout"><b>Notice:</b> MIN/MAX return the <i>number</i>, not the model name. To fetch the name you need a lookup — coming later today.</div>
+    </div>
+    <div><div class="sheet" data-cols="A-E" data-formula="=MIN(D2:D21)" data-presets="=MIN(D2:D21)|=MAX(D2:D21)|=MAX(E2:E21)|=MIN(E2:E21)|=MAX(D2:D21)-MIN(D2:D21)"></div></div>
+  </div>
+</section>
+
+<!-- 9 AVERAGE -->
+<section class="slide" data-title="AVERAGE" data-acc="violet">
+  <div class="kicker">Summarise · 3 of 3</div>
+  <h2><span class="fn">AVERAGE</span> — the typical value</h2>
+  <div class="cols wide-r">
+    <div>
+      <div class="syntax"><span class="o">=</span><span class="f">AVERAGE</span><span class="o">(</span><span class="a">number1</span><span class="o">, [</span><span class="a">number2</span><span class="o">], …)</span></div>
+      <p>Adds the numbers and divides by how many there are (the mean). Empty and text cells are ignored.</p>
+      <ul class="tidy">
+        <li>Average 2021 sales: <code>=AVERAGE(D2:D21)</code></li>
+        <li>Tidy it: <code>=ROUND(AVERAGE(D2:D21),0)</code></li>
+        <li>Compare with the middle value: <code>=MEDIAN(D2:D21)</code></li>
+      </ul>
+      <div class="callout"><b>Analyst's eye:</b> the mean is higher than the median because a few giants (F-Series, Ram, Silverado) pull it up. Always ask: is the average <i>typical</i>?</div>
+    </div>
+    <div><div class="sheet" data-cols="A-E" data-formula="=AVERAGE(D2:D21)" data-presets="=AVERAGE(D2:D21)|=AVERAGE(E2:E21)|=ROUND(AVERAGE(D2:D21),0)|=MEDIAN(D2:D21)|=SUM(D2:D21)/20"></div></div>
+  </div>
+</section>
+
+<!-- 10 QUICK CHECK 1 -->
+<section class="slide" data-title="Quick check #1" data-acc="blue">
+  <div class="kicker">Quick check · 3 questions</div>
+  <h2>Quick check #1 — summarising</h2>
+  <div class="quiz" data-quiz="q1"></div>
+</section>
+
+<!-- 11 LOGICAL TESTS -->
+<section class="slide" data-title="Logical tests: TRUE or FALSE" data-acc="orange">
+  <div class="kicker">Decide · warm-up</div>
+  <h2>Logical tests — every answer is TRUE or FALSE</h2>
+  <div class="cols wide-r">
+    <div>
+      <div class="ops">
+        <div class="op"><b>=</b><span>equal to</span></div>
+        <div class="op"><b>&lt;&gt;</b><span>not equal to</span></div>
+        <div class="op"><b>&gt;</b><span>greater than</span></div>
+        <div class="op"><b>&lt;</b><span>less than</span></div>
+        <div class="op"><b>&gt;=</b><span>greater or equal</span></div>
+        <div class="op"><b>&lt;=</b><span>less or equal</span></div>
+      </div>
+      <p style="margin-top:14px"><code>=D2&gt;E2</code> asks: <i>“Did this model sell more in 2021 than in 2020?”</i></p>
+      <div class="callout">Written once in <b>F2</b>, then <b>filled down</b> to F21. Hover a result to see how the references shift row by row.</div>
+    </div>
+    <div><div class="sheet" data-cols="A-F" data-fill="2021 &gt; 2020?" data-formula="=D2>E2" data-presets="=D2>E2|=D2>=300000|=B2=&quot;Toyota&quot;|=E2<>D2"></div></div>
+  </div>
+</section>
+
+<!-- 12 IF -->
+<section class="slide" data-title="IF" data-acc="orange">
+  <div class="kicker">Decide · 1 of 3</div>
+  <h2><span class="fn">IF</span> — choose between two outcomes</h2>
+  <div class="cols wide-r">
+    <div>
+      <div class="syntax"><span class="o">=</span><span class="f">IF</span><span class="o">(</span><span class="a">logical_test</span><span class="o">, </span><span class="a">value_if_true</span><span class="o">, </span><span class="a">value_if_false</span><span class="o">)</span></div>
+      <p>Did each model grow or decline in 2021?</p>
+      <div class="syntax" style="font-size:15px"><span class="o">=</span><span class="f">IF</span><span class="o">(</span><span class="a">D2&gt;E2</span><span class="o">, </span><span class="s">"GROWTH"</span><span class="o">, </span><span class="s">"DECLINE"</span><span class="o">)</span></div>
+      <div class="callout warn"><b>Label carefully:</b> if 2021 &gt; 2020, that is <b>growth</b>. Unit sales tell us growth or decline — not profit or loss (that needs revenue and cost).</div>
+      <div class="callout"><b>Text needs straight double quotes</b> <code>"GROWTH"</code>. Single quotes <code>'GROWTH'</code> give an error.</div>
+    </div>
+    <div><div class="sheet" data-cols="A-F" data-fill="Status" data-formula='=IF(D2>E2,"GROWTH","DECLINE")' data-presets='=IF(D2>E2,"GROWTH","DECLINE")|=IF(D2>=300000,"Top seller","Others")|=IF(D2>E2,D2-E2,0)|=IF(D2>E2,"GROWTH",&apos;DECLINE&apos;)'></div></div>
+  </div>
+</section>
+
+<!-- 13 AND -->
+<section class="slide" data-title="AND" data-acc="amber">
+  <div class="kicker">Decide · 2 of 3</div>
+  <h2><span class="fn">AND</span> — all conditions must be TRUE</h2>
+  <div class="cols wide-r">
+    <div>
+      <div class="syntax"><span class="o">=</span><span class="f">AND</span><span class="o">(</span><span class="a">logical1</span><span class="o">, [</span><span class="a">logical2</span><span class="o">], …)</span></div>
+      <p>Which models sold <b>more than 250,000 in both</b> 2021 and 2020?</p>
+      <div class="syntax" style="font-size:15px"><span class="o">=</span><span class="f">AND</span><span class="o">(</span><span class="a">D2&gt;250000</span><span class="o">, </span><span class="a">E2&gt;250000</span><span class="o">)</span></div>
+      <p>“Between” is an AND too: <code>=AND(D2&gt;=250000, D2&lt;=400000)</code></p>
+      <div class="callout warn"><b>Never type thousand separators</b> in a formula. <code>250,000</code> is read as two arguments: <code>250</code> and <code>000</code>. Try the last button to see.</div>
+    </div>
+    <div><div class="sheet" data-cols="A-F" data-fill="Both > 250k?" data-formula="=AND(D2>250000,E2>250000)" data-presets='=AND(D2>250000,E2>250000)|=AND(D2>=250000,D2<=400000)|=IF(AND(D2>250000,E2>250000),"Consistent","-")|=AND(D2>250,000,E2>250,000)'></div></div>
+  </div>
+</section>
+
+<!-- 14 OR -->
+<section class="slide" data-title="OR" data-acc="rose">
+  <div class="kicker">Decide · 3 of 3</div>
+  <h2><span class="fn">OR</span> — at least one condition is TRUE</h2>
+  <div class="cols wide-r">
+    <div>
+      <div class="syntax"><span class="o">=</span><span class="f">OR</span><span class="o">(</span><span class="a">logical1</span><span class="o">, [</span><span class="a">logical2</span><span class="o">], …)</span></div>
+      <p>Which models sold more than 250,000 in <b>either</b> 2021 or 2020?</p>
+      <div class="syntax" style="font-size:15px"><span class="o">=</span><span class="f">OR</span><span class="o">(</span><span class="a">D2&gt;250000</span><span class="o">, </span><span class="a">E2&gt;250000</span><span class="o">)</span></div>
+      <table class="tt">
+        <tr><th>Test 1</th><th>Test 2</th><th>AND</th><th>OR</th></tr>
+        <tr><td class="T">TRUE</td><td class="T">TRUE</td><td class="T">TRUE</td><td class="T">TRUE</td></tr>
+        <tr><td class="T">TRUE</td><td class="F">FALSE</td><td class="F">FALSE</td><td class="T">TRUE</td></tr>
+        <tr><td class="F">FALSE</td><td class="T">TRUE</td><td class="F">FALSE</td><td class="T">TRUE</td></tr>
+        <tr><td class="F">FALSE</td><td class="F">FALSE</td><td class="F">FALSE</td><td class="F">FALSE</td></tr>
+      </table>
+    </div>
+    <div><div class="sheet" data-cols="A-F" data-fill="Either > 250k?" data-formula="=OR(D2>250000,E2>250000)" data-presets='=OR(D2>250000,E2>250000)|=OR(B2="Toyota",B2="Honda")|=IF(OR(D2>250000,E2>250000),"Strong","Watch")|=AND(D2>250000,E2>250000)'></div></div>
+  </div>
+</section>
+
+<!-- 15 QUICK CHECK 2 -->
+<section class="slide" data-title="Quick check #2" data-acc="orange">
+  <div class="kicker">Quick check · 3 questions</div>
+  <h2>Quick check #2 — logic</h2>
+  <div class="quiz" data-quiz="q2"></div>
+</section>
+
+<!-- 16 COUNT -->
+<section class="slide" data-title="COUNT & COUNTA" data-acc="green">
+  <div class="kicker">Count · 1 of 2</div>
+  <h2><span class="fn">COUNT</span> &amp; <span class="fn">COUNTA</span> — how many?</h2>
+  <div class="cols wide-r">
+    <div>
+      <div class="syntax"><span class="o">=</span><span class="f">COUNT</span><span class="o">(</span><span class="a">range</span><span class="o">)</span>   <span class="o">=</span><span class="f">COUNTA</span><span class="o">(</span><span class="a">range</span><span class="o">)</span></div>
+      <table class="mini">
+        <tr><th>Function</th><th>Counts</th><th>B2:B21 (text)</th></tr>
+        <tr><td><code>COUNT</code></td><td>cells with <b>numbers</b></td><td><b>0</b></td></tr>
+        <tr><td><code>COUNTA</code></td><td>cells that are <b>not empty</b></td><td><b>20</b></td></tr>
+      </table>
+      <div class="callout"><b>Data-quality check:</b> if <code>COUNT(D2:D21)</code> is less than 20, some sales figures were typed as text (e.g. <code>'726004</code>) or are missing.</div>
+    </div>
+    <div><div class="sheet" data-cols="A-E" data-formula="=COUNT(D2:D21)" data-presets="=COUNT(D2:D21)|=COUNT(B2:B21)|=COUNTA(B2:B21)|=COUNT(A1:E21)|=COUNTA(A1:E21)"></div></div>
+  </div>
+</section>
+
+<!-- 17 COUNTIF -->
+<section class="slide" data-title="COUNTIF" data-acc="green">
+  <div class="kicker">Count · 2 of 2</div>
+  <h2><span class="fn">COUNTIF</span> — count with a rule</h2>
+  <div class="cols wide-r">
+    <div>
+      <div class="syntax"><span class="o">=</span><span class="f">COUNTIF</span><span class="o">(</span><span class="a">range</span><span class="o">, </span><span class="s">criteria</span><span class="o">)</span></div>
+      <table class="mini">
+        <tr><th>Criteria</th><th>Counts cells that…</th></tr>
+        <tr><td><code>"&gt;250000"</code></td><td>are greater than 250,000</td></tr>
+        <tr><td><code>"Toyota"</code></td><td>equal Toyota (not case-sensitive)</td></tr>
+        <tr><td><code>"T*"</code></td><td>start with T (<code>*</code> = any characters)</td></tr>
+        <tr><td><code>"&lt;&gt;Ford"</code></td><td>are anything except Ford</td></tr>
+      </table>
+      <div class="callout"><b>Bonus — SUMIF:</b> total 2021 sales for Toyota only: <code>=SUMIF(B2:B21,"Toyota",D2:D21)</code></div>
+    </div>
+    <div><div class="sheet" data-cols="A-E" data-formula='=COUNTIF(D2:D21,">250000")' data-presets='=COUNTIF(D2:D21,">250000")|=COUNTIF(B2:B21,"Toyota")|=COUNTIF(B2:B21,"T*")|=COUNTIF(B2:B21,"<>Ford")|=SUMIF(B2:B21,"Toyota",D2:D21)'></div></div>
+  </div>
+</section>
+
+<!-- 18 VLOOKUP -->
+<section class="slide" data-title="VLOOKUP" data-acc="pink">
+  <div class="kicker">Look up · 1 of 3</div>
+  <h2><span class="fn">VLOOKUP</span> — find it, then read across</h2>
+  <div class="cols wide-r">
+    <div>
+      <div class="syntax" style="font-size:15px"><span class="o">=</span><span class="f">VLOOKUP</span><span class="o">(</span><span class="a">lookup_value</span><span class="o">, </span><span class="a">table_array</span><span class="o">, </span><span class="a">col_index_num</span><span class="o">, </span><span class="a">[range_lookup]</span><span class="o">)</span></div>
+      <div class="vparts">
+        <div><b>lookup_value</b>What to find — e.g. "Honda Civic"</div>
+        <div><b>table_array</b>Where — C2:E21 (search column first!)</div>
+        <div><b>col_index_num</b>Which column of the table to return (C=1, D=2, E=3)</div>
+        <div><b>FALSE</b>Exact match. Use it almost always.</div>
+      </div>
+      <div class="build card tint">
+        <label>Build it — pick a model</label>
+        <select id="vModel"></select>
+        <label>Return</label>
+        <select id="vCol"><option value="2">Sales 2021 (column 2 of C:E)</option><option value="3">Sales 2020 (column 3 of C:E)</option></select>
+      </div>
+    </div>
+    <div><div class="sheet" id="vSheet" data-cols="A-E" data-animate="1" data-formula='=VLOOKUP("Honda Civic",C2:E21,2,FALSE)' data-presets='=VLOOKUP("Honda Civic",C2:E21,2,FALSE)|=VLOOKUP("Jeep Wrangler",C2:E21,3,FALSE)|=VLOOKUP(5,A2:E21,3,FALSE)|=VLOOKUP("Tesla Model 3",C2:E21,2,FALSE)'></div></div>
+  </div>
+</section>
+
+<!-- 19 VLOOKUP RULES -->
+<section class="slide" data-title="VLOOKUP: 4 golden rules" data-acc="pink">
+  <div class="kicker">Look up · 2 of 3</div>
+  <h2>VLOOKUP — four golden rules</h2>
+  <div class="oc-grid" style="grid-template-columns:1fr 1fr">
+    <div class="oc"><div class="num" style="background:var(--pink)">1</div><h3>Search column comes first</h3><p>VLOOKUP only searches the <b>left-most</b> column of <code>table_array</code>. To find by model, start the table at column C: <code>C2:E21</code>, not <code>A2:E21</code>.</p></div>
+    <div class="oc"><div class="num" style="background:var(--pink)">2</div><h3>Count columns from the table, not from A</h3><p>In <code>C2:E21</code>, column D is <b>2</b> and column E is <b>3</b>. A number larger than the table width gives <code>#REF!</code>.</p></div>
+    <div class="oc"><div class="num" style="background:var(--pink)">3</div><h3>Use FALSE for exact match</h3><p>Omitting it means approximate match, which needs sorted data and can quietly return the <b>wrong</b> row.</p></div>
+    <div class="oc"><div class="num" style="background:var(--pink)">4</div><h3>Lock the table before copying</h3><p>Filling down? Use <code>$C$2:$E$21</code> so the table doesn't slide. <span class="pill">F4</span> toggles the $ signs.</p></div>
+  </div>
+  <div class="callout" style="margin-top:16px"><b>Using Microsoft 365?</b> <code>XLOOKUP</code> is the modern successor — it can look left, defaults to exact match, and doesn't need a column number. Master VLOOKUP first; it appears in almost every workplace workbook.</div>
+</section>
+
+<!-- 20 HLOOKUP -->
+<section class="slide" data-title="HLOOKUP" data-acc="indigo">
+  <div class="kicker">Look up · 3 of 3</div>
+  <h2><span class="fn">HLOOKUP</span> — same idea, sideways</h2>
+  <div class="cols even">
+    <div>
+      <div class="syntax" style="font-size:15px"><span class="o">=</span><span class="f">HLOOKUP</span><span class="o">(</span><span class="a">lookup_value</span><span class="o">, </span><span class="a">table_array</span><span class="o">, </span><span class="a">row_index_num</span><span class="o">, </span><span class="a">FALSE</span><span class="o">)</span></div>
+      <p>Searches the <b>top row</b> of the table, then reads <b>down</b>. Useful when categories run across columns — like this brand summary built with SUMIF in <code>H1:N3</code>.</p>
+      <div class="vh">
+        <div class="card"><b>VLOOKUP</b><div class="arrowdemo"><i class="k"></i><i></i><i class="r"></i></div>Find in first <b>column</b> → read <b>across</b> to column <i>n</i>.</div>
+        <div class="card"><b>HLOOKUP</b><div class="arrowdemo" style="flex-direction:column;width:26px"><i class="k"></i><i></i><i class="r"></i></div>Find in first <b>row</b> → read <b>down</b> to row <i>n</i>.</div>
+      </div>
+    </div>
+    <div><div class="sheet" data-cols="H-N" data-rows="1-3" data-animate="1" data-formula='=HLOOKUP("Toyota",H1:N3,2,FALSE)' data-presets='=HLOOKUP("Toyota",H1:N3,2,FALSE)|=HLOOKUP("Ford",H1:N3,3,FALSE)|=HLOOKUP("Honda",H1:N3,2,FALSE)-HLOOKUP("Honda",H1:N3,3,FALSE)|=HLOOKUP("Jeep",H1:N3,4,FALSE)'></div></div>
+  </div>
+</section>
+
+<!-- 21 ERRORS -->
+<section class="slide" data-title="Common errors & fixes" data-acc="rose">
+  <div class="kicker">Troubleshooting</div>
+  <h2>Common errors — and how to fix them</h2>
+  <div class="cols wide-r" style="grid-template-columns:1.35fr 1fr">
+    <div class="errgrid">
+      <div class="errc" data-try="=SUMM(D2:D21)"><span class="code">#NAME?</span><p>Misspelt function, or text without quotes.</p><span class="try">try: =SUMM(D2:D21)</span></div>
+      <div class="errc" data-try='=IF(D2>E2,GROWTH,DECLINE)'><span class="code">#NAME?</span><p>Text must be in double quotes: <code>"GROWTH"</code>.</p><span class="try">try: =IF(D2>E2,GROWTH,…)</span></div>
+      <div class="errc" data-try="=C2*2"><span class="code">#VALUE!</span><p>Maths on text — e.g. multiplying a model name.</p><span class="try">try: =C2*2</span></div>
+      <div class="errc" data-try='=VLOOKUP("Civic",C2:E21,2,FALSE)'><span class="code">#N/A</span><p>Lookup value not found — check spelling and spaces.</p><span class="try">try: =VLOOKUP("Civic",…)</span></div>
+      <div class="errc" data-try='=VLOOKUP("Honda Civic",C2:E21,4,FALSE)'><span class="code">#REF!</span><p>Column number bigger than the table (C:E has 3).</p><span class="try">try: col_index 4</span></div>
+      <div class="errc" data-try="=AVERAGE(F2:F21)"><span class="code">#DIV/0!</span><p>Averaging an empty range — nothing to divide by.</p><span class="try">try: =AVERAGE(F2:F21)</span></div>
+    </div>
+    <div><div class="sheet nogrid" id="errSheet" data-cols="A-E" data-formula="=SUMM(D2:D21)" data-presets="=SUM(D2:D21)|=AND(D2>250,000,E2>250,000)"></div>
+      <div class="callout" style="margin-top:14px">Click any error card to reproduce it here, then fix the formula yourself and press <kbd>Enter</kbd>.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 22 PLAYGROUND -->
+<section class="slide" data-title="Formula playground" data-acc="xl">
+  <div class="kicker">Practice</div>
+  <h2>Formula playground</h2>
+  <div class="cols wide-r">
+    <div>
+      <p class="lead">Try anything from today. Tick <b>Fill down</b> to copy your formula from F2 to F21.</p>
+      <ul class="tidy">
+        <li>How many models <b>declined</b> in 2021?<br><code style="font-size:13px">=SUM(E2:E21)</code>… no! Try <code style="font-size:13px">IF</code> + fill down, then count.</li>
+        <li>What is Toyota's <b>average</b> 2021 sales? <span class="pill">AVERAGEIF</span></li>
+        <li>What did the <b>rank 1</b> model sell in 2020?</li>
+        <li>Growth % for each model: <code style="font-size:13px">=(D2-E2)/E2</code></li>
+      </ul>
+      <p class="src">Supported: SUM, MIN, MAX, AVERAGE, MEDIAN, ROUND, ABS, COUNT, COUNTA, COUNTIF, SUMIF, AVERAGEIF, IF, AND, OR, NOT, VLOOKUP, HLOOKUP, and + − * / ^ &amp; operators.</p>
+    </div>
+    <div><div class="sheet" data-cols="A-F" data-filltoggle="1" data-fill="Result" data-formula="=(D2-E2)/E2" data-presets='=(D2-E2)/E2|=ROUND((D2-E2)/E2*100,1)|=AVERAGEIF(B2:B21,"Toyota",D2:D21)|=VLOOKUP(1,A2:E21,5,FALSE)|=C2&" ("&B2&")"'></div></div>
+  </div>
+</section>
+
+<!-- 23 EXIT TICKET -->
+<section class="slide" data-title="Exit ticket" data-acc="violet">
+  <div class="kicker">Exit ticket · 5 questions</div>
+  <h2>Exit ticket — how much stuck?</h2>
+  <div class="quiz" data-quiz="exit"></div>
+</section>
+
+<!-- 24 WRAP-UP -->
+<section class="slide" data-title="Wrap-up & your task" data-acc="xl">
+  <div class="kicker">Wrap-up</div>
+  <h2>Key takeaways</h2>
+  <div class="recap">
+    <div class="rc" style="background:#2563eb"><b>SUM</b><span>Adds values or ranges.</span></div>
+    <div class="rc" style="background:#0d9488"><b>MIN / MAX</b><span>Smallest / largest value.</span></div>
+    <div class="rc" style="background:#7c3aed"><b>AVERAGE</b><span>The mean — check it against the median.</span></div>
+    <div class="rc" style="background:#16a34a"><b>COUNT / COUNTIF</b><span>How many — in total, or meeting a rule.</span></div>
+    <div class="rc" style="background:#ea580c"><b>IF</b><span>One outcome if TRUE, another if FALSE.</span></div>
+    <div class="rc" style="background:#d97706"><b>AND</b><span>TRUE only when every test is TRUE.</span></div>
+    <div class="rc" style="background:#e11d48"><b>OR</b><span>TRUE when any test is TRUE.</span></div>
+    <div class="rc" style="background:#db2777"><b>V / HLOOKUP</b><span>Find a key, return a matching value. Use FALSE.</span></div>
+  </div>
+  <div class="cols even" style="margin-top:20px">
+    <div class="card tint"><h3>📝 Your task this week</h3><p style="margin:0">Complete the <b>Chapter 2 Top-20 Vehicles Excel exercise</b> and upload your .xlsx on the course site. You get your score and feedback immediately.</p></div>
+    <div class="card"><h3>✅ Before you submit</h3><p style="margin:0">No thousand separators inside formulas · text in <code>"double quotes"</code> · VLOOKUP with <code>FALSE</code> · check every result makes sense.</p></div>
+  </div>
+</section>
+
+</div></div>
+
+<nav id="menu" aria-label="Slides"><h4>Chapter 2 · Slides</h4><div id="menuList"></div></nav>
+<div id="scrim"></div>
+<div id="help"><kbd>←</kbd><kbd>→</kbd> navigate · <kbd>M</kbd> menu · <kbd>F</kbd> full screen · <kbd>T</kbd> timer</div>
+<div id="hud">
+  <button id="menuBtn" title="Slide menu (M)" aria-label="Menu">☰</button>
+  <button id="timer" title="Lecture timer — click to start/pause, double-click to reset (T)">▶ 00:00</button>
+  <button id="fsBtn" title="Full screen (F)" aria-label="Full screen">⛶</button>
+  <button id="prevBtn" aria-label="Previous">‹</button>
+  <span class="count" id="count">1 / 24</span>
+  <button id="nextBtn" aria-label="Next">›</button>
+</div>
+
+<script>
+/* =====================================================================
+   DATA — edit here to match your class file (columns A–E, rows 2–21)
+   [Rank, Make, Model, Sales 2021, Sales 2020]
+   ===================================================================== */
+const HEADERS = ["Rank","Make","Model","Sales 2021","Sales 2020"];
+const DATA = [
+  [1,"Ford","F-Series",726004,787422],
+  [2,"Ram","Ram Pickup",569388,563676],
+  [3,"Chevrolet","Silverado",529765,586675],
+  [4,"Toyota","RAV4",407739,430387],
+  [5,"Honda","CR-V",361271,333502],
+  [6,"Toyota","Camry",313795,294348],
+  [7,"Nissan","Rogue",285602,227935],
+  [8,"Jeep","Grand Cherokee",264444,209786],
+  [9,"Toyota","Highlander",264128,212280],
+  [10,"Honda","Civic",263787,261225],
+  [11,"Toyota","Tacoma",252520,238806],
+  [12,"Toyota","Corolla",248993,237178],
+  [13,"GMC","Sierra",248923,253016],
+  [14,"Ford","Explorer",219871,226217],
+  [15,"Jeep","Wrangler",204610,201311],
+  [16,"Honda","Accord",202676,199458],
+  [17,"Mazda","CX-5",168383,146420],
+  [18,"Chevrolet","Equinox",165323,270994],
+  [19,"Subaru","Forester",154723,177029],
+  [20,"Hyundai","Tucson",150949,123657]
+];
+// Model column shows "Make Model" style names for friendlier lookups
+DATA.forEach(r=>{ if(!r[2].startsWith(r[1])) r[2]= (r[1]==="Ram"?"":r[1]+" ")+r[2]; });
+const BRANDS = ["Toyota","Ford","Honda","Chevrolet","Jeep","Ram"]; // horizontal table H1:N3
+
+/* ------------------------- grid ------------------------- */
+const GRID = {};
+const K=(c,r)=>c+","+r;
+const colNum=l=>{l=l.toUpperCase();let n=0;for(const ch of l)n=n*26+(ch.charCodeAt(0)-64);return n};
+const colName=n=>{let s="";while(n>0){const m=(n-1)%26;s=String.fromCharCode(65+m)+s;n=Math.floor((n-1)/26)}return s};
+function getCell(c,r){const v=GRID[K(c,r)];return v===undefined?null:v}
+HEADERS.forEach((h,i)=>GRID[K(i+1,1)]=h);
+DATA.forEach((row,ri)=>row.forEach((v,ci)=>GRID[K(ci+1,ri+2)]=v));
+GRID[K(8,1)]="Make";GRID[K(8,2)]="Sales 2021";GRID[K(8,3)]="Sales 2020";
+BRANDS.forEach((b,i)=>{const c=9+i;GRID[K(c,1)]=b;
+  GRID[K(c,2)]=DATA.filter(r=>r[1]===b).reduce((s,r)=>s+r[3],0);
+  GRID[K(c,3)]=DATA.filter(r=>r[1]===b).reduce((s,r)=>s+r[4],0);});
+
+/* ------------------------- formula engine ------------------------- */
+class XErr{constructor(code,msg){this.code=code;this.msg=msg}}
+const isRange=v=>v&&typeof v==="object"&&v.range;
+function tokenize(s){
+  const t=[];let i=0;
+  while(i<s.length){
+    const c=s[i];
+    if(/\s/.test(c)){i++;continue}
+    if(c==='"'){let j=i+1,str="";while(j<s.length){if(s[j]==='"'){if(s[j+1]==='"'){str+='"';j+=2;continue}break}str+=s[j++]}
+      if(j>=s.length)throw new XErr("SYNTAX",'Missing closing double quote " — text must be wrapped like "GROWTH".');
+      t.push({t:"str",v:str});i=j+1;continue}
+    if("'‘’“”".includes(c))throw new XErr("#NAME?",'Excel only accepts straight double quotes " for text — e.g. "DECLINE". Single quotes or curly “smart” quotes cause an error.');
+    const rest=s.slice(i);let m;
+    if((m=rest.match(/^(\$?)([A-Za-z]{1,2})(\$?)(\d+)(?::(\$?)([A-Za-z]{1,2})(\$?)(\d+))?(?![A-Za-z0-9_(])/))){
+      const c1=colNum(m[2]),r1=+m[4];
+      if(m[5]!==undefined&&m[6]){t.push({t:"ref",node:{type:"range",c1,r1,c2:colNum(m[6]),r2:+m[8],absR1:!!m[3],absR2:!!m[7]}})}
+      else t.push({t:"ref",node:{type:"ref",col:c1,row:r1,absR:!!m[3]}});
+      i+=m[0].length;continue}
+    if((m=rest.match(/^\d+(\.\d+)?([eE][+-]?\d+)?/))){t.push({t:"num",v:parseFloat(m[0])});i+=m[0].length;continue}
+    if((m=rest.match(/^[A-Za-z_][A-Za-z0-9_.]*/))){
+      const id=m[0];i+=id.length;const up=id.toUpperCase();
+      let j=i;while(s[j]===" ")j++;
+      if(s[j]==="("){t.push({t:"fn",v:up});continue}
+      if(up==="TRUE"||up==="FALSE"){t.push({t:"bool",v:up==="TRUE"});continue}
+      throw new XErr("#NAME?",`Excel doesn't recognise “${id}”. If it's text, wrap it in double quotes: "${id}".`)}
+    const two=s.substr(i,2);
+    if(["<=",">=","<>"].includes(two)){t.push({t:"op",v:two});i+=2;continue}
+    if("+-*/^&=<>()".includes(c)){t.push({t:"op",v:c});i++;continue}
+    if(c===","||c===";"){t.push({t:"sep"});i++;continue}
+    throw new XErr("SYNTAX",`Unexpected character “${c}”.`)
+  }
+  return t;
+}
+function parse(src){
+  let s=String(src).trim();
+  if(!s.startsWith("="))throw new XErr("NO =","Every Excel formula must start with an equals sign =");
+  s=s.slice(1);if(!s.trim())throw new XErr("SYNTAX","Type something after the = sign.");
+  const toks=tokenize(s);let p=0;
+  const peek=()=>toks[p],next=()=>toks[p++];
+  const isOp=(...v)=>peek()&&peek().t==="op"&&v.includes(peek().v);
+  function cmp(){let l=cat();while(isOp("=","<>","<",">","<=",">=")){const o=next().v;l={type:"bin",o,l,r:cat()}}return l}
+  function cat(){let l=add();while(isOp("&")){next();l={type:"bin",o:"&",l,r:add()}}return l}
+  function add(){let l=mul();while(isOp("+","-")){const o=next().v;l={type:"bin",o,l,r:mul()}}return l}
+  function mul(){let l=pw();while(isOp("*","/")){const o=next().v;l={type:"bin",o,l,r:pw()}}return l}
+  function pw(){let l=un();while(isOp("^")){next();l={type:"bin",o:"^",l,r:un()}}return l}
+  function un(){if(isOp("-","+")){const o=next().v;const e=un();return o==="-"?{type:"neg",e}:e}return prim()}
+  function prim(){
+    const k=next();
+    if(!k)throw new XErr("SYNTAX","The formula ends too early — something is missing (a value or a closing bracket?).");
+    if(k.t==="num")return{type:"num",v:k.v};
+    if(k.t==="str")return{type:"str",v:k.v};
+    if(k.t==="bool")return{type:"bool",v:k.v};
+    if(k.t==="ref")return k.node;
+    if(k.t==="op"&&k.v==="("){const e=cmp();const c=next();if(!c||c.v!==")")throw new XErr("SYNTAX","Missing closing bracket ).");return e}
+    if(k.t==="fn"){
+      const name=k.v;next();const args=[];
+      if(isOp(")")){next();return{type:"fn",name,args}}
+      for(;;){
+        if(peek()&&peek().t==="sep"){args.push({type:"empty"});next();continue}
+        args.push(cmp());const n=next();
+        if(!n)throw new XErr("SYNTAX",`Missing closing bracket ) for ${name}.`);
+        if(n.t==="sep"){if(isOp(")")){args.push({type:"empty"});next();break}continue}
+        if(n.t==="op"&&n.v===")")break;
+        throw new XErr("SYNTAX",`Unexpected “${n.v}” — is a comma missing between arguments?`);
+      }
+      return{type:"fn",name,args}}
+    if(k.t==="sep")throw new XErr("SYNTAX","Unexpected comma.");
+    throw new XErr("SYNTAX",`Unexpected “${k.v}”.`);
+  }
+  const e=cmp();
+  if(p<toks.length){const k=toks[p];throw new XErr("SYNTAX",k.t==="op"&&k.v===")"?"There is an extra closing bracket ).":`Unexpected “${k.v??","}” — check your brackets and commas.`)}
+  return e;
+}
+function scalar(v){if(isRange(v)){if(v.rows.length===1&&v.rows[0].length===1)return v.rows[0][0];throw new XErr("#VALUE!","A range was used where Excel expects a single value.")}return v}
+function num(v){v=scalar(v);if(v===null)return 0;if(typeof v==="boolean")return v?1:0;if(typeof v==="number")return v;
+  const s=String(v).trim();if(s!==""&&!isNaN(+s))return +s;throw new XErr("#VALUE!",`“${v}” is text, not a number — maths can't be done on it.`)}
+function truthy(v){v=scalar(v);if(v===null)return false;if(typeof v==="boolean")return v;if(typeof v==="number")return v!==0;
+  const u=String(v).toUpperCase();if(u==="TRUE")return true;if(u==="FALSE")return false;throw new XErr("#VALUE!",`“${v}” is text, not TRUE/FALSE.`)}
+function str(v){v=scalar(v);if(v===null)return"";if(typeof v==="boolean")return v?"TRUE":"FALSE";return String(v)}
+function rank(v){return typeof v==="number"?1:typeof v==="string"?2:typeof v==="boolean"?3:0}
+function compare(a,b){a=scalar(a);b=scalar(b);if(a===null)a=typeof b==="string"?"":0;if(b===null)b=typeof a==="string"?"":0;
+  const ra=rank(a),rb=rank(b);if(ra!==rb)return ra-rb;
+  if(typeof a==="string"){a=a.toLowerCase();b=b.toLowerCase()}if(typeof a==="boolean"){a=+a;b=+b}
+  return a<b?-1:a>b?1:0}
+function flatNums(args,strict=true){const out=[];for(const a of args){
+  if(isRange(a)){for(const row of a.rows)for(const v of row)if(typeof v==="number")out.push(v)}
+  else if(a===null)continue;else out.push(num(a));}return out}
+function flatAll(args){const out=[];for(const a of args){if(isRange(a))for(const row of a.rows)for(const v of row)out.push(v);else out.push(a)}return out}
+function makeCrit(c){
+  c=scalar(c);
+  if(typeof c==="number")return v=>typeof v==="number"&&v===c;
+  if(typeof c==="boolean")return v=>v===c;
+  const s=c===null?"":String(c);const m=s.match(/^(<=|>=|<>|=|<|>)?([\s\S]*)$/);const op=m[1]||"=",rhs=m[2];
+  const n=rhs.trim()!==""&&!isNaN(+rhs)?+rhs:null;
+  const test=(x,o)=>o==="="?x===0:o==="<>"?x!==0:o==="<"?x<0:o===">"?x>0:o==="<="?x<=0:x>=0;
+  if(n!==null)return v=>{if(typeof v!=="number")return op==="<>";return test(v<n?-1:v>n?1:0,op)};
+  if(op==="="||op==="<>"){
+    const re=new RegExp("^"+rhs.replace(/[.+^${}()|[\]\\]/g,"\\$&").replace(/\*/g,"[\\s\\S]*").replace(/\?/g,".")+"$","i");
+    const hit=v=>rhs===""?(v===null||v===""):(v!==null&&typeof v!=="number"&&re.test(String(v)));
+    return op==="="?hit:v=>!hit(v)}
+  return v=>typeof v==="string"&&test(compare(v,rhs),op);
+}
+const FN={
+  SUM:{min:1,f:a=>flatNums(a).reduce((s,x)=>s+x,0)},
+  MIN:{min:1,f:a=>{const n=flatNums(a);return n.length?Math.min(...n):0}},
+  MAX:{min:1,f:a=>{const n=flatNums(a);return n.length?Math.max(...n):0}},
+  AVERAGE:{min:1,f:a=>{const n=flatNums(a);if(!n.length)throw new XErr("#DIV/0!","There are no numbers to average, so Excel would divide by zero.");return n.reduce((s,x)=>s+x,0)/n.length}},
+  MEDIAN:{min:1,f:a=>{const n=flatNums(a).sort((x,y)=>x-y);if(!n.length)throw new XErr("#NUM!","No numbers found.");const h=n.length>>1;return n.length%2?n[h]:(n[h-1]+n[h])/2}},
+  COUNT:{min:1,f:a=>{let c=0;for(const x of a){if(isRange(x)){for(const r of x.rows)for(const v of r)if(typeof v==="number")c++}else if(typeof x==="number")c++}return c}},
+  COUNTA:{min:1,f:a=>flatAll(a).filter(v=>v!==null&&v!=="").length},
+  ROUND:{min:2,max:2,f:a=>{const d=Math.trunc(num(a[1])),f=Math.pow(10,d);return Math.round(num(a[0])*f)/f}},
+  ABS:{min:1,max:1,f:a=>Math.abs(num(a[0]))},
+  IF:{min:2,max:3,f:a=>truthy(a[0])?(a[1]===undefined?0:scalar(a[1])):(a.length>2?scalar(a[2]):false)},
+  AND:{min:1,f:a=>{const v=flatAll(a).filter(x=>x!==null);if(!v.length)throw new XErr("#VALUE!","AND needs at least one TRUE/FALSE test.");return v.every(truthy)}},
+  OR:{min:1,f:a=>{const v=flatAll(a).filter(x=>x!==null);if(!v.length)throw new XErr("#VALUE!","OR needs at least one TRUE/FALSE test.");return v.some(truthy)}},
+  NOT:{min:1,max:1,f:a=>!truthy(a[0])},
+  COUNTIF:{min:2,max:2,f:a=>{if(!isRange(a[0]))throw new XErr("#VALUE!","The first argument of COUNTIF must be a range, e.g. B2:B21.");const t=makeCrit(a[1]);let c=0;for(const r of a[0].rows)for(const v of r)if(t(v))c++;return c}},
+  SUMIF:{min:2,max:3,f:a=>{if(!isRange(a[0]))throw new XErr("#VALUE!","The first argument of SUMIF must be a range.");const t=makeCrit(a[1]);const sr=a[2]&&isRange(a[2])?a[2]:a[0];let s=0;
+    a[0].rows.forEach((r,i)=>r.forEach((v,j)=>{if(t(v)){const x=sr.rows[i]&&sr.rows[i][j];if(typeof x==="number")s+=x}}));return s}},
+  AVERAGEIF:{min:2,max:3,f:a=>{if(!isRange(a[0]))throw new XErr("#VALUE!","The first argument of AVERAGEIF must be a range.");const t=makeCrit(a[1]);const sr=a[2]&&isRange(a[2])?a[2]:a[0];let s=0,n=0;
+    a[0].rows.forEach((r,i)=>r.forEach((v,j)=>{if(t(v)){const x=sr.rows[i]&&sr.rows[i][j];if(typeof x==="number"){s+=x;n++}}}));if(!n)throw new XErr("#DIV/0!","No cells matched the criteria, so there is nothing to average.");return s/n}},
+  VLOOKUP:{min:3,max:4,f:(a,ctx)=>lookup(a,ctx,"v")},
+  HLOOKUP:{min:3,max:4,f:(a,ctx)=>lookup(a,ctx,"h")},
+};
+function lookup(a,ctx,dir){
+  const nm=dir==="v"?"VLOOKUP":"HLOOKUP";
+  const key=scalar(a[0]),tb=a[1];
+  if(!isRange(tb))throw new XErr("#VALUE!",`The 2nd argument of ${nm} must be a table range, e.g. ${dir==="v"?"C2:E21":"H1:N3"}.`);
+  const idx=Math.trunc(num(a[2]));
+  const width=dir==="v"?tb.rows[0].length:tb.rows.length;
+  if(idx<1)throw new XErr("#VALUE!",`The ${dir==="v"?"column":"row"} number must be 1 or more.`);
+  if(idx>width)throw new XErr("#REF!",`The table has only ${width} ${dir==="v"?"columns":"rows"}, but you asked for ${dir==="v"?"column":"row"} ${idx}.`);
+  const exact=a.length>3&&a[3]!==undefined?!truthy(a[3]):false;
+  const keys=dir==="v"?tb.rows.map(r=>r[0]):tb.rows[0];
+  let found=-1,scanned=0;
+  if(exact){for(let i=0;i<keys.length;i++){scanned=i;if(keys[i]!==null&&compare(keys[i],key)===0&&rank(keys[i])===rank(key)){found=i;break}}}
+  else{for(let i=0;i<keys.length;i++){scanned=i;if(keys[i]===null)continue;if(rank(keys[i])===rank(key)&&compare(keys[i],key)<=0)found=i;else if(rank(keys[i])===rank(key))break}}
+  ctx.trace={dir,tb,found,scanned,idx};
+  if(found<0)throw new XErr("#N/A",`“${str(key)}” was not found in the first ${dir==="v"?"column":"row"} of the table. Check spelling, spaces and that the table starts at the right ${dir==="v"?"column":"row"}.`);
+  const val=dir==="v"?tb.rows[found][idx-1]:tb.rows[idx-1][found];
+  ctx.hit=dir==="v"?K(tb.c1+idx-1,tb.r1+found):K(tb.c1+found,tb.r1+idx-1);
+  return val===null?0:val;
+}
+function ev(n,ctx){
+  switch(n.type){
+    case"num":case"str":case"bool":return n.v;
+    case"empty":return null;
+    case"ref":{const r=n.row+(n.absR?0:ctx.off);if(r<1)throw new XErr("#REF!","Reference moved above row 1.");ctx.used.add(K(n.col,r));return getCell(n.col,r)}
+    case"range":{let r1=n.r1+(n.absR1?0:ctx.off),r2=n.r2+(n.absR2?0:ctx.off);const c1=Math.min(n.c1,n.c2),c2=Math.max(n.c1,n.c2);if(r1>r2)[r1,r2]=[r2,r1];
+      const rows=[];for(let r=r1;r<=r2;r++){const row=[];for(let c=c1;c<=c2;c++){ctx.used.add(K(c,r));row.push(getCell(c,r))}rows.push(row)}
+      return{range:true,rows,c1,r1,c2,r2}}
+    case"neg":return -num(ev(n.e,ctx));
+    case"bin":{const l=ev(n.l,ctx),r=ev(n.r,ctx);
+      switch(n.o){case"+":return num(l)+num(r);case"-":return num(l)-num(r);case"*":return num(l)*num(r);
+        case"/":{const d=num(r);if(d===0)throw new XErr("#DIV/0!","Division by zero.");return num(l)/d}
+        case"^":return Math.pow(num(l),num(r));case"&":return str(l)+str(r);
+        case"=":return compare(l,r)===0;case"<>":return compare(l,r)!==0;case"<":return compare(l,r)<0;case">":return compare(l,r)>0;case"<=":return compare(l,r)<=0;case">=":return compare(l,r)>=0}}
+    case"fn":{const spec=FN[n.name];
+      if(!spec)throw new XErr("#NAME?",`“${n.name}” is not a function Excel knows. Check the spelling${n.name==="SUMM"?" — did you mean SUM?":"."}`);
+      const cnt=n.args.length;
+      if(cnt<spec.min||(spec.max&&cnt>spec.max)){
+        const exp=spec.max===spec.min?`${spec.min}`:spec.max?`${spec.min}–${spec.max}`:`at least ${spec.min}`;
+        throw new XErr("ARGS",`${n.name} expects ${exp} argument${spec.max===1?"":"s"}, but got ${cnt}.`+(ctx.commaHint?" A number like 250,000 is split at the comma — type 250000.":""))}
+      const args=n.args.map(a=>ev(a,ctx));
+      if(n.name==="AND"||n.name==="OR"){/* warn when 000 appears as an argument */}
+      return spec.f(args,ctx)}
+  }
+}
+function commaHint(src){const outside=src.replace(/"[^"]*"/g,"");return /\d,\d{3}(?!\d)/.test(outside)}
+function evaluate(src,off=0){
+  const ctx={off,used:new Set(),commaHint:commaHint(src)};
+  try{const ast=parse(src);let v=ev(ast,ctx);ctx.ast=ast;return{ok:true,v,ctx}}
+  catch(e){if(e instanceof XErr)return{ok:false,err:e,ctx};console.error(e);return{ok:false,err:new XErr("ERROR","Something went wrong evaluating this formula."),ctx}}
+}
+function shiftFormula(src,off){ // relative refs move down by off rows (outside quotes)
+  return src.split(/("[^"]*")/).map((seg,i)=>i%2?seg:seg.replace(/(^|[^A-Za-z0-9_])(\$?)([A-Za-z]{1,2})(\$?)(\d+)(?![A-Za-z0-9_(])/g,(m,pre,d1,c,d2,r)=>pre+d1+c+d2+(d2?r:(+r+off)))).join("");
+}
+function fmt(v){
+  if(isRange(v)){const n=(v.r2-v.r1+1)*(v.c2-v.c1+1);return{t:`${colName(v.c1)}${v.r1}:${colName(v.c2)}${v.r2}`,m:`A range of ${n} cell${n>1?"s":""} — highlighted below. On its own a range isn't an answer; wrap it in a function like SUM.`}}
+  if(v===null)return{t:"0"};
+  if(typeof v==="boolean")return{t:v?"TRUE":"FALSE"};
+  if(typeof v==="number"){const a=Math.abs(v);return{t:(Number.isInteger(v)?v.toLocaleString("en-US"):a<10?v.toLocaleString("en-US",{maximumFractionDigits:4}):v.toLocaleString("en-US",{maximumFractionDigits:2}))}}
+  return{t:String(v)};
+}
+const ERRCODE={"SYNTAX":"Formula error","NO =":"Not a formula","ARGS":"Wrong number of arguments","ERROR":"Error"};
+
+/* ------------------------- sheet widget ------------------------- */
+function parseSpan(s,def){if(!s)return def;const [a,b]=s.split("-");return[a,b||a]}
+function buildSheet(el){
+  const [ca,cb]=parseSpan(el.dataset.cols,["A","E"]);
+  const [ra,rb]=(el.dataset.rows||"1-21").split("-").map(Number);
+  const c1=colNum(ca),c2=colNum(cb);
+  const fillHead=el.dataset.fill||null;
+  const fillToggle=!!el.dataset.filltoggle;
+  const presets=(el.dataset.presets||"").split("|").filter(Boolean);
+  el.classList.add("sheet-w");
+  el.innerHTML=`<div class="fbar"><span class="nm">${fillHead?"F2":"—"}</span><span class="fx">fx</span><input spellcheck="false" autocomplete="off" aria-label="Formula"><button type="button">Enter ↵</button></div>
+    ${presets.length?`<div class="presets"></div>`:""}
+    ${fillToggle?`<div class="opts"><label><input type="checkbox" class="ft" checked> Fill down F2 → F21</label></div>`:""}
+    <div class="hint"></div>
+    <div class="out"><span class="lbl">Result</span><span class="val">—</span><span class="msg"></span></div>
+    <div class="gridwrap"><table class="grid"></table></div>`;
+  const input=el.querySelector("input:not(.ft)"),btn=el.querySelector(".fbar button"),valEl=el.querySelector(".val"),msgEl=el.querySelector(".msg"),hint=el.querySelector(".hint"),nm=el.querySelector(".nm");
+  const ft=el.querySelector(".ft");
+  // grid
+  const tbl=el.querySelector("table.grid");let h="<thead><tr><th></th>";
+  for(let c=c1;c<=c2;c++)h+=`<th data-c="${c}">${colName(c)}</th>`;h+="</tr></thead><tbody>";
+  for(let r=ra;r<=rb;r++){h+=`<tr><th>${r}</th>`;for(let c=c1;c<=c2;c++){const v=getCell(c,r);const isHdr=(r===1&&c<=6)||(c===8);
+    h+=`<td data-k="${K(c,r)}" class="${typeof v==="number"&&!isHdr?"num":""} ${isHdr&&v!==null?"hdr":""}">${v===null?"":typeof v==="number"?v.toLocaleString("en-US"):esc(v)}</td>`}h+="</tr>"}
+  tbl.innerHTML=h+"</tbody>";
+  const cells={};tbl.querySelectorAll("td").forEach(td=>cells[td.dataset.k]=td);
+  const fillOn=()=>fillHead&&(!ft||ft.checked);
+  if(fillHead&&cells[K(6,1)]){cells[K(6,1)].textContent=fillHead;cells[K(6,1)].classList.add("hdr")}
+  let anim=[];
+  function clear(){anim.forEach(clearTimeout);anim=[];
+    Object.values(cells).forEach(td=>td.classList.remove("used","hit","scan","good","bad","neu","fillc","f2"));
+    tbl.querySelectorAll("th.colsel").forEach(t=>t.classList.remove("colsel"));
+    if(fillHead)for(let r=2;r<=21;r++){const td=cells[K(6,r)];if(td){td.textContent="";td.title=""}}}
+  function run(){
+    const src=input.value;clear();
+    presetsEl&&presetsEl.querySelectorAll("button").forEach(b=>b.classList.toggle("on",b.dataset.f===src));
+    const hasComma=commaHint(src);
+    hint.classList.toggle("show",hasComma);
+    hint.innerHTML=hasComma?"⚠️ <b>Watch the commas:</b> Excel reads <code>250,000</code> as two separate arguments (250 and 000). Type <code>250000</code> instead.":"";
+    const res=evaluate(src,0);
+    valEl.classList.toggle("err",!res.ok);msgEl.classList.toggle("err",!res.ok);
+    if(!res.ok){
+      valEl.textContent=res.err.code.startsWith("#")?res.err.code:(ERRCODE[res.err.code]||res.err.code);
+      msgEl.textContent=res.err.msg;
+      res.ctx.used.forEach(k=>cells[k]&&cells[k].classList.add("used"));
+      if(res.ctx.trace)animateTrace(res.ctx.trace,null);
+      return}
+    const f=fmt(res.v);valEl.textContent=f.t;msgEl.textContent=f.m||"";
+    const ast=res.ctx.ast;
+    if(fillOn()&&!isRange(res.v)){
+      nm.textContent="F2";
+      // highlight row-2 refs, fill F2:F21
+      res.ctx.used.forEach(k=>cells[k]&&cells[k].classList.add("used"));
+      for(let off=0;off<20;off++){
+        const r=evaluate(src,off);const td=cells[K(6,2+off)];if(!td)continue;
+        const t=r.ok?fmt(r.v).t:r.err.code;td.textContent=t;td.classList.add("fillc");
+        const up=t.toUpperCase();
+        td.classList.add(!r.ok?"bad":(up==="TRUE"||/GROWTH|TOP|CONSISTENT|STRONG/.test(up))?"good":(up==="FALSE"||/DECLINE|WATCH|OTHERS/.test(up)||up==="-")?"bad":"neu");
+        td.title=`F${2+off}: ${shiftFormula(src,off)}`;
+      }
+      cells[K(6,2)]&&cells[K(6,2)].classList.add("f2");
+      if(!msgEl.textContent)msgEl.textContent="Result in F2 — filled down to F21. Hover a cell to see its formula.";
+    }else{
+      nm.textContent=fillHead?"F2":"—";
+      if(fillHead&&!isRange(res.v)&&cells[K(6,2)]){cells[K(6,2)].textContent=f.t;cells[K(6,2)].classList.add("fillc","f2","neu")}
+      res.ctx.used.forEach(k=>cells[k]&&cells[k].classList.add("used"));
+    }
+    // MIN/MAX hit
+    if(ast&&ast.type==="fn"&&["MIN","MAX"].includes(ast.name)&&typeof res.v==="number"){
+      res.ctx.used.forEach(k=>{if(getCell(...k.split(",").map(Number))===res.v&&cells[k])cells[k].classList.add("hit")})}
+    if(res.ctx.trace)animateTrace(res.ctx.trace,res.ctx.hit);
+    else if(res.ctx.hit&&cells[res.ctx.hit])cells[res.ctx.hit].classList.add("hit");
+  }
+  function animateTrace(tr,hitKey){
+    const {dir,tb,found,scanned,idx}=tr;
+    if(!el.dataset.animate){if(hitKey&&cells[hitKey])cells[hitKey].classList.add("hit");return}
+    const last=found>=0?found:scanned;
+    for(let i=0;i<=last;i++){
+      const k=dir==="v"?K(tb.c1,tb.r1+i):K(tb.c1+i,tb.r1);
+      anim.push(setTimeout(()=>{const td=cells[k];if(td){td.classList.add("scan");td.scrollIntoView&&i===last&&0}
+        if(i>0){const pk=dir==="v"?K(tb.c1,tb.r1+i-1):K(tb.c1+i-1,tb.r1);cells[pk]&&cells[pk].classList.remove("scan")}},90*i));
+    }
+    if(found>=0&&hitKey){
+      for(let j=1;j<idx;j++){
+        const k=dir==="v"?K(tb.c1+j,tb.r1+found):K(tb.c1+found,tb.r1+j);
+        anim.push(setTimeout(()=>cells[k]&&cells[k].classList.add("scan"),90*last+220+160*j));
+      }
+      anim.push(setTimeout(()=>cells[hitKey]&&cells[hitKey].classList.add("hit"),90*last+220+160*idx));
+    }
+  }
+  const presetsEl=el.querySelector(".presets");
+  if(presetsEl)presets.forEach(p=>{const b=document.createElement("button");b.type="button";b.textContent=p;b.dataset.f=p;
+    b.onclick=()=>{input.value=p;run()};presetsEl.appendChild(b)});
+  input.value=el.dataset.formula||"";
+  btn.onclick=run;
+  input.addEventListener("keydown",e=>{e.stopPropagation();if(e.key==="Enter"){e.preventDefault();run()}});
+  ft&&ft.addEventListener("change",run);
+  el._run=run;el._set=f=>{input.value=f;run()};
+  el._ran=false;
+  el._ensure=()=>{if(!el._ran){el._ran=true;run()}};
+}
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+
+/* ------------------------- quizzes ------------------------- */
+const QUIZ={
+  q1:[
+    {q:"Which formula returns the <b>lowest</b> 2021 sales among the top 20?",o:["<code>=MIN(D2:D21)</code>","<code>=LOW(D2:D21)</code>","<code>=MIN(D2-D21)</code>","<code>MIN(D2:D21)</code>"],a:0,w:"MIN finds the smallest value. <code>LOW</code> isn't a function, <code>D2-D21</code> subtracts two cells instead of making a range, and a formula without <code>=</code> is just text."},
+    {q:"How many cells does <code>=SUM(D2:D4)</code> add?",o:["2","3","4","21"],a:1,w:"D2, D3 and D4 — the colon means “to”, and both ends are included."},
+    {q:"<code>=AVERAGE(D2:D21)</code> is higher than <code>=MEDIAN(D2:D21)</code>. Why?",o:["AVERAGE ignores the smallest values","A few very large values pull the mean up","MEDIAN only counts Toyota models","Excel rounds the median down"],a:1,w:"Big sellers like the F-Series pull the mean upward. The median is the middle value, so extremes don't move it much."}
+  ],
+  q2:[
+    {q:"For the Ford F-Series, D2 = 726,004 and E2 = 787,422. What does <code>=IF(D2&gt;E2,\"GROWTH\",\"DECLINE\")</code> return?",o:["GROWTH","DECLINE","TRUE","#VALUE!"],a:1,w:"726,004 &gt; 787,422 is FALSE, so IF returns the third argument: DECLINE."},
+    {q:"Which formula tests whether 2021 sales are <b>between</b> 250,000 and 400,000?",o:["<code>=OR(D2&gt;=250000,D2&lt;=400000)</code>","<code>=AND(D2&gt;=250000,D2&lt;=400000)</code>","<code>=AND(D2&gt;250,000,D2&lt;400,000)</code>","<code>=IF(D2=250000:400000)</code>"],a:1,w:"“Between” means both conditions must hold — AND. OR would be TRUE for almost every number, and the thousand separators in option C break the arguments apart."},
+    {q:"Text inside a formula (like GROWTH) must be wrapped in…",o:["single quotes ' '","straight double quotes \" \"","brackets ( )","nothing — just type it"],a:1,w:"Excel only recognises text in straight double quotes. Without them you get #NAME?."}
+  ],
+  exit:[
+    {q:"Which formula counts the models with 2021 sales <b>above 300,000</b>?",o:["<code>=COUNT(D2:D21&gt;300000)</code>","<code>=COUNTIF(D2:D21,\"&gt;300000\")</code>","<code>=SUMIF(D2:D21,\"&gt;300000\")</code>","<code>=COUNTIF(\"&gt;300000\",D2:D21)</code>"],a:1,w:"COUNTIF(range, criteria) — range first, criteria in quotes. SUMIF would add the sales instead of counting them."},
+    {q:"In <code>=VLOOKUP(\"Honda Civic\",C2:E21,2,FALSE)</code>, the <b>2</b> refers to…",o:["Column B","Row 2","Column D — the 2nd column of the table C:E","The 2nd matching model"],a:2,w:"col_index_num counts from the first column of table_array. In C2:E21, C=1, D=2, E=3."},
+    {q:"What does <code>=OR(FALSE,TRUE,FALSE)</code> return?",o:["TRUE","FALSE","#VALUE!","1"],a:0,w:"OR is TRUE when at least one argument is TRUE."},
+    {q:"<code>=IF(D2&gt;E2,GROWTH,DECLINE)</code> shows <b>#NAME?</b>. What's the fix?",o:["Change &gt; to &gt;=","Wrap the text in double quotes","Use AND instead of IF","Add $ signs"],a:1,w:"Without quotes, Excel thinks GROWTH is a named range or function. Write <code>\"GROWTH\"</code> and <code>\"DECLINE\"</code>."},
+    {q:"Which formula gives the <b>total 2021 sales of Toyota models</b>?",o:["<code>=COUNTIF(B2:B21,\"Toyota\")</code>","<code>=SUM(B2:B21=\"Toyota\")</code>","<code>=SUMIF(B2:B21,\"Toyota\",D2:D21)</code>","<code>=VLOOKUP(\"Toyota\",B2:D21,3,FALSE)</code>"],a:2,w:"SUMIF checks B for “Toyota” and adds the matching values in D. VLOOKUP would return only the <i>first</i> Toyota's sales."}
+  ]
+};
+function buildQuiz(el){
+  const qs=QUIZ[el.dataset.quiz];let i=0,score=0;const res=[];
+  function render(){
+    if(i>=qs.length){
+      const pct=Math.round(score/qs.length*100);
+      el.innerHTML=`<div class="qcard qdone"><div class="big">${score} / ${qs.length}</div><p class="lead">${pct===100?"Perfect — you're ready for the exercise!":pct>=60?"Good work. Review the ones you missed before the exercise.":"Worth another look — revisit the slides, then try again."}</p><div class="qnav" style="justify-content:center"><button class="btn ghost" type="button">Try again</button></div></div>`;
+      el.querySelector("button").onclick=()=>{i=0;score=0;res.length=0;render()};return}
+    const q=qs[i];const L="ABCD";
+    el.innerHTML=`<div class="qhead"><div class="qdots">${qs.map((_,k)=>`<i class="${res[k]===true?"ok":res[k]===false?"no":k===i?"cur":""}"></i>`).join("")}</div><div class="qscore">Question ${i+1} of ${qs.length} · Score ${score}</div></div>
+      <div class="qcard"><div class="qq">${q.q}</div><div class="qopts">${q.o.map((o,k)=>`<button class="qopt" type="button" data-k="${k}"><span class="L">${L[k]}</span><span>${o}</span></button>`).join("")}</div>
+      <div class="qwhy"></div><div class="qnav"><button class="btn" type="button" disabled>${i===qs.length-1?"See score":"Next question"} →</button></div></div>`;
+    const why=el.querySelector(".qwhy"),nx=el.querySelector(".qnav .btn");
+    el.querySelectorAll(".qopt").forEach(b=>b.onclick=()=>{
+      const k=+b.dataset.k,ok=k===q.a;if(ok)score++;res[i]=ok;
+      el.querySelectorAll(".qopt").forEach(x=>{x.disabled=true;if(+x.dataset.k===q.a)x.classList.add("right")});
+      if(!ok)b.classList.add("wrong");
+      why.innerHTML=(ok?"✅ <b>Correct.</b> ":"❌ <b>Not quite.</b> ")+q.w;why.classList.add("show");
+      el.querySelector(".qscore").textContent=`Question ${i+1} of ${qs.length} · Score ${score}`;
+      el.querySelectorAll(".qdots i")[i].className=ok?"ok":"no";
+      nx.disabled=false;nx.focus();});
+    nx.onclick=()=>{i++;render()};
+  }
+  render();
+}
+
+/* ------------------------- anatomy ------------------------- */
+const ANAT={
+  eq:["=","Equals sign","Every formula starts with <code>=</code>. Without it, Excel treats what you type as plain text."],
+  fn:["SUM / IF","Function name","A built-in operation. Excel has 400+ functions; today we learn the core ones."],
+  br:["( )","Brackets","Wrap the function's arguments. Every opening bracket needs a closing one."],
+  rg:["D2:D21","Range","The cells to work on. The colon means “to”: D2, D3 … D21."],
+  cm:[",","Comma","Separates arguments. That's why you must never type 250,000 inside a formula."],
+  lt:["D2>E2","Logical test","A question that answers TRUE or FALSE: did 2021 beat 2020?"],
+  tx:['"text"',"Text value","Words must be wrapped in straight double quotes, e.g. \"GROWTH\"."]
+};
+document.querySelectorAll(".anat span").forEach(s=>{
+  const show=()=>{document.querySelectorAll(".anat span").forEach(x=>x.classList.toggle("on",x.dataset.k===s.dataset.k));
+    const a=ANAT[s.dataset.k];document.getElementById("anatOut").innerHTML=`<div class="big">${esc(a[0])}</div><div><h3>${a[1]}</h3><p style="margin:0">${a[2]}</p></div>`};
+  s.addEventListener("mouseenter",show);s.addEventListener("click",show);
+});
+
+/* ------------------------- deck ------------------------- */
+const slides=[...document.querySelectorAll(".slide")];
+const deck=document.getElementById("deck");
+slides.forEach(s=>{s.querySelectorAll(".sheet").forEach(buildSheet);s.querySelectorAll(".quiz").forEach(buildQuiz)});
+// VLOOKUP builder
+(function(){const sel=document.getElementById("vModel"),col=document.getElementById("vCol"),sh=document.getElementById("vSheet");
+  DATA.forEach(r=>{const o=document.createElement("option");o.textContent=r[2];if(r[2]==="Honda Civic")o.selected=true;sel.appendChild(o)});
+  const go=()=>sh._set(`=VLOOKUP("${sel.value}",C2:E21,${col.value},FALSE)`);sel.onchange=go;col.onchange=go;})();
+// error cards
+document.querySelectorAll(".errc").forEach(c=>c.onclick=()=>document.getElementById("errSheet")._set(c.dataset.try));
+// footers + menu
+const menuList=document.getElementById("menuList");
+const accOf=s=>getComputedStyle(s).getPropertyValue("--acc").trim()||"#2563eb";
+slides.forEach((s,i)=>{
+  if(!s.classList.contains("title-slide")){const f=document.createElement("div");f.className="foot";f.innerHTML=`<span>BPMNK2033 · Chapter 2 · Basic Excel Formulas</span><span>${i+1}</span>`;s.appendChild(f)}
+  const a=document.createElement("a");a.href="#"+(i+1);a.innerHTML=`<span class="n" style="background:${accOf(s)}">${i+1}</span>${esc(s.dataset.title||"Slide "+(i+1))}`;
+  a.onclick=e=>{e.preventDefault();go(i);toggleMenu(false)};menuList.appendChild(a)});
+let cur=-1;
+function go(n){
+  n=Math.max(0,Math.min(slides.length-1,n));if(n===cur)return;
+  slides.forEach((s,i)=>{s.classList.toggle("active",i===n);s.classList.toggle("prev",i<n)});
+  cur=n;document.getElementById("count").textContent=`${n+1} / ${slides.length}`;
+  document.getElementById("progress").style.width=((n+1)/slides.length*100)+"%";
+  menuList.querySelectorAll("a").forEach((a,i)=>a.classList.toggle("cur",i===n));
+  if(location.hash!=="#"+(n+1))history.replaceState(null,"","#"+(n+1));
+  slides[n].querySelectorAll(".sheet").forEach(s=>s._ensure&&s._ensure());
+  if(!timerStarted&&n>0)startTimer();
+}
+function fit(){
+  const mobile=window.innerWidth<760;document.body.classList.toggle("mobile",mobile);
+  if(mobile){deck.style.transform="";slides.forEach(s=>s.querySelectorAll(".sheet").forEach(x=>x._ensure&&x._ensure()));return}
+  const sc=Math.min(window.innerWidth/1320,(window.innerHeight-70)/736);deck.style.transform=`scale(${sc})`;
+}
+window.addEventListener("resize",fit);
+document.addEventListener("keydown",e=>{
+  if(e.target.matches("input,select,textarea"))return;
+  if(document.body.classList.contains("mobile"))return;
+  const k=e.key;
+  if(["ArrowRight","PageDown"," "].includes(k)){e.preventDefault();go(cur+1)}
+  else if(["ArrowLeft","PageUp"].includes(k)){e.preventDefault();go(cur-1)}
+  else if(k==="Home")go(0);else if(k==="End")go(slides.length-1);
+  else if(k==="m"||k==="M")toggleMenu();else if(k==="f"||k==="F")toggleFs();else if(k==="t"||k==="T")toggleTimer();
+  else if(k==="Escape")toggleMenu(false);
+});
+document.getElementById("prevBtn").onclick=()=>go(cur-1);
+document.getElementById("nextBtn").onclick=()=>go(cur+1);
+document.getElementById("menuBtn").onclick=()=>toggleMenu();
+document.getElementById("scrim").onclick=()=>toggleMenu(false);
+document.getElementById("fsBtn").onclick=toggleFs;
+function toggleMenu(v){const m=document.getElementById("menu");const on=v===undefined?!m.classList.contains("open"):v;m.classList.toggle("open",on);document.getElementById("scrim").classList.toggle("show",on)}
+function toggleFs(){if(!document.fullscreenElement)document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen().catch(()=>{});else document.exitFullscreen()}
+// swipe
+let tx=null;document.addEventListener("touchstart",e=>{if(e.target.closest(".sheet-w,.quiz,select"))return;tx=e.touches[0].clientX},{passive:true});
+document.addEventListener("touchend",e=>{if(tx===null||document.body.classList.contains("mobile"))return;const dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>60)go(cur+(dx<0?1:-1));tx=null});
+// timer (70-minute lecture)
+const LIMIT=70*60;let tStart=0,tAcc=0,tRun=false,timerStarted=false;const tEl=document.getElementById("timer");
+function startTimer(){timerStarted=true;if(!tRun){tRun=true;tStart=Date.now()}}
+function toggleTimer(){timerStarted=true;if(tRun){tAcc+=Date.now()-tStart;tRun=false}else{tRun=true;tStart=Date.now()}paint()}
+function paint(){const s=Math.floor((tAcc+(tRun?Date.now()-tStart:0))/1000);const mm=String(Math.floor(s/60)).padStart(2,"0"),ss=String(s%60).padStart(2,"0");
+  tEl.textContent=(tRun?"⏸ ":"▶ ")+mm+":"+ss;tEl.classList.toggle("over",s>LIMIT)}
+setInterval(paint,1000);
+tEl.onclick=toggleTimer;tEl.ondblclick=()=>{tAcc=0;tRun=false;paint()};
+// start
+fit();
+const h=parseInt(location.hash.slice(1),10);go(isNaN(h)?0:h-1);
+window.addEventListener("hashchange",()=>{const n=parseInt(location.hash.slice(1),10);if(!isNaN(n))go(n-1)});
+</script>
+</body>
+</html>

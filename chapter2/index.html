@@ -223,7 +223,28 @@ body.mobile{overflow:auto}
 body.mobile #viewport{position:static;inset:auto;display:block;padding:12px 12px 90px}
 body.mobile #deck{width:auto;height:auto;transform:none!important}
 body.mobile .slide{position:relative;inset:auto;opacity:1;visibility:visible;transform:none;margin-bottom:16px;padding:28px 16px 40px;border-radius:18px}
-body.mobile .cols,body.mobile .cols.even,body.mobile .cols.wide-r,body.mobile .vh{grid-template-columns:1fr;gap:18px}
+body.mobile .cols,body.mobile .cols.even,body.mobile .cols.wide-r,body.mobile .vh{grid-template-columns:minmax(0,1fr)!important;gap:18px}
+body.mobile .cols>*,body.mobile .vh>*,body.mobile .errgrid>*,body.mobile .oc-grid>*,body.mobile .qopts>*{min-width:0}
+body.mobile .slide{max-width:100%}
+body.mobile .sheet-w{max-width:100%}
+body.mobile .gridwrap{max-height:60vh;-webkit-overflow-scrolling:touch}
+body.mobile .gridwrap::before{content:"← swipe the table sideways to see all columns →";display:block;position:sticky;left:0;font-size:11px;color:#64748b;padding:4px 8px;background:#f8fafc;border-bottom:1px solid #e2e8f0}
+body.mobile .sheet-w .fbar input{font-size:16px}
+body.mobile table.grid{font-size:11px}
+body.mobile table.grid th,body.mobile table.grid td{padding:0 5px}
+body.mobile table.grid tbody th{width:24px}
+body.mobile .sheet-w .presets button{max-width:100%;white-space:normal;overflow-wrap:anywhere;text-align:left}
+body.mobile .sheet-w .out{flex-wrap:wrap}
+body.mobile .syntax{font-size:14px;white-space:pre-wrap;word-break:break-word}
+body.mobile .qcard{padding:16px}
+body.mobile .qcard .qq{font-size:18px}
+body.mobile .qopt span{min-width:0;overflow-wrap:anywhere}
+body.mobile .qopt code{white-space:normal;overflow-wrap:anywhere}
+body.mobile table.mini{font-size:14px}
+body.mobile table.mini td,body.mobile table.mini th{padding:6px}
+body.mobile .anat{font-size:22px;padding:14px}
+body.mobile .anat.small{font-size:16px}
+body.mobile p,body.mobile .callout,body.mobile li{overflow-wrap:anywhere}
 body.mobile .agenda{grid-template-columns:1fr 1fr}
 body.mobile .ag{min-height:0}
 body.mobile .oc-grid,body.mobile .errgrid,body.mobile .recap{grid-template-columns:1fr}

@@ -453,7 +453,7 @@ body.mobile .ops{grid-template-columns:1fr 1fr}
       <p style="margin-top:14px"><code>=D2&gt;E2</code> asks: <i>“Did this model sell more in 2021 than in 2020?”</i></p>
       <div class="callout">Written once in <b>F2</b>, then <b>filled down</b> to F21. Hover a result to see how the references shift row by row.</div>
     </div>
-    <div><div class="sheet" data-cols="A-F" data-fill="2021 &gt; 2020?" data-formula="=D2>E2" data-presets="=D2>E2|=D2>=300000|=B2=&quot;Toyota&quot;|=E2<>D2"></div></div>
+    <div><div class="sheet" data-cols="A-F" data-fill="2021 &gt; 2020?" data-heads="2021 &gt; 2020?|2021 ≥ 300k?|Make = Toyota?|2020 ≠ 2021?" data-formula="=D2>E2" data-presets="=D2>E2|=D2>=300000|=B2=&quot;Toyota&quot;|=E2<>D2"></div></div>
   </div>
 </section>
 
@@ -469,7 +469,7 @@ body.mobile .ops{grid-template-columns:1fr 1fr}
       <div class="callout warn"><b>Label carefully:</b> if 2021 &gt; 2020, that is <b>growth</b>. Unit sales tell us growth or decline — not profit or loss (that needs revenue and cost).</div>
       <div class="callout"><b>Text needs straight double quotes</b> <code>"GROWTH"</code>. Single quotes <code>'GROWTH'</code> give an error.</div>
     </div>
-    <div><div class="sheet" data-cols="A-F" data-fill="Status" data-formula='=IF(D2>E2,"GROWTH","DECLINE")' data-presets='=IF(D2>E2,"GROWTH","DECLINE")|=IF(D2>=300000,"Top seller","Others")|=IF(D2>E2,D2-E2,0)|=IF(D2>E2,"GROWTH",&apos;DECLINE&apos;)'></div></div>
+    <div><div class="sheet" data-cols="A-F" data-fill="Status" data-heads="Status|Seller group|Growth (units)|Status" data-formula='=IF(D2>E2,"GROWTH","DECLINE")' data-presets='=IF(D2>E2,"GROWTH","DECLINE")|=IF(D2>=300000,"Top seller","Others")|=IF(D2>E2,D2-E2,0)|=IF(D2>E2,"GROWTH",&apos;DECLINE&apos;)'></div></div>
   </div>
 </section>
 
@@ -485,7 +485,7 @@ body.mobile .ops{grid-template-columns:1fr 1fr}
       <p>“Between” is an AND too: <code>=AND(D2&gt;=250000, D2&lt;=400000)</code></p>
       <div class="callout warn"><b>Never type thousand separators</b> in a formula. <code>250,000</code> is read as two arguments: <code>250</code> and <code>000</code>. Try the last button to see.</div>
     </div>
-    <div><div class="sheet" data-cols="A-F" data-fill="Both > 250k?" data-formula="=AND(D2>250000,E2>250000)" data-presets='=AND(D2>250000,E2>250000)|=AND(D2>=250000,D2<=400000)|=IF(AND(D2>250000,E2>250000),"Consistent","-")|=AND(D2>250,000,E2>250,000)'></div></div>
+    <div><div class="sheet" data-cols="A-F" data-fill="Both > 250k?" data-heads="Both &gt; 250k?|2021 in 250k–400k?|Consistent?|Both &gt; 250k?" data-formula="=AND(D2>250000,E2>250000)" data-presets='=AND(D2>250000,E2>250000)|=AND(D2>=250000,D2<=400000)|=IF(AND(D2>250000,E2>250000),"Consistent","-")|=AND(D2>250,000,E2>250,000)'></div></div>
   </div>
 </section>
 
@@ -506,7 +506,7 @@ body.mobile .ops{grid-template-columns:1fr 1fr}
         <tr><td class="F">FALSE</td><td class="F">FALSE</td><td class="F">FALSE</td><td class="F">FALSE</td></tr>
       </table>
     </div>
-    <div><div class="sheet" data-cols="A-F" data-fill="Either > 250k?" data-formula="=OR(D2>250000,E2>250000)" data-presets='=OR(D2>250000,E2>250000)|=OR(B2="Toyota",B2="Honda")|=IF(OR(D2>250000,E2>250000),"Strong","Watch")|=AND(D2>250000,E2>250000)'></div></div>
+    <div><div class="sheet" data-cols="A-F" data-fill="Either > 250k?" data-heads="Either &gt; 250k?|Toyota or Honda?|Strong / Watch|Both &gt; 250k?" data-formula="=OR(D2>250000,E2>250000)" data-presets='=OR(D2>250000,E2>250000)|=OR(B2="Toyota",B2="Honda")|=IF(OR(D2>250000,E2>250000),"Strong","Watch")|=AND(D2>250000,E2>250000)'></div></div>
   </div>
 </section>
 
@@ -954,6 +954,7 @@ function buildSheet(el){
   function run(){
     const src=input.value;clear();
     presetsEl&&presetsEl.querySelectorAll("button").forEach(b=>b.classList.toggle("on",b.dataset.f===src));
+    if(fillHead&&el.dataset.heads&&cells[K(6,1)]){const ps=(el.dataset.presets||"").split("|"),hs=el.dataset.heads.split("|"),i=ps.indexOf(src);cells[K(6,1)].textContent=i>=0&&hs[i]?hs[i]:"Result"}
     const hasComma=commaHint(src);
     hint.classList.toggle("show",hasComma);
     hint.innerHTML=hasComma?"⚠️ <b>Watch the commas:</b> Excel reads <code>250,000</code> as two separate arguments (250 and 000). Type <code>250000</code> instead.":"";

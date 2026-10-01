@@ -987,14 +987,23 @@ function buildSheet(el){
     }
     // MIN/MAX hit
     // walk the whole formula so nested MIN/MAX (e.g. =MAX(D2:D21)-MIN(D2:D21)) also highlight their cells
+    const mm=[];
     (function markMinMax(n){
       if(!n||typeof n!=="object")return;
       if(n.type==="fn"&&(n.name==="MIN"||n.name==="MAX")){
         const sub={off:0,used:new Set(),commaHint:false};
-        try{const v=ev(n,sub);if(typeof v==="number")sub.used.forEach(k=>{if(getCell(...k.split(",").map(Number))===v&&cells[k])cells[k].classList.add("hit")})}catch(e){}
+        try{const v=ev(n,sub);if(typeof v==="number"){let where=null;sub.used.forEach(k=>{const [c,r]=k.split(",").map(Number);if(getCell(c,r)===v&&cells[k]){cells[k].classList.add("hit");if(!where){const m=getCell(3,r);where=colName(c)+r+(typeof m==="string"&&m?" – "+m:"")}}});mm.push({name:n.name,v,where})}}catch(e){}
       }
       ["l","r","e"].forEach(x=>markMinMax(n[x]));(n.args||[]).forEach(markMinMax);
     })(ast);
+    // plain-language explanation under RESULT so the number is never ambiguous
+    if(mm.length&&!msgEl.textContent&&typeof res.v==="number"){
+      const F=x=>fmt(x).t, W=p=>p.where?` (yellow cell <b>${p.where}</b>)`:"";
+      if(ast.type==="fn"&&mm.length===1){const p=mm[0];
+        msgEl.innerHTML=`${p.name==="MIN"?"Lowest":"Highest"} value = <b>${F(p.v)}</b>${W(p)}.`}
+      else if(ast.type==="bin"&&ast.o==="-"&&mm.length===2){const [a,b]=mm;
+        msgEl.innerHTML=`${a.name} <b>${F(a.v)}</b>${W(a)} − ${b.name} <b>${F(b.v)}</b>${W(b)} = <b>${F(res.v)}</b>. The answer is calculated, so it sits in no cell — yellow shows the two numbers used.`}
+    }
     if(res.ctx.trace)animateTrace(res.ctx.trace,res.ctx.hit);
     else if(res.ctx.hit&&cells[res.ctx.hit])cells[res.ctx.hit].classList.add("hit");
   }

@@ -986,8 +986,15 @@ function buildSheet(el){
       res.ctx.used.forEach(k=>cells[k]&&cells[k].classList.add("used"));
     }
     // MIN/MAX hit
-    if(ast&&ast.type==="fn"&&["MIN","MAX"].includes(ast.name)&&typeof res.v==="number"){
-      res.ctx.used.forEach(k=>{if(getCell(...k.split(",").map(Number))===res.v&&cells[k])cells[k].classList.add("hit")})}
+    // walk the whole formula so nested MIN/MAX (e.g. =MAX(D2:D21)-MIN(D2:D21)) also highlight their cells
+    (function markMinMax(n){
+      if(!n||typeof n!=="object")return;
+      if(n.type==="fn"&&(n.name==="MIN"||n.name==="MAX")){
+        const sub={off:0,used:new Set(),commaHint:false};
+        try{const v=ev(n,sub);if(typeof v==="number")sub.used.forEach(k=>{if(getCell(...k.split(",").map(Number))===v&&cells[k])cells[k].classList.add("hit")})}catch(e){}
+      }
+      ["l","r","e"].forEach(x=>markMinMax(n[x]));(n.args||[]).forEach(markMinMax);
+    })(ast);
     if(res.ctx.trace)animateTrace(res.ctx.trace,res.ctx.hit);
     else if(res.ctx.hit&&cells[res.ctx.hit])cells[res.ctx.hit].classList.add("hit");
   }

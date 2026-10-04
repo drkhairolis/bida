@@ -169,6 +169,16 @@ table.grid th.colsel{background:color-mix(in srgb,var(--acc) 22%,#f1f5f9);color:
 .sheet-w.nogrid .gridwrap{display:none}
 /* ---------- quiz ---------- */
 .quiz{max-width:880px}
+.qmini .qhead{margin-bottom:6px}
+.qmini .qcard{padding:12px 14px;border-radius:14px}
+.qmini .qcard .qq{font-size:16px;margin-bottom:10px}
+.qmini .qopts{gap:7px}
+.qmini .qopt{padding:6px 9px;font-size:14px;border-radius:10px}
+.qmini .qopt code{font-size:12.5px}
+.qmini .qopt .L{width:22px;height:22px;font-size:12px}
+.qmini .qwhy{margin-top:8px;font-size:13.5px;padding:7px 10px;line-height:1.4}
+.qmini .qnav{margin-top:8px}
+.qmini .btn{padding:6px 14px;font-size:14px}
 .qhead{display:flex;align-items:center;gap:10px;margin-bottom:12px}
 .qdots{display:flex;gap:6px}
 .qdots i{width:28px;height:8px;border-radius:4px;background:var(--line)}
@@ -612,7 +622,9 @@ body.mobile .ops{grid-template-columns:1fr 1fr}
         <div class="card"><b>HLOOKUP</b><div class="arrowdemo" style="flex-direction:column;width:26px"><i class="k"></i><i></i><i class="r"></i></div>Find in first <b>row</b> → read <b>down</b> to row <i>n</i>.</div>
       </div>
     </div>
-    <div><div class="sheet" data-cols="H-N" data-rows="1-3" data-animate="1" data-formula='=HLOOKUP("Toyota",H1:N3,2,FALSE)' data-presets='=HLOOKUP("Toyota",H1:N3,2,FALSE)|=HLOOKUP("Ford",H1:N3,3,FALSE)|=HLOOKUP("Honda",H1:N3,2,FALSE)-HLOOKUP("Honda",H1:N3,3,FALSE)|=HLOOKUP("Jeep",H1:N3,4,FALSE)'></div></div>
+    <div><div class="sheet" data-cols="H-N" data-rows="1-3" data-animate="1" data-formula='=HLOOKUP("Toyota",H1:N3,2,FALSE)' data-presets='=HLOOKUP("Toyota",H1:N3,2,FALSE)|=HLOOKUP("Ford",H1:N3,3,FALSE)|=HLOOKUP("Honda",H1:N3,2,FALSE)-HLOOKUP("Honda",H1:N3,3,FALSE)|=HLOOKUP("Jeep",H1:N3,4,FALSE)'></div>
+      <div class="kicker" style="margin:16px 0 8px">Your turn · use the table above</div>
+      <div class="quiz qmini" data-quiz="h1"></div></div>
   </div>
 </section>
 
@@ -1065,6 +1077,11 @@ const QUIZ={
     {q:"For the Ford F-Series, D2 = 726,004 and E2 = 787,422. What does <code>=IF(D2&gt;E2,\"GROWTH\",\"DECLINE\")</code> return?",o:["GROWTH","DECLINE","TRUE","#VALUE!"],a:1,w:"726,004 &gt; 787,422 is FALSE, so IF returns the third argument: DECLINE."},
     {q:"Which formula tests whether 2021 sales are <b>between</b> 250,000 and 400,000?",o:["<code>=OR(D2&gt;=250000,D2&lt;=400000)</code>","<code>=AND(D2&gt;=250000,D2&lt;=400000)</code>","<code>=AND(D2&gt;250,000,D2&lt;400,000)</code>","<code>=IF(D2=250000:400000)</code>"],a:1,w:"“Between” means both conditions must hold — AND. OR would be TRUE for almost every number, and the thousand separators in option C break the arguments apart."},
     {q:"Text inside a formula (like GROWTH) must be wrapped in…",o:["single quotes ' '","straight double quotes \" \"","brackets ( )","nothing — just type it"],a:1,w:"Excel only recognises text in straight double quotes. Without them you get #NAME?."}
+  ],
+  h1:[
+    {q:"Which formula returns <b>Honda's 2020 sales</b> (794,185)?",o:["<code>=HLOOKUP(\"Honda\",H1:N3,3,FALSE)</code>","<code>=HLOOKUP(\"Honda\",H1:N3,2,FALSE)</code>","<code>=VLOOKUP(\"Honda\",H1:N3,3,FALSE)</code>","<code>=HLOOKUP(Honda,H1:N3,3,FALSE)</code>"],a:0,w:"Row 3 of H1:N3 is Sales 2020. Row 2 would give 2021; VLOOKUP searches down column H, not across row 1; and Honda without quotes gives #NAME?."},
+    {q:"<code>=HLOOKUP(\"Jeep\",H1:N3,2,FALSE)-HLOOKUP(\"Jeep\",H1:N3,3,FALSE)</code> returns…",o:["57,957","-57,957","880,151","#REF!"],a:0,w:"469,054 (2021) − 411,097 (2020) = 57,957. Jeep grew."},
+    {q:"What does <code>=HLOOKUP(\"Nissan\",H1:N3,2,FALSE)</code> return?",o:["285,602","0","#N/A","#REF!"],a:2,w:"Nissan is not in the top row H1:N1, so an exact match (FALSE) finds nothing: #N/A. (285,602 is the Rogue in the main table, not in this summary.)"}
   ],
   exit:[
     {q:"Which formula counts the models with 2021 sales <b>above 300,000</b>?",o:["<code>=COUNT(D2:D21&gt;300000)</code>","<code>=COUNTIF(D2:D21,\"&gt;300000\")</code>","<code>=SUMIF(D2:D21,\"&gt;300000\")</code>","<code>=COUNTIF(\"&gt;300000\",D2:D21)</code>"],a:1,w:"COUNTIF(range, criteria) — range first, criteria in quotes. SUMIF would add the sales instead of counting them."},

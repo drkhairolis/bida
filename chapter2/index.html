@@ -659,6 +659,7 @@ body.mobile .ops{grid-template-columns:1fr 1fr}
         <li>What is Toyota's <b>average</b> 2021 sales? <span class="pill">AVERAGEIF</span></li>
         <li>What did the <b>rank 1</b> model sell in 2020?</li>
         <li>Growth % for each model: <code style="font-size:13px">=(D2-E2)/E2</code></li>
+        <li>Why do <b>AVERAGEIF</b> and <b>VLOOKUP</b> stay in F2 only? Because of <code style="font-size:13px">$</code> locking — read the message.</li>
       </ul>
       <p class="src">Supported: SUM, MIN, MAX, AVERAGE, MEDIAN, ROUND, ABS, COUNT, COUNTA, COUNTIF, SUMIF, AVERAGEIF, IF, AND, OR, NOT, VLOOKUP, HLOOKUP, and + − * / ^ &amp; operators.</p>
     </div>
@@ -922,6 +923,8 @@ function ev(n,ctx){
   }
 }
 function fixFormula(src){let f=src.replace(/[‘’'“”]/g,'"');const parts=f.split('"');for(let i=0;i<parts.length;i+=2)parts[i]=parts[i].replace(/(\d),(\d{3})(?!\d)/g,"$1$2");f=parts.join('"');return f}
+// a range whose rows are not locked with $ (e.g. B2:B21) would slide down when filled
+function relRange(src){const out=src.replace(/"[^"]*"/g,"");const re=/\$?[A-Za-z]{1,2}(\$?)\d+:\$?[A-Za-z]{1,2}(\$?)\d+/g;let m;while((m=re.exec(out)))if(!m[1]||!m[2])return m[0];return null}
 function commaHint(src){const outside=src.replace(/"[^"]*"/g,"");return /\d,\d{3}(?!\d)/.test(outside)}
 function evaluate(src,off=0){
   const ctx={off,used:new Set(),commaHint:commaHint(src)};
@@ -993,7 +996,8 @@ function buildSheet(el){
       return}
     const f=fmt(res.v);valEl.textContent=f.t;msgEl.textContent=f.m||"";
     const ast=res.ctx.ast;
-    if(fillOn()&&!isRange(res.v)){
+    const slide=relRange(src);
+    if(fillOn()&&!isRange(res.v)&&!slide){
       nm.textContent="F2";
       // highlight row-2 refs, fill F2:F21
       res.ctx.used.forEach(k=>cells[k]&&cells[k].classList.add("used"));
@@ -1009,6 +1013,10 @@ function buildSheet(el){
     }else{
       nm.textContent=fillHead?"F2":"—";
       if(fillHead&&!isRange(res.v)&&cells[K(6,2)]){cells[K(6,2)].textContent=f.t;cells[K(6,2)].classList.add("fillc","f2","neu")}
+      if(fillOn()&&slide&&!isRange(res.v)){
+        const lock=slide.replace(/\$?([A-Za-z]{1,2})\$?(\d+)/g,"$$$1$$$2");
+        msgEl.innerHTML=`One answer for the whole table, so it stays in F2 only. If you filled it down in Excel, <code>${esc(slide)}</code> would slide to row 3, 4… and the answers would go wrong (#N/A, #DIV/0!). Lock it with $: <code>${esc(lock)}</code>`;
+      }
       res.ctx.used.forEach(k=>cells[k]&&cells[k].classList.add("used"));
     }
     // MIN/MAX hit

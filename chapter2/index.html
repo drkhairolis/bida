@@ -143,6 +143,8 @@ kbd{font-family:var(--mono);font-size:11px;border:1px solid var(--line2);border-
 .sheet-w .out .val.err{color:var(--rose)}
 .sheet-w .out .msg{font-size:13px;color:var(--muted);line-height:1.35;flex:1}
 .sheet-w .out .msg.err{color:#9f1239}
+.sheet-w .out .fixbtn{flex:none;align-self:center;border:0;border-radius:999px;background:#15803d;color:#fff;font:700 13px var(--sans);padding:8px 14px;cursor:pointer;white-space:nowrap}
+.sheet-w .out .fixbtn:hover{background:#166534}
 .sheet-w .hint{font-size:12.5px;color:#92400e;background:#fffbeb;border-bottom:1px solid #fde68a;padding:6px 12px;display:none}
 .sheet-w .hint.show{display:block}
 .sheet-w .opts{display:flex;gap:14px;align-items:center;padding:6px 12px;font-size:13px;color:var(--muted);border-bottom:1px solid var(--line)}
@@ -749,8 +751,8 @@ function tokenize(s){
     if(c==='"'){let j=i+1,str="";while(j<s.length){if(s[j]==='"'){if(s[j+1]==='"'){str+='"';j+=2;continue}break}str+=s[j++]}
       if(j>=s.length)throw new XErr("SYNTAX",'Missing closing double quote " — text must be wrapped like "GROWTH".');
       t.push({t:"str",v:str});i=j+1;continue}
-    if("'‘’".includes(c))throw new XErr("REJECTED",'Excel won\'t even accept this — it pops up "There\'s a problem with this formula". Single quotes are reserved for sheet names, e.g. \'Sales 2021\'!A1. Text needs straight double quotes: "DECLINE".');
-    if("“”".includes(c))throw new XErr("#NAME?",'Curly “smart” quotes (often copied from Word or WhatsApp) are not real quotes to Excel, so it shows #NAME?. Retype them as straight double quotes: "DECLINE".');
+    if("'‘’".includes(c))throw new XErr("REJECTED",'Excel pops up "There\'s a problem with this formula". Single quotes are only for sheet names (e.g. \'Sales 2021\'!A1). Use straight double quotes: "DECLINE".');
+    if("“”".includes(c))throw new XErr("#NAME?",'Curly “smart” quotes (copied from Word/WhatsApp) aren\'t real quotes to Excel. Retype them as straight double quotes: "DECLINE".');
     const rest=s.slice(i);let m;
     if((m=rest.match(/^(\$?)([A-Za-z]{1,2})(\$?)(\d+)(?::(\$?)([A-Za-z]{1,2})(\$?)(\d+))?(?![A-Za-z0-9_(])/))){
       const c1=colNum(m[2]),r1=+m[4];
@@ -907,6 +909,7 @@ function ev(n,ctx){
       return spec.f(args,ctx)}
   }
 }
+function fixFormula(src){let f=src.replace(/[‘’'“”]/g,'"');const parts=f.split('"');for(let i=0;i<parts.length;i+=2)parts[i]=parts[i].replace(/(\d),(\d{3})(?!\d)/g,"$1$2");f=parts.join('"');return f}
 function commaHint(src){const outside=src.replace(/"[^"]*"/g,"");return /\d,\d{3}(?!\d)/.test(outside)}
 function evaluate(src,off=0){
   const ctx={off,used:new Set(),commaHint:commaHint(src)};
@@ -939,10 +942,10 @@ function buildSheet(el){
     ${presets.length?`<div class="presets"></div>`:""}
     ${fillToggle?`<div class="opts"><label><input type="checkbox" class="ft" checked> Fill down F2 → F21</label></div>`:""}
     <div class="hint"></div>
-    <div class="out"><span class="lbl">Result</span><span class="val">—</span><span class="msg"></span></div>
+    <div class="out"><span class="lbl">Result</span><span class="val">—</span><span class="msg"></span><button type="button" class="fixbtn" hidden title="Load the correct formula">✓ Fix it</button></div>
     <div class="gridwrap"><table class="grid"></table></div>`;
   const input=el.querySelector("input:not(.ft)"),btn=el.querySelector(".fbar button"),valEl=el.querySelector(".val"),msgEl=el.querySelector(".msg"),hint=el.querySelector(".hint"),nm=el.querySelector(".nm");
-  const ft=el.querySelector(".ft");
+  const ft=el.querySelector(".ft");const fixBtn=el.querySelector(".fixbtn");
   // grid
   const tbl=el.querySelector("table.grid");let h="<thead><tr><th></th>";
   for(let c=c1;c<=c2;c++)h+=`<th data-c="${c}">${colName(c)}</th>`;h+="</tr></thead><tbody>";
@@ -965,12 +968,16 @@ function buildSheet(el){
     hint.classList.toggle("show",hasComma);
     hint.innerHTML=hasComma?"⚠️ <b>Watch the commas:</b> Excel reads <code>250,000</code> as two separate arguments (250 and 000). Type <code>250000</code> instead.":"";
     const res=evaluate(src,0);
+    {const fx=fixFormula(src);let show=false;if(fx!==src&&(!res.ok||hasComma)){try{show=evaluate(fx,0).ok}catch(e){}}
+     fixBtn.hidden=!show;fixBtn.dataset.f=show?fx:"";}
     valEl.classList.toggle("err",!res.ok);msgEl.classList.toggle("err",!res.ok);
     if(!res.ok){
       valEl.textContent=res.err.code.startsWith("#")?res.err.code:(ERRCODE[res.err.code]||res.err.code);
       msgEl.textContent=res.err.msg;
       res.ctx.used.forEach(k=>cells[k]&&cells[k].classList.add("used"));
       if(res.ctx.trace)animateTrace(res.ctx.trace,null);
+      // like Excel: a #ERROR filled down shows in every row; a rejected formula never enters the cells
+      if(fillOn()&&res.err.code.startsWith("#"))for(let r=2;r<=21;r++){const td=cells[K(6,r)];if(td){td.textContent=res.err.code;td.classList.add("fillc","bad");td.title=`F${r}: ${shiftFormula(src,r-2)}`}}
       return}
     const f=fmt(res.v);valEl.textContent=f.t;msgEl.textContent=f.m||"";
     const ast=res.ctx.ast;
@@ -1038,6 +1045,7 @@ function buildSheet(el){
     b.onclick=()=>{input.value=p;run()};presetsEl.appendChild(b)});
   input.value=el.dataset.formula||"";
   btn.onclick=run;
+  fixBtn.onclick=()=>{if(fixBtn.dataset.f){input.value=fixBtn.dataset.f;run()}};
   input.addEventListener("keydown",e=>{e.stopPropagation();if(e.key==="Enter"){e.preventDefault();run()}});
   ft&&ft.addEventListener("change",run);
   el._run=run;el._set=f=>{input.value=f;run()};

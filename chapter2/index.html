@@ -133,7 +133,10 @@ kbd{font-family:var(--mono);font-size:11px;border:1px solid var(--line2);border-
 .sheet-w .fbar button:hover{filter:brightness(1.1)}
 .sheet-w .presets{display:flex;flex-wrap:wrap;gap:6px;padding:8px 10px;border-bottom:1px solid var(--line);background:#fff}
 .sheet-w .presets button{font-family:var(--mono);font-size:12px;border:1px solid var(--line2);background:#f8fafc;border-radius:8px;padding:4px 8px;cursor:pointer;color:#334155;transition:all .15s}
-.sheet-w .presets button:hover,.sheet-w .presets button.on{border-color:var(--acc);color:var(--acc);background:color-mix(in srgb,var(--acc) 8%,#fff)}
+.sheet-w .presets button.mistake{border:1px dashed #fda4af;background:#fff1f2;color:#9f1239}
+.sheet-w .presets button.mistake::before{content:"✗ mistake · ";font-family:var(--sans);font-weight:700;font-size:11px}
+.sheet-w .presets button.mistake.on{border:1.5px solid var(--rose);background:#ffe4e6;color:#9f1239}
+.sheet-w .presets button:not(.mistake):hover,.sheet-w .presets button.on:not(.mistake){border-color:var(--acc);color:var(--acc);background:color-mix(in srgb,var(--acc) 8%,#fff)}
 .sheet-w .out{display:flex;align-items:center;gap:12px;padding:9px 12px;border-bottom:1px solid var(--line);min-height:44px;background:linear-gradient(90deg,color-mix(in srgb,var(--acc) 6%,#fff),#fff)}
 .sheet-w .out .lbl{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--soft)}
 .sheet-w .out .val{font-family:var(--mono);font-size:20px;font-weight:700;color:var(--ink)}
@@ -1030,6 +1033,8 @@ function buildSheet(el){
   }
   const presetsEl=el.querySelector(".presets");
   if(presetsEl)presets.forEach(p=>{const b=document.createElement("button");b.type="button";b.textContent=p;b.dataset.f=p;
+    let bad=false;try{bad=!evaluate(p,0).ok||commaHint(p)}catch(e){}
+    if(bad){b.classList.add("mistake");b.title="Common mistake — click to see what Excel does";}
     b.onclick=()=>{input.value=p;run()};presetsEl.appendChild(b)});
   input.value=el.dataset.formula||"";
   btn.onclick=run;

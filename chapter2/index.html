@@ -42,6 +42,8 @@ h3{font-size:18px;font-weight:700;margin-bottom:8px}
 p{margin:0 0 12px;line-height:1.55;font-size:17px;color:var(--muted)}
 .lead{font-size:19px;color:#334155}
 code,.code{font-family:var(--mono);font-size:.92em}
+/* show >=, <=, <> exactly as typed (JetBrains Mono would draw them as ≥ ≤ ≠) */
+*,*::before,*::after{font-variant-ligatures:none;font-feature-settings:"liga" 0,"calt" 0}
 .cols{display:grid;grid-template-columns:1fr 1.25fr;gap:32px;align-items:start}
 .cols.even{grid-template-columns:1fr 1fr}
 .cols.wide-r{grid-template-columns:.86fr 1.5fr}
@@ -467,9 +469,9 @@ body.mobile .ops{grid-template-columns:1fr 1fr}
       <p>Did each model grow or decline in 2021?</p>
       <div class="syntax" style="font-size:15px"><span class="o">=</span><span class="f">IF</span><span class="o">(</span><span class="a">D2&gt;E2</span><span class="o">, </span><span class="s">"GROWTH"</span><span class="o">, </span><span class="s">"DECLINE"</span><span class="o">)</span></div>
       <div class="callout warn"><b>Label carefully:</b> if 2021 &gt; 2020, that is <b>growth</b>. Unit sales tell us growth or decline — not profit or loss (that needs revenue and cost).</div>
-      <div class="callout"><b>Text needs straight double quotes</b> <code>"GROWTH"</code>. Single quotes <code>'GROWTH'</code> give an error.</div>
+      <div class="callout"><b>Text needs straight double quotes</b> <code>"GROWTH"</code>. Single quotes <code>'GROWTH'</code> → Excel rejects the formula. Curly “smart” quotes <code>“GROWTH”</code> (copied from Word/WhatsApp) → <b>#NAME?</b></div>
     </div>
-    <div><div class="sheet" data-cols="A-F" data-fill="Status" data-heads="Status|Seller group|Growth (units)|Status" data-formula='=IF(D2>E2,"GROWTH","DECLINE")' data-presets='=IF(D2>E2,"GROWTH","DECLINE")|=IF(D2>=300000,"Top seller","Others")|=IF(D2>E2,D2-E2,0)|=IF(D2>E2,"GROWTH",&apos;DECLINE&apos;)'></div></div>
+    <div><div class="sheet" data-cols="A-F" data-fill="Status" data-heads="Status|Seller group|Growth (units)|Status|Status" data-formula='=IF(D2>E2,"GROWTH","DECLINE")' data-presets='=IF(D2>E2,"GROWTH","DECLINE")|=IF(D2>=300000,"Top seller","Others")|=IF(D2>E2,D2-E2,0)|=IF(D2>E2,"GROWTH",&apos;DECLINE&apos;)|=IF(D2>E2,“GROWTH”,“DECLINE”)'></div></div>
   </div>
 </section>
 
@@ -744,7 +746,8 @@ function tokenize(s){
     if(c==='"'){let j=i+1,str="";while(j<s.length){if(s[j]==='"'){if(s[j+1]==='"'){str+='"';j+=2;continue}break}str+=s[j++]}
       if(j>=s.length)throw new XErr("SYNTAX",'Missing closing double quote " — text must be wrapped like "GROWTH".');
       t.push({t:"str",v:str});i=j+1;continue}
-    if("'‘’“”".includes(c))throw new XErr("#NAME?",'Excel only accepts straight double quotes " for text — e.g. "DECLINE". Single quotes or curly “smart” quotes cause an error.');
+    if("'‘’".includes(c))throw new XErr("REJECTED",'Excel won\'t even accept this — it pops up "There\'s a problem with this formula". Single quotes are reserved for sheet names, e.g. \'Sales 2021\'!A1. Text needs straight double quotes: "DECLINE".');
+    if("“”".includes(c))throw new XErr("#NAME?",'Curly “smart” quotes (often copied from Word or WhatsApp) are not real quotes to Excel, so it shows #NAME?. Retype them as straight double quotes: "DECLINE".');
     const rest=s.slice(i);let m;
     if((m=rest.match(/^(\$?)([A-Za-z]{1,2})(\$?)(\d+)(?::(\$?)([A-Za-z]{1,2})(\$?)(\d+))?(?![A-Za-z0-9_(])/))){
       const c1=colNum(m[2]),r1=+m[4];
@@ -917,7 +920,7 @@ function fmt(v){
   if(typeof v==="number"){const a=Math.abs(v);return{t:(Number.isInteger(v)?v.toLocaleString("en-US"):a<10?v.toLocaleString("en-US",{maximumFractionDigits:4}):v.toLocaleString("en-US",{maximumFractionDigits:2}))}}
   return{t:String(v)};
 }
-const ERRCODE={"SYNTAX":"Formula error","NO =":"Not a formula","ARGS":"Wrong number of arguments","ERROR":"Error"};
+const ERRCODE={"REJECTED":"Formula rejected","SYNTAX":"Formula error","NO =":"Not a formula","ARGS":"Wrong number of arguments","ERROR":"Error"};
 
 /* ------------------------- sheet widget ------------------------- */
 function parseSpan(s,def){if(!s)return def;const [a,b]=s.split("-");return[a,b||a]}

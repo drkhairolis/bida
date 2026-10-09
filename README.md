@@ -11,6 +11,8 @@ bida/
 │   └── index.html        ← Chapter 3: Data Visualisation & Exploration (2 lectures)
 ├── chapter4/
 │   └── index.html        ← Chapter 4: Descriptive Statistics (2 lectures)
+├── chapter5/
+│   └── index.html        ← Chapter 5: Probability Distributions & Data Modelling (2 lectures)
 ├── chapter4-5/
 │   └── index.html        ← redirect to chapter3/ (old link)
 └── README.md
@@ -61,3 +63,7 @@ Near the top of the `<script>` block in `chapter2/index.html`, find `const DATA 
 ## Chapter 4 (two lectures in one module)
 
 `chapter4/index.html` has 26 slides. **Part A (lecture 1)** is slides 1–13 and **Part B (lecture 2)** is slides 14–26. For the second lecture, open `…/chapter4/#14`.
+
+## Chapter 5 (two lectures in one module)
+
+`chapter5/index.html` has 27 slides. **Part A (lecture 1)** is slides 1–13 and **Part B (lecture 2)** is slides 14–27. For the second lecture, open `…/chapter5/#14`.

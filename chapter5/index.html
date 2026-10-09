@@ -1,0 +1,1423 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 5 · Probability Distributions &amp; Data Modelling | BPMNK2033</title>
+<meta name="description" content="BPMNK2033 Business Intelligence & Data Analytics — Chapter 5: Probability Distributions and Data Modelling. Interactive slides with simulations, Bayes tree, distribution explorers and quizzes.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#e9eef6; --paper:#ffffff; --ink:#0f172a; --muted:#475569; --soft:#64748b; --line:#e2e8f0; --line2:#cbd5e1;
+  --blue:#2563eb; --teal:#0d9488; --violet:#7c3aed; --amber:#d97706; --orange:#ea580c; --green:#16a34a;
+  --rose:#e11d48; --pink:#db2777; --cyan:#0891b2; --indigo:#4f46e5; --xl:#107c41;
+  --acc:var(--blue);
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --sans:'Plus Jakarta Sans',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+body{overflow:hidden;background:radial-gradient(1200px 600px at 10% 0%,#dbeafe 0,transparent 60%),radial-gradient(900px 600px at 100% 100%,#fce7f3 0,transparent 55%),var(--bg)}
+button{font-family:inherit}
+/* ---------- stage ---------- */
+#viewport{position:fixed;inset:0 0 58px 0;display:flex;align-items:center;justify-content:center}
+#deck{width:1280px;height:720px;position:relative;transform-origin:center center;flex:none}
+.slide{position:absolute;inset:0;background:var(--paper);border-radius:22px;box-shadow:0 30px 80px -30px rgba(15,23,42,.35),0 2px 6px rgba(15,23,42,.06);
+  padding:44px 56px 64px;overflow:hidden;opacity:0;visibility:hidden;transform:translateX(40px) scale(.985);transition:opacity .45s ease,transform .45s cubic-bezier(.2,.7,.2,1),visibility 0s .45s}
+.slide.active{opacity:1;visibility:visible;transform:none;transition:opacity .45s ease,transform .45s cubic-bezier(.2,.7,.2,1)}
+.slide.prev{transform:translateX(-40px) scale(.985)}
+.slide::before{content:"";position:absolute;left:0;top:0;right:0;height:6px;background:linear-gradient(90deg,var(--acc),color-mix(in srgb,var(--acc) 40%,#fff))}
+.slide::after{content:"";position:absolute;right:-120px;top:-120px;width:340px;height:340px;border-radius:50%;background:color-mix(in srgb,var(--acc) 9%,transparent);pointer-events:none}
+[data-acc=blue]{--acc:var(--blue)}[data-acc=teal]{--acc:var(--teal)}[data-acc=violet]{--acc:var(--violet)}[data-acc=amber]{--acc:var(--amber)}
+[data-acc=orange]{--acc:var(--orange)}[data-acc=green]{--acc:var(--green)}[data-acc=rose]{--acc:var(--rose)}[data-acc=pink]{--acc:var(--pink)}
+[data-acc=cyan]{--acc:var(--cyan)}[data-acc=indigo]{--acc:var(--indigo)}[data-acc=xl]{--acc:var(--xl)}
+.kicker{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--acc);margin-bottom:6px}
+.kicker::before{content:"";width:18px;height:3px;border-radius:2px;background:var(--acc)}
+h1,h2,h3{margin:0;letter-spacing:-.02em}
+h2{font-size:38px;font-weight:800;line-height:1.1;margin-bottom:18px}
+h2 .fn{font-family:var(--mono);color:var(--acc);font-weight:700}
+h3{font-size:18px;font-weight:700;margin-bottom:8px}
+p{margin:0 0 12px;line-height:1.55;font-size:17px;color:var(--muted)}
+.lead{font-size:19px;color:#334155}
+code,.code{font-family:var(--mono);font-size:.92em}
+/* show >=, <=, <> exactly as typed (JetBrains Mono would draw them as ≥ ≤ ≠) */
+*,*::before,*::after{font-variant-ligatures:none;font-feature-settings:"liga" 0,"calt" 0}
+.cols{display:grid;grid-template-columns:1fr 1.25fr;gap:32px;align-items:start}
+.cols.even{grid-template-columns:1fr 1fr}
+.cols.wide-r{grid-template-columns:.86fr 1.5fr}
+.syntax{font-family:var(--mono);font-size:17px;background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:12px;margin:4px 0 14px;line-height:1.5;overflow-x:auto}
+.syntax .f{color:#7dd3fc;font-weight:700}.syntax .a{color:#fcd34d}.syntax .o{color:#94a3b8}.syntax .s{color:#86efac}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px;box-shadow:0 1px 2px rgba(15,23,42,.04)}
+.tint{background:color-mix(in srgb,var(--acc) 7%,#fff);border-color:color-mix(in srgb,var(--acc) 25%,#fff)}
+.callout{border-left:4px solid var(--acc);background:color-mix(in srgb,var(--acc) 7%,#fff);padding:10px 14px;border-radius:0 12px 12px 0;font-size:15px;color:#334155;line-height:1.5;margin:10px 0}
+.callout b{color:var(--ink)}
+.callout.warn{--acc:var(--rose)}
+ul.tidy{margin:0;padding:0;list-style:none}
+ul.tidy li{position:relative;padding:6px 0 6px 26px;font-size:16.5px;line-height:1.45;color:#334155}
+ul.tidy li::before{content:"";position:absolute;left:4px;top:13px;width:10px;height:10px;border-radius:3px;background:var(--acc);transform:rotate(45deg)}
+.pill{display:inline-block;font-family:var(--mono);font-size:13px;font-weight:600;padding:3px 9px;border-radius:999px;background:color-mix(in srgb,var(--acc) 12%,#fff);color:color-mix(in srgb,var(--acc) 80%,#000);border:1px solid color-mix(in srgb,var(--acc) 30%,#fff)}
+.foot{position:absolute;left:56px;right:56px;bottom:18px;display:flex;justify-content:space-between;font-size:12px;color:var(--soft);pointer-events:none}
+table.mini{border-collapse:collapse;width:100%;font-size:15px}
+table.mini th,table.mini td{padding:7px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+table.mini th{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--soft);font-weight:700}
+table.mini td code{color:var(--acc);font-weight:600}
+/* ---------- chrome ---------- */
+#progress{position:fixed;left:0;top:0;height:4px;background:linear-gradient(90deg,var(--blue),var(--violet),var(--pink),var(--orange));width:0;transition:width .4s ease;z-index:30}
+#hud{position:fixed;right:16px;bottom:14px;display:flex;gap:8px;align-items:center;z-index:30}
+#hud button,#hud .count{height:38px;min-width:38px;border-radius:12px;border:1px solid var(--line2);background:rgba(255,255,255,.92);backdrop-filter:blur(6px);color:var(--ink);font-size:15px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:0 10px;box-shadow:0 4px 14px -6px rgba(15,23,42,.25)}
+#hud button:hover{border-color:var(--blue);color:var(--blue)}
+#hud .count{cursor:default;font-variant-numeric:tabular-nums;font-size:13px}
+#timer{font-variant-numeric:tabular-nums;font-size:13px!important}
+#timer.over{color:var(--rose)!important;border-color:var(--rose)!important}
+#menu{position:fixed;left:0;top:0;bottom:0;width:340px;background:#fff;box-shadow:20px 0 60px -20px rgba(15,23,42,.35);z-index:40;transform:translateX(-105%);transition:transform .3s ease;overflow-y:auto;padding:20px 14px}
+#menu.open{transform:none}
+#menu h4{margin:4px 10px 12px;font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--soft)}
+#menu a{display:flex;gap:10px;align-items:center;padding:8px 10px;border-radius:10px;color:var(--ink);text-decoration:none;font-size:14.5px;font-weight:500}
+#menu a:hover{background:#f1f5f9}
+#menu a.cur{background:#eff6ff;color:var(--blue);font-weight:700}
+#menu a .n{width:26px;height:26px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex:none}
+#scrim{position:fixed;inset:0;background:rgba(15,23,42,.25);z-index:35;display:none}
+#scrim.show{display:block}
+#help{position:fixed;left:16px;bottom:14px;font-size:12px;color:var(--soft);z-index:30;background:rgba(255,255,255,.8);padding:6px 10px;border-radius:10px;border:1px solid var(--line)}
+kbd{font-family:var(--mono);font-size:11px;border:1px solid var(--line2);border-bottom-width:2px;border-radius:5px;padding:0 5px;background:#fff;color:var(--ink)}
+/* ---------- title ---------- */
+.title-slide{background:linear-gradient(135deg,#0b3d2e 0%,#107c41 45%,#16a34a 100%)!important;color:#fff}
+.title-slide::before{display:none}
+.title-slide::after{background:rgba(255,255,255,.07);width:520px;height:520px;right:-160px;top:-160px}
+.title-slide .kicker{color:#bbf7d0}.title-slide .kicker::before{background:#bbf7d0}
+.title-slide h1{font-size:64px;line-height:1.02;font-weight:800;margin:14px 0 18px;max-width:700px}
+.title-slide h1 span{color:#bbf7d0}
+.title-slide p{color:#dcfce7;font-size:20px;max-width:600px}
+.title-meta{position:absolute;left:56px;bottom:56px;display:flex;gap:28px;font-size:14px;color:#dcfce7}
+.title-meta b{display:block;color:#fff;font-size:16px}
+.floaters{position:absolute;right:40px;top:120px;width:400px;height:480px}
+.floater{position:absolute;font-family:var(--mono);font-size:17px;font-weight:600;background:rgba(255,255,255,.96);color:#0f172a;padding:10px 14px;border-radius:12px;box-shadow:0 18px 40px -16px rgba(0,0,0,.45);animation:bob 6s ease-in-out infinite;white-space:nowrap}
+.floater i{font-style:normal;color:var(--xl)}
+.floater.b{animation-delay:-1.5s}.floater.c{animation-delay:-3s}.floater.d{animation-delay:-4.5s}.floater.e{animation-delay:-2.2s}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+/* ---------- agenda ---------- */
+.agenda{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;margin-top:22px}
+.ag{border-radius:16px;padding:16px 14px;color:#fff;min-height:250px;display:flex;flex-direction:column;position:relative;overflow:hidden;transition:transform .2s}
+.ag:hover{transform:translateY(-4px)}
+.ag .t{font-family:var(--mono);font-size:13px;opacity:.9}
+.ag .h{font-size:18px;font-weight:800;margin:8px 0 6px;line-height:1.2}
+.ag .d{font-size:13.5px;opacity:.95;line-height:1.45}
+.ag .m{margin-top:auto;font-size:30px;font-weight:800;opacity:.9}
+.ag .m small{font-size:13px;font-weight:600}
+.bar70{display:flex;height:14px;border-radius:8px;overflow:hidden;margin-top:18px}
+/* ---------- outcomes ---------- */
+.oc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:8px}
+.oc{border-radius:16px;padding:18px;border:1px solid var(--line);background:#fff;position:relative}
+.oc .num{width:34px;height:34px;border-radius:10px;color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;margin-bottom:10px}
+.oc h3{font-size:17px}
+.oc p{font-size:14.5px;margin:0}
+.oc .fns{margin-top:10px;display:flex;flex-wrap:wrap;gap:6px}
+/* ---------- anatomy ---------- */
+.anat{font-family:var(--mono);font-size:44px;font-weight:700;display:flex;flex-wrap:wrap;gap:2px;padding:26px 24px;background:#0f172a;border-radius:18px;color:#e2e8f0;margin:6px 0 16px}
+.anat span{padding:4px 6px;border-radius:8px;cursor:pointer;transition:background .15s,transform .15s;position:relative}
+.anat span:hover,.anat span.on{background:rgba(255,255,255,.12);transform:translateY(-2px)}
+.anat .p-eq{color:#fda4af}.anat .p-fn{color:#7dd3fc}.anat .p-br{color:#cbd5e1}.anat .p-rg{color:#fcd34d}.anat .p-cm{color:#94a3b8}.anat .p-tx{color:#86efac}.anat .p-lt{color:#c4b5fd}
+.anat.small{font-size:30px;padding:20px}
+.anat-explain{min-height:90px;display:flex;gap:14px;align-items:flex-start}
+.anat-explain .big{font-family:var(--mono);font-size:22px;font-weight:700;color:var(--acc);min-width:120px}
+/* ---------- sheet widget ---------- */
+.sheet-w{border:1px solid var(--line2);border-radius:14px;overflow:hidden;background:#fff;box-shadow:0 10px 30px -18px rgba(15,23,42,.35)}
+.sheet-w .fbar{display:flex;align-items:center;gap:0;border-bottom:1px solid var(--line2);background:#f8fafc}
+.sheet-w .fbar .nm{font-family:var(--mono);font-size:12.5px;color:var(--soft);width:56px;text-align:center;border-right:1px solid var(--line2);padding:10px 0;font-weight:600}
+.sheet-w .fbar .fx{font-family:Georgia,serif;font-style:italic;color:var(--xl);font-weight:700;padding:0 10px;font-size:16px}
+.sheet-w .fbar input{flex:1;border:0;outline:0;background:#fff;font-family:var(--mono);font-size:15px;padding:10px 12px;color:var(--ink);min-width:0;border-left:1px solid var(--line)}
+.sheet-w .fbar input:focus{box-shadow:inset 0 -2px 0 var(--xl)}
+.sheet-w .fbar button{border:0;background:var(--xl);color:#fff;font-weight:700;font-size:13px;padding:0 14px;align-self:stretch;cursor:pointer}
+.sheet-w .fbar button:hover{filter:brightness(1.1)}
+.sheet-w .presets{display:flex;flex-wrap:wrap;gap:6px;padding:8px 10px;border-bottom:1px solid var(--line);background:#fff}
+.sheet-w .presets button{font-family:var(--mono);font-size:12px;border:1px solid var(--line2);background:#f8fafc;border-radius:8px;padding:4px 8px;cursor:pointer;color:#334155;transition:all .15s}
+.sheet-w .presets button.mistake{border:1px dashed #fda4af;background:#fff1f2;color:#9f1239}
+.sheet-w .presets button.mistake::before{content:"✗ mistake · ";font-family:var(--sans);font-weight:700;font-size:11px}
+.sheet-w .presets button.mistake.on{border:1.5px solid var(--rose);background:#ffe4e6;color:#9f1239}
+.sheet-w .presets button:not(.mistake):hover,.sheet-w .presets button.on:not(.mistake){border-color:var(--acc);color:var(--acc);background:color-mix(in srgb,var(--acc) 8%,#fff)}
+.sheet-w .out{display:flex;align-items:center;gap:12px;padding:9px 12px;border-bottom:1px solid var(--line);min-height:44px;background:linear-gradient(90deg,color-mix(in srgb,var(--acc) 6%,#fff),#fff)}
+.sheet-w .out .lbl{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--soft)}
+.sheet-w .out .val{font-family:var(--mono);font-size:20px;font-weight:700;color:var(--ink)}
+.sheet-w .out .val.err{color:var(--rose)}
+.sheet-w .out .msg{font-size:13px;color:var(--muted);line-height:1.35;flex:1}
+.sheet-w .out .msg.err{color:#9f1239}
+.sheet-w .out .fixbtn{flex:none;align-self:center;border:0;border-radius:999px;background:#15803d;color:#fff;font:700 13px var(--sans);padding:8px 14px;cursor:pointer;white-space:nowrap}
+.sheet-w .out .fixbtn:hover{background:#166534}
+.sheet-w .hint{font-size:12.5px;color:#92400e;background:#fffbeb;border-bottom:1px solid #fde68a;padding:6px 12px;display:none}
+.sheet-w .hint.show{display:block}
+.sheet-w .opts{display:flex;gap:14px;align-items:center;padding:6px 12px;font-size:13px;color:var(--muted);border-bottom:1px solid var(--line)}
+.sheet-w .opts label{display:flex;gap:6px;align-items:center;cursor:pointer}
+.gridwrap{overflow:auto;max-height:396px}
+.slide[data-title="Formula playground"] .gridwrap{max-height:360px}
+table.grid{border-collapse:separate;border-spacing:0;font-size:12.5px;width:100%;font-variant-numeric:tabular-nums}
+table.grid th,table.grid td{border-right:1px solid #e5e7eb;border-bottom:1px solid #e5e7eb;padding:0 8px;height:17px;line-height:17px;white-space:nowrap;transition:background .2s,box-shadow .2s}
+table.grid thead th{position:sticky;top:0;background:#f1f5f9;color:#475569;font-weight:600;font-size:11.5px;text-align:center;z-index:2;height:22px}
+table.grid tbody th{background:#f1f5f9;color:#64748b;font-weight:600;font-size:11px;text-align:center;width:34px;position:sticky;left:0;z-index:1}
+table.grid td.num{text-align:right}
+table.grid td.hdr{font-weight:700;color:#0f172a;background:#f8fafc}
+table.grid td.used{background:color-mix(in srgb,var(--acc) 14%,#fff);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--acc) 40%,#fff)}
+table.grid td.hit{background:#fde68a!important;box-shadow:inset 0 0 0 2px #d97706!important;font-weight:700}
+table.grid td.scan{background:#bfdbfe!important}
+table.grid td.fillc{font-weight:700;text-align:center}
+table.grid td.good{color:#15803d;background:#f0fdf4}
+table.grid td.bad{color:#be123c;background:#fff1f2}
+table.grid td.neu{color:#1e3a8a;background:#eff6ff}
+table.grid td.f2{box-shadow:inset 0 0 0 2px var(--xl)!important}
+table.grid th.colsel{background:color-mix(in srgb,var(--acc) 22%,#f1f5f9);color:var(--ink)}
+.sheet-w.nogrid .gridwrap{display:none}
+/* ---------- quiz ---------- */
+.quiz{max-width:880px}
+.qmini .qhead{margin-bottom:6px}
+.qmini .qcard{padding:12px 14px;border-radius:14px}
+.qmini .qcard .qq{font-size:16px;margin-bottom:10px}
+.qmini .qopts{gap:7px}
+.qmini .qopt{padding:6px 9px;font-size:14px;border-radius:10px}
+.qmini .qopt code{font-size:12.5px}
+.qmini .qopt .L{width:22px;height:22px;font-size:12px}
+.qmini .qwhy{margin-top:8px;font-size:13.5px;padding:7px 10px;line-height:1.4}
+.qmini .qnav{margin-top:8px}
+.qmini .btn{padding:6px 14px;font-size:14px}
+.qhead{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.qdots{display:flex;gap:6px}
+.qdots i{width:28px;height:8px;border-radius:4px;background:var(--line)}
+.qdots i.cur{background:var(--acc)}.qdots i.ok{background:var(--green)}.qdots i.no{background:var(--rose)}
+.qscore{margin-left:auto;font-weight:700;color:var(--muted);font-size:14px}
+.qcard{border:1px solid var(--line);border-radius:18px;padding:22px 24px;background:#fff;box-shadow:0 14px 34px -22px rgba(15,23,42,.35)}
+.qcard .qq{font-size:22px;font-weight:700;line-height:1.35;margin-bottom:16px}
+.qcard .qq code{background:#f1f5f9;padding:1px 6px;border-radius:6px;color:#0f172a}
+.qopts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.qopt{text-align:left;border:2px solid var(--line);background:#fff;border-radius:14px;padding:12px 14px;font-size:16px;cursor:pointer;display:flex;gap:10px;align-items:flex-start;transition:all .15s;color:var(--ink);line-height:1.35}
+.qopt:hover:not(:disabled){border-color:var(--acc);background:color-mix(in srgb,var(--acc) 5%,#fff)}
+.qopt .L{flex:none;width:26px;height:26px;border-radius:8px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:var(--muted)}
+.qopt code{font-size:14.5px}
+.qopt.right{border-color:var(--green);background:#f0fdf4}.qopt.right .L{background:var(--green);color:#fff}
+.qopt.wrong{border-color:var(--rose);background:#fff1f2}.qopt.wrong .L{background:var(--rose);color:#fff}
+.qopt:disabled{cursor:default}
+.qwhy{margin-top:14px;font-size:15px;color:#334155;padding:10px 14px;border-radius:12px;background:#f8fafc;display:none;line-height:1.5}
+.qwhy.show{display:block}
+.qnav{display:flex;justify-content:flex-end;margin-top:14px;gap:10px}
+.btn{border:0;border-radius:12px;padding:10px 18px;font-weight:700;font-size:15px;cursor:pointer;background:var(--acc);color:#fff;box-shadow:0 8px 20px -10px var(--acc)}
+.btn.ghost{background:#fff;color:var(--acc);border:2px solid var(--acc);box-shadow:none}
+.btn:disabled{opacity:.4;cursor:default}
+.qdone{text-align:center;padding:26px}
+.qdone .big{font-size:64px;font-weight:800;color:var(--acc)}
+/* ---------- misc components ---------- */
+.ops{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.op{border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:#fff}
+.op b{font-family:var(--mono);font-size:22px;color:var(--acc)}
+.op span{display:block;font-size:13px;color:var(--muted)}
+.tt{border-collapse:collapse;font-size:15px;margin-top:6px}
+.tt th,.tt td{padding:6px 12px;border:1px solid var(--line);text-align:center}
+.tt th{background:#f8fafc;font-size:12.5px;color:var(--soft)}
+.T{color:var(--green);font-weight:800}.F{color:var(--rose);font-weight:800}
+.errgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.errc{border-radius:14px;padding:14px;border:1px solid var(--line);background:#fff;cursor:pointer;transition:transform .15s,box-shadow .15s}
+.errc:hover{transform:translateY(-3px);box-shadow:0 14px 30px -18px rgba(15,23,42,.4)}
+.errc .code{font-family:var(--mono);font-weight:800;font-size:20px;color:var(--rose)}
+.errc p{font-size:13.5px;margin:6px 0 0;line-height:1.45}
+.errc .try{font-family:var(--mono);font-size:12px;color:var(--soft);margin-top:8px;display:block}
+.recap{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.rc{border-radius:14px;padding:14px;color:#fff}
+.rc b{font-family:var(--mono);font-size:17px;display:block;margin-bottom:4px}
+.rc span{font-size:13.5px;opacity:.95;line-height:1.4;display:block}
+.build{display:flex;flex-direction:column;gap:10px}
+.build label{font-size:13px;font-weight:700;color:var(--soft);text-transform:uppercase;letter-spacing:.06em}
+.build select{font-family:var(--sans);font-size:15px;padding:9px 10px;border-radius:10px;border:1px solid var(--line2);background:#fff;width:100%}
+.vparts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:6px 0 10px}
+.vparts div{border-radius:10px;padding:8px 10px;font-size:13.5px;line-height:1.35;color:#334155;background:#f8fafc;border:1px solid var(--line)}
+.vparts b{font-family:var(--mono);display:block;font-size:13px}
+.dict td:first-child{font-family:var(--mono);font-weight:700;color:var(--acc);width:40px}
+.src{font-size:12px;color:var(--soft);margin-top:10px;line-height:1.4}
+.vh{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}
+.vh .card{font-size:14px;color:#334155;line-height:1.45}
+.arrowdemo{display:flex;gap:4px;margin:8px 0}
+.arrowdemo i{width:26px;height:18px;border-radius:4px;background:#e2e8f0}
+.arrowdemo i.k{background:var(--acc)}.arrowdemo i.r{background:#fcd34d}
+/* ---------- mobile: stacked scroll ---------- */
+body.mobile{overflow:auto}
+body.mobile #viewport{position:static;inset:auto;display:block;padding:12px 12px 90px}
+body.mobile #deck{width:auto;height:auto;transform:none!important}
+body.mobile .slide{position:relative;inset:auto;opacity:1;visibility:visible;transform:none;margin-bottom:16px;padding:28px 16px 40px;border-radius:18px}
+body.mobile .cols,body.mobile .cols.even,body.mobile .cols.wide-r,body.mobile .vh{grid-template-columns:minmax(0,1fr)!important;gap:18px}
+body.mobile .cols>*,body.mobile .vh>*,body.mobile .errgrid>*,body.mobile .oc-grid>*,body.mobile .qopts>*{min-width:0}
+body.mobile .slide{max-width:100%}
+body.mobile .sheet-w{max-width:100%}
+body.mobile .gridwrap{max-height:60vh;-webkit-overflow-scrolling:touch}
+body.mobile .gridwrap::before{content:"← swipe the table sideways to see all columns →";display:block;position:sticky;left:0;font-size:11px;color:#64748b;padding:4px 8px;background:#f8fafc;border-bottom:1px solid #e2e8f0}
+body.mobile .sheet-w .fbar input{font-size:16px}
+body.mobile table.grid{font-size:11px}
+body.mobile table.grid th,body.mobile table.grid td{padding:0 5px}
+body.mobile table.grid tbody th{width:24px}
+body.mobile .sheet-w .presets button{max-width:100%;white-space:normal;overflow-wrap:anywhere;text-align:left}
+body.mobile .sheet-w .out{flex-wrap:wrap}
+body.mobile .syntax{font-size:14px;white-space:pre-wrap;word-break:break-word}
+body.mobile .qcard{padding:16px}
+body.mobile .qcard .qq{font-size:18px}
+body.mobile .qopt span{min-width:0;overflow-wrap:anywhere}
+body.mobile .qopt code{white-space:normal;overflow-wrap:anywhere}
+body.mobile table.mini{font-size:14px}
+body.mobile table.mini td,body.mobile table.mini th{padding:6px}
+body.mobile .anat{font-size:22px;padding:14px}
+body.mobile .anat.small{font-size:16px}
+body.mobile p,body.mobile .callout,body.mobile li{overflow-wrap:anywhere}
+body.mobile .agenda{grid-template-columns:1fr 1fr}
+body.mobile .ag{min-height:0}
+body.mobile .oc-grid,body.mobile .errgrid,body.mobile .recap{grid-template-columns:1fr}
+body.mobile .qopts{grid-template-columns:1fr}
+body.mobile h2{font-size:28px}
+body.mobile .title-slide h1{font-size:40px}
+body.mobile .floaters{display:none}
+body.mobile .title-meta{position:static;margin-top:24px;flex-wrap:wrap}
+body.mobile .anat{font-size:24px}
+body.mobile .foot{position:static;margin-top:16px}
+body.mobile #help,body.mobile #hud .count,body.mobile #prevBtn,body.mobile #nextBtn,body.mobile #timer,body.mobile #fsBtn{display:none}
+body.mobile .ops{grid-template-columns:1fr 1fr}
+@media print{body{overflow:visible}#hud,#help,#progress,#menu{display:none}#viewport{position:static;display:block}#deck{transform:none!important;width:auto;height:auto}.slide{position:relative;opacity:1;visibility:visible;transform:none;page-break-after:always;box-shadow:none;border:1px solid #ddd;width:1280px;height:720px;margin:0 auto 20px}}
+
+/* ================= Chapter 4 & 5 additions ================= */
+.title-slide.viz{background:linear-gradient(135deg,#1e1b4b 0%,#4338ca 42%,#7c3aed 72%,#db2777 100%)!important}
+.title-slide.viz .kicker{color:#e0e7ff}.title-slide.viz .kicker::before{background:#e0e7ff}
+.title-slide.viz h1 span{color:#fbcfe8}
+.title-slide.viz p{color:#e0e7ff}
+.title-slide.viz .title-meta{color:#e0e7ff}
+.title-slide.partb{background:linear-gradient(135deg,#083344 0%,#0e7490 45%,#0d9488 75%,#4f46e5 100%)!important}
+.title-slide.partb .kicker{color:#ccfbf1}.title-slide.partb .kicker::before{background:#ccfbf1}
+.title-slide.partb h1 span{color:#a5f3fc}
+.title-slide.partb p{color:#ccfbf1}
+.vizfloat{position:absolute;right:48px;top:96px;width:430px;height:500px}
+.vizfloat .fc{position:absolute;background:rgba(255,255,255,.96);border-radius:16px;padding:12px;box-shadow:0 22px 50px -20px rgba(0,0,0,.55);animation:bob 6s ease-in-out infinite}
+.vizfloat .fc:nth-child(2){animation-delay:-1.6s}.vizfloat .fc:nth-child(3){animation-delay:-3.1s}.vizfloat .fc:nth-child(4){animation-delay:-4.4s}
+.vizfloat .fc b{display:block;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#64748b;margin-bottom:4px}
+/* controls */
+.ctl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 10px}
+.ctl .lab{font-size:12px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--soft);margin-right:2px}
+.seg{display:inline-flex;border:1px solid var(--line2);border-radius:12px;overflow:hidden;background:#f8fafc;flex:none}
+.seg button{border:0;background:none;padding:7px 12px;font-weight:700;font-size:13.5px;color:var(--muted);cursor:pointer;border-right:1px solid var(--line)}
+.seg button:last-child{border-right:0}
+.seg button.on{background:var(--acc);color:#fff}
+.seg button:not(.on):hover{color:var(--acc);background:#fff}
+.tg{border:1px solid var(--line2);border-radius:999px;padding:6px 12px;font-size:13px;font-weight:700;background:#fff;cursor:pointer;color:var(--muted);transition:all .15s}
+.tg.on{background:color-mix(in srgb,var(--acc) 12%,#fff);border-color:var(--acc);color:color-mix(in srgb,var(--acc) 80%,#000)}
+.tg:hover{border-color:var(--acc)}
+.sbtn{border:0;border-radius:10px;padding:7px 14px;font-weight:700;font-size:13.5px;cursor:pointer;background:var(--acc);color:#fff;box-shadow:0 6px 16px -8px var(--acc)}
+.sbtn.ghost{background:#fff;color:var(--acc);border:1.5px solid var(--acc);box-shadow:none}
+.sbtn:disabled{opacity:.45;cursor:default}
+.chk{display:inline-flex;gap:6px;align-items:center;font-size:13.5px;color:#334155;cursor:pointer;font-weight:600}
+.chk input{accent-color:var(--acc);width:16px;height:16px}
+.panel{background:#fff;border:1px solid var(--line);border-radius:16px;padding:12px 14px;box-shadow:0 10px 30px -22px rgba(15,23,42,.35)}
+.chart svg{display:block;width:100%;height:auto;overflow:visible}
+.chart text{font-family:var(--sans)}
+.out{font-size:14.5px;color:#334155;line-height:1.45;background:color-mix(in srgb,var(--acc) 6%,#fff);border:1px solid color-mix(in srgb,var(--acc) 22%,#fff);border-radius:12px;padding:9px 12px;min-height:42px}
+.out b{color:var(--ink)}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:13px;color:#334155;font-weight:600;margin:4px 0 6px}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.legend span.lg{cursor:pointer;padding:3px 8px;border-radius:999px;border:1px solid var(--line)}
+.legend span.lg.off{opacity:.35}
+.steps{margin:0;padding:0 0 0 0;list-style:none;counter-reset:st}
+.steps li{counter-increment:st;position:relative;padding:5px 0 5px 32px;font-size:14px;line-height:1.4;color:#334155}
+.steps li::before{content:counter(st);position:absolute;left:0;top:5px;width:22px;height:22px;border-radius:7px;background:var(--xl);color:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center}
+.steps li b{color:var(--ink)}
+.xlsteps{border:1px solid #bbf7d0;background:#f0fdf4;border-radius:14px;padding:10px 14px}
+.xlsteps h3{font-size:14px;color:#166534;margin-bottom:4px;display:flex;align-items:center;gap:6px}
+.xlsteps h3::before{content:"X";display:inline-flex;width:20px;height:20px;border-radius:5px;background:#107c41;color:#fff;font-size:12px;align-items:center;justify-content:center;font-weight:800}
+.mini-def{display:grid;gap:8px}
+.mini-def>div{border-left:4px solid var(--acc);background:#f8fafc;border-radius:0 10px 10px 0;padding:8px 12px;font-size:14.5px;line-height:1.45;color:#334155}
+.mini-def>div b{color:var(--ink)}
+#tip{position:fixed;z-index:60;pointer-events:none;background:#0f172a;color:#f8fafc;font-size:13px;line-height:1.4;padding:8px 10px;border-radius:10px;box-shadow:0 12px 30px -10px rgba(0,0,0,.5);display:none;max-width:280px}
+#tip b{color:#fff}#tip .k{color:#94a3b8}
+/* outcomes */
+.lo-wrap{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.lo-col h3{display:flex;align-items:center;gap:10px;font-size:17px}
+.lo-col h3 .tag{font-size:12px;font-weight:800;color:#fff;border-radius:8px;padding:3px 8px}
+.lo{display:flex;gap:12px;align-items:flex-start;padding:9px 12px;border:1px solid var(--line);border-radius:12px;margin-bottom:8px;background:#fff;transition:transform .15s}
+.lo:hover{transform:translateX(4px)}
+.lo code{flex:none;font-weight:800;font-size:12.5px;padding:3px 7px;border-radius:7px;color:#fff}
+.lo span{font-size:14.5px;line-height:1.4;color:#334155}
+/* roadmap */
+.road{display:grid;gap:18px;margin-top:6px}
+.road .rw{border:1px solid var(--line);border-radius:18px;padding:14px 16px;background:#fff}
+.road .rw h3{display:flex;align-items:center;gap:10px}
+.road .rw h3 small{font-weight:600;color:var(--soft);font-size:13px}
+.blocks{display:flex;gap:6px;margin-top:8px}
+.blk{border-radius:12px;padding:10px 10px;color:#fff;cursor:pointer;min-width:0;transition:transform .15s,filter .15s;display:flex;flex-direction:column;gap:2px}
+.blk:hover{transform:translateY(-3px);filter:brightness(1.07)}
+.blk .t{font-family:var(--mono);font-size:11.5px;opacity:.9}
+.blk .h{font-size:14px;font-weight:800;line-height:1.2}
+.blk .d{font-size:12px;opacity:.95;line-height:1.3}
+/* sevens */
+.sevens{display:grid;grid-template-columns:repeat(10,1fr);gap:2px 6px;font-family:var(--mono);font-size:19px;font-weight:600;background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px 16px;user-select:none}
+.sevens span{text-align:center;line-height:1.25;color:#334155;transition:all .2s}
+.sevens.color span.s{color:#ea580c;font-weight:800}
+.sevens.size span.s{font-size:28px;font-weight:800;color:#0f172a;line-height:.9}
+.sevens.reveal span.s{background:#fde68a;border-radius:6px;box-shadow:0 0 0 2px #d97706}
+.sevens.hide{filter:blur(7px)}
+.stopw{font-family:var(--mono);font-size:42px;font-weight:800;color:var(--acc);font-variant-numeric:tabular-nums}
+.restab{width:100%;border-collapse:collapse;font-size:14.5px}
+.restab td{padding:6px 8px;border-bottom:1px solid var(--line)}
+.restab td:last-child{text-align:right;font-family:var(--mono);font-weight:700}
+/* spot it */
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.shake{animation:shake .25s 2}
+/* tables */
+table.dt{border-collapse:collapse;font-size:14px;width:100%;font-variant-numeric:tabular-nums}
+table.dt th,table.dt td{padding:6px 9px}
+table.dt td.n,table.dt th.n{text-align:right}
+table.dt .lbl{text-align:left}
+table.dt.hi thead th{font-size:12px;color:var(--soft);font-weight:700;border-bottom:1.5px solid #334155}
+table.dt.hi tbody tr:last-child td{border-bottom:1px solid var(--line)}
+table.dt.lo{border:3px double #111}
+table.dt.lo th,table.dt.lo td{border:2px solid #111;background:#fef9c3;font-weight:700;font-family:Georgia,serif}
+table.dt.lo thead th{background:#1d4ed8;color:#fff}
+table.dt.lo tbody tr:nth-child(even) td{background:#bbf7d0}
+.tdes{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.tdes .opt{border:2px solid var(--line);border-radius:14px;padding:10px;cursor:pointer;background:#fff;transition:all .15s;position:relative}
+.tdes .opt:hover{border-color:var(--acc)}
+.tdes .opt.pick{border-color:var(--rose);background:#fff1f2}
+.tdes .opt.best{border-color:var(--green);background:#f0fdf4}
+.tdes .opt .L{display:block;font-weight:800;color:var(--soft);font-size:12.5px;margin-bottom:4px}
+.tdes table{border-collapse:collapse;font-size:11px;width:100%;font-variant-numeric:tabular-nums}
+.tdes td,.tdes th{padding:3px 4px;white-space:nowrap;text-align:right}
+.tdes td:first-child,.tdes th:first-child{text-align:left}
+.dA td,.dA th{border:2px solid #0f172a}.dA table{border:3px solid #0f172a}
+.dB td,.dB th{border:1px solid #94a3b8}.dB thead th{background:#e2e8f0}.dB table{border:2px solid #475569}
+.dC td,.dC th{border-left:2px solid #334155;border-right:2px solid #334155}.dC thead th{border-bottom:2px solid #334155}
+.dD thead tr:first-child th.m{border-bottom:1px solid #94a3b8}.dD thead tr:last-child th{border-bottom:1.5px solid #334155}.dD td.tot,.dD th.tot{border-left:1px solid #94a3b8}.dD tr.pr td{border-top:1px solid #94a3b8}
+.xt{border-collapse:separate;border-spacing:3px;width:100%;font-variant-numeric:tabular-nums}
+.xt th{font-size:12.5px;color:var(--soft);font-weight:800;padding:6px 8px;text-align:right}
+.xt th.rl{text-align:left}
+.xt td{padding:9px 10px;text-align:right;font-family:var(--mono);font-size:16px;font-weight:700;border-radius:8px;cursor:pointer;transition:outline .1s}
+.xt td.rl{text-align:left;font-family:var(--sans);font-size:14.5px;color:var(--ink);cursor:default;background:#f8fafc}
+.xt td.tot{background:#f1f5f9;color:#334155}
+.xt td.sel{outline:3px solid #d97706}
+.xt td.na{color:#94a3b8}
+/* pivot builder */
+.pv{display:grid;grid-template-columns:1fr 250px;gap:14px}
+.pvpane{border:1px solid var(--line2);border-radius:12px;background:#fff;padding:10px 12px;font-size:13px}
+.pvpane h4{margin:0 0 6px;font-size:12px;text-transform:uppercase;letter-spacing:.07em;color:#166534}
+.pvpane .fld{display:flex;align-items:center;gap:6px;padding:3px 0;color:#334155;font-weight:600}
+.pvpane .fld i{width:14px;height:14px;border:1.5px solid #94a3b8;border-radius:3px;display:inline-flex;align-items:center;justify-content:center;font-style:normal;font-size:10px;color:#fff}
+.pvpane .fld i.on{background:#107c41;border-color:#107c41}
+.pvpane label{display:block;font-size:11px;font-weight:800;color:var(--soft);text-transform:uppercase;letter-spacing:.06em;margin:8px 0 3px}
+.pvpane select{width:100%;font:600 13px var(--sans);padding:6px 8px;border-radius:8px;border:1px solid var(--line2);background:#f8fafc}
+.pvt{border-collapse:collapse;font-size:14px;width:100%;font-variant-numeric:tabular-nums}
+.pvt th,.pvt td{padding:6px 9px;border-bottom:1px solid #e2e8f0;text-align:right;white-space:nowrap}
+.pvt th{background:#e8f5ee;color:#14532d;font-size:12.5px}
+.pvt td:first-child,.pvt th:first-child{text-align:left}
+.pvt tr.gt td{font-weight:800;border-top:1.5px solid #14532d}
+.pvt td.gt{font-weight:800}
+/* chooser */
+.choose{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.chc{border:1px solid var(--line);border-radius:14px;padding:11px 12px;background:#fff;display:flex;flex-direction:column;gap:8px}
+.chc.ok{border-color:var(--green);background:#f0fdf4}.chc.no{border-color:var(--rose);background:#fff1f2}
+.chc .q{font-size:16px;font-weight:700;line-height:1.35;color:var(--ink)}
+.chc .opts{display:flex;flex-wrap:wrap;gap:5px}
+.chc .opts button{border:1px solid var(--line2);background:#f8fafc;border-radius:8px;padding:6px 10px;font:600 13.5px var(--sans);cursor:pointer;color:#334155}
+.chc .opts button:hover:not(:disabled){border-color:var(--acc);color:var(--acc)}
+.chc .opts button.r{background:var(--green);color:#fff;border-color:var(--green)}
+.chc .opts button.w{background:var(--rose);color:#fff;border-color:var(--rose)}
+.chc .why{font-size:12.5px;color:#334155;line-height:1.4;display:none}
+.chc.ok .why,.chc.no .why{display:block}
+/* lens */
+.lens{font-size:12px}
+.lens .hd{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:4px}
+.lens .hd button{border:1px solid var(--line2);background:#f8fafc;border-radius:8px;padding:5px 6px;font:700 12px var(--sans);color:#334155;cursor:pointer;text-align:left}
+.lens .hd button.on{background:var(--acc);color:#fff;border-color:var(--acc)}
+.lens .rows{position:relative}
+.lens .r{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;height:6.6px;align-items:stretch;transition:transform .5s ease;position:absolute;left:0;right:0}
+.lens .r .nm{font-size:0;overflow:hidden}
+.lens .r .b{background:#f1f5f9;position:relative}
+.lens .r .b i{position:absolute;left:0;top:.6px;bottom:.6px;background:var(--acc);border-radius:0 2px 2px 0}
+.lens .r:hover .b i,.lens .r.hl .b i{background:#d97706}
+.lens .r:hover .nm,.lens .r.hl .nm{font-size:0}
+/* heat */
+.heat{border-collapse:separate;border-spacing:2px;font-variant-numeric:tabular-nums;width:100%}
+.heat th{font-size:11px;color:var(--soft);font-weight:800;padding:2px 3px}
+.heat td{font-family:var(--mono);font-size:11.5px;font-weight:600;text-align:center;padding:2px 2px;border-radius:4px;transition:background .3s,color .3s}
+.heat td.cty{font-family:var(--sans);text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;padding-right:6px;cursor:pointer}
+.heat tr.hl td.cty{color:var(--acc)}
+.heat tr.hl td{outline:1.5px solid #0f172a}
+.heat td.sp{padding:0 4px;width:92px}
+/* tiles */
+.tiles{display:grid;grid-template-columns:repeat(11,1fr);gap:4px}
+.tiles div{aspect-ratio:1.25;border-radius:7px;display:flex;align-items:center;justify-content:center;font:800 12.5px var(--sans);cursor:default;transition:opacity .2s,transform .15s}
+.tiles div.st:hover{transform:scale(1.12)}
+.tiles div.dim{opacity:.15}
+.tiles div.e{background:transparent}
+.ramp{display:flex;gap:4px;align-items:center;flex-wrap:wrap}
+.ramp span{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;color:#334155;padding:4px 8px;border-radius:999px;border:1px solid var(--line);cursor:pointer;background:#fff}
+.ramp span i{width:14px;height:14px;border-radius:4px;display:inline-block}
+.ramp span.on{border-color:#0f172a;box-shadow:0 0 0 1px #0f172a}
+/* dashboard */
+.dash{border:1px solid #cbd5e1;border-radius:16px;background:#f8fafc;padding:10px}
+.dash .top{display:flex;align-items:center;gap:12px;margin-bottom:8px;flex-wrap:wrap}
+.dash .top b{font-size:15px}
+.dash .grid5{display:grid;grid-template-columns:1.15fr 1fr 1fr;grid-template-rows:auto auto;gap:8px}
+.dash .p{background:#fff;border:1px solid var(--line);border-radius:12px;padding:6px 8px}
+.dash .p h5{margin:0 0 2px;font-size:11.5px;color:#334155;letter-spacing:.02em}
+.prin{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:10px}
+.prin div{border-radius:12px;padding:8px 10px;color:#fff;font-size:12.5px;line-height:1.35;font-weight:600}
+.prin div b{display:block;font-size:13.5px}
+.note{font-size:11.5px;color:var(--soft);line-height:1.35;margin-top:6px}
+.kpis{display:flex;gap:8px}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:10px;padding:4px 10px;font-size:11px;color:var(--soft);font-weight:700}
+.kpi b{display:block;font-size:17px;color:var(--ink);font-family:var(--mono)}
+/* mobile extras */
+body.mobile .lo-wrap,body.mobile .pv,body.mobile .tdes,body.mobile .choose,body.mobile .prin{grid-template-columns:minmax(0,1fr)!important}
+body.mobile .blocks{flex-wrap:wrap}
+body.mobile .blk{flex:1 1 45%!important}
+body.mobile .vizfloat{display:none}
+body.mobile .dash .grid5{grid-template-columns:minmax(0,1fr)!important}
+body.mobile .dash .grid5>*{grid-column:auto!important;grid-row:auto!important}
+body.mobile .sevens{font-size:15px;padding:8px}
+body.mobile .sevens.size span.s{font-size:21px}
+body.mobile .heatwrap,body.mobile .lenswrap{overflow-x:auto}
+body.mobile .heat{min-width:640px}
+body.mobile .lens{min-width:520px}
+body.mobile .tiles div{font-size:9px;border-radius:4px}
+body.mobile .xt td{font-size:13px;padding:6px}
+body.mobile .pvt{font-size:12px}
+body.mobile .pvwrap{overflow-x:auto}
+
+#spMatrix svg{max-height:400px}
+.dash .chart svg{max-height:126px}
+.prin div{padding:6px 10px}
+#pieBar.hidden{filter:blur(7px);opacity:.55}
+.title-slide.d4{background:linear-gradient(135deg,#0c1a4b 0%,#1d4ed8 45%,#0891b2 75%,#14b8a6 100%)!important}
+.title-slide.d4 .kicker{color:#dbeafe}.title-slide.d4 .kicker::before{background:#dbeafe}
+.title-slide.d4 h1 span{color:#a5f3fc}.title-slide.d4 p,.title-slide.d4 .title-meta{color:#e0f2fe}
+.choose#classify{grid-template-columns:repeat(4,1fr)}
+#classify .chc .q{font-size:14.5px}
+table.obs{border-collapse:collapse;width:100%;font-size:14px;font-variant-numeric:tabular-nums}
+table.obs th,table.obs td{padding:7px 9px;border:1px solid #e2e8f0}
+table.obs th{background:#f1f5f9;cursor:pointer;font-size:12.5px;text-align:left}
+table.obs th:hover{background:#ccfbf1}
+table.obs td.n{text-align:right}
+table.obs tbody tr{cursor:pointer}
+table.obs tbody tr:hover td{background:#f0fdfa}
+table.obs th.hl{background:#0d9488;color:#fff}
+table.obs td.hlc{background:#ccfbf1;font-weight:700}
+table.obs tr.hl td{background:#fef3c7;font-weight:700}
+.selx{font:600 13.5px var(--sans);padding:6px 10px;border-radius:10px;border:1px solid var(--line2);background:#fff}
+table.xlt{border-collapse:collapse;width:100%;font-size:13px;font-variant-numeric:tabular-nums}
+table.xlt th,table.xlt td{border:1px solid #e5e7eb;padding:4px 8px;white-space:nowrap}
+table.xlt thead th{background:#f1f5f9;position:sticky;top:0;cursor:pointer;font-size:12px;z-index:1}
+table.xlt thead th.sorted{background:#dcfce7;color:#14532d}
+table.xlt th.rh{background:#f1f5f9;color:#94a3b8;font-weight:600;width:28px;cursor:default}
+table.xlt td.n{text-align:right}
+table.xlt td.neg{background:#ffc7ce;color:#9c0006;font-weight:700}
+.chips50{display:grid;grid-template-columns:repeat(5,1fr);gap:4px}
+.chips50 span{font-size:11.5px;font-weight:700;text-align:center;padding:4px 2px;border-radius:7px;background:#f1f5f9;color:#334155;border:1.5px solid transparent;transition:all .15s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chips50 span.done{background:color-mix(in srgb,var(--c) 16%,#fff);border-color:var(--c)}
+.chips50 span.now{transform:scale(1.15);background:var(--c);color:#fff}
+.chips50 span.mode{background:#fef3c7;border-color:#d97706;color:#78350f}
+#moChips span{font-size:14px;padding:8px 4px;font-family:var(--mono)}
+i.sw{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:7px;vertical-align:-1px}
+#cuT tr.hlrow td{background:#e0e7ff;font-weight:800}
+body.mobile .choose#classify{grid-template-columns:minmax(0,1fr)!important}
+body.mobile .chips50{grid-template-columns:repeat(3,1fr)}
+body.mobile #tvTable,body.mobile #obsTable{overflow-x:auto}
+.title-slide.d5{background:linear-gradient(135deg,#2e1065 0%,#6d28d9 40%,#c026d3 72%,#f97316 100%)!important}
+.title-slide.d5 .kicker{color:#f5d0fe}.title-slide.d5 .kicker::before{background:#f5d0fe}
+.title-slide.d5 h1 span{color:#fde68a}.title-slide.d5 p,.title-slide.d5 .title-meta{color:#fae8ff}
+.die{font-size:34px;margin-left:auto;line-height:1}
+.monob{font-family:var(--mono);min-width:52px;font-size:13.5px}
+.workers{display:grid;grid-template-columns:repeat(10,1fr);gap:6px}
+.workers span{aspect-ratio:1;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;transition:background .25s,opacity .25s}
+#rvGame,#dsGame{grid-template-columns:repeat(4,1fr)}
+#dsGame{grid-template-columns:repeat(3,1fr)}
+#mxGame .chc .q{font-size:14px}
+.numin{width:70px;font:700 14px var(--mono);padding:4px 6px;border:1px solid var(--line2);border-radius:8px}
+body.mobile #rvGame,body.mobile #dsGame{grid-template-columns:minmax(0,1fr)!important}
+body.mobile .workers span{font-size:15px}
+
+.chk input.numin{width:72px;height:auto}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<filter id="deut" color-interpolation-filters="linearRGB"><feColorMatrix type="matrix" values="0.367 0.861 -0.228 0 0  0.280 0.673 0.047 0 0  -0.012 0.043 0.969 0 0  0 0 0 1 0"/></filter>
+<marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" fill="#7c3aed"/></marker>
+</defs></svg>
+<div id="progress"></div>
+<div id="viewport"><div id="deck">
+
+<!-- 1 TITLE -->
+<section class="slide title-slide d5" data-title="Probability Distributions & Data Modelling" data-acc="violet">
+  <div class="kicker">BPMNK2033 · Chapter 5</div>
+  <h1>Probability <span>Distributions</span> &amp; Data Modelling</h1>
+  <p>Put a number on uncertainty: events, conditional probability, Bayes' theorem, and the distributions businesses use to model demand, arrivals, lifetimes and risk. Roll, drag and simulate everything.</p>
+  <div class="vizfloat" id="titleViz5"></div>
+  <div class="title-meta">
+    <div><b>Business Intelligence &amp; Data Analytics</b>School of Business Management, UUM</div>
+    <div><b>Dr. Khairol Anuar Ishak</b>Session A261 · Sep Sem 2026/2027</div>
+    <div><b>Navigate</b><kbd>→</kbd> <kbd>Space</kbd> next · <kbd>M</kbd> menu · <kbd>F</kbd> full screen</div>
+  </div>
+</section>
+
+<!-- 2 ROADMAP -->
+<section class="slide" data-title="Roadmap: two lectures" data-acc="indigo">
+  <div class="kicker">Roadmap</div>
+  <h2>Chapter 5 in two lectures: from events to distributions</h2>
+  <p class="lead" style="margin-bottom:6px">Based on Camm et al., <i>Business Analytics</i> 5e, Chapter 5. Click any block to jump there.</p>
+  <div class="road">
+    <div class="rw"><h3><span class="pill" style="--acc:var(--indigo)">Part A</span> Lecture 1: Probability fundamentals <small>· 70 min · slides 4–13</small></h3>
+      <div class="blocks">
+        <div class="blk" data-go="4" style="flex:6;background:linear-gradient(160deg,#2563eb,#3b82f6)"><span class="t">00–06</span><span class="h">Warm-up</span><span class="d">Roll the die</span></div>
+        <div class="blk" data-go="5" style="flex:20;background:linear-gradient(160deg,#0d9488,#14b8a6)"><span class="t">06–26</span><span class="h">Events &amp; rules</span><span class="d">Sample space · complement · union · intersection · addition law</span></div>
+        <div class="blk" data-go="8" style="flex:20;background:linear-gradient(160deg,#7c3aed,#8b5cf6)"><span class="t">26–46</span><span class="h">Conditional probability</span><span class="d">Joint tables · independence · multiplication law</span></div>
+        <div class="blk" data-go="11" style="flex:12;background:linear-gradient(160deg,#ea580c,#f97316)"><span class="t">46–58</span><span class="h">Bayes' theorem</span><span class="d">Prior → posterior</span></div>
+        <div class="blk" data-go="12" style="flex:12;background:linear-gradient(160deg,#db2777,#ec4899)"><span class="t">58–70</span><span class="h">Check + exit</span></div>
+      </div></div>
+    <div class="rw"><h3><span class="pill" style="--acc:var(--teal)">Part B</span> Lecture 2: Probability distributions <small>· 70 min · slides 14–27</small></h3>
+      <div class="blocks">
+        <div class="blk" data-go="14" style="flex:5;background:linear-gradient(160deg,#0e7490,#0891b2)"><span class="t">00–05</span><span class="h">Recap</span><span class="d">Random variables</span></div>
+        <div class="blk" data-go="16" style="flex:23;background:linear-gradient(160deg,#2563eb,#3b82f6)"><span class="t">05–28</span><span class="h">Discrete</span><span class="d">Expected value · binomial · Poisson</span></div>
+        <div class="blk" data-go="20" style="flex:28;background:linear-gradient(160deg,#7c3aed,#a855f7)"><span class="t">28–56</span><span class="h">Continuous</span><span class="d">Uniform · triangular · normal · NORM.INV · exponential</span></div>
+        <div class="blk" data-go="25" style="flex:14;background:linear-gradient(160deg,#16a34a,#22c55e)"><span class="t">56–70</span><span class="h">Choose + exit</span><span class="d">Which distribution?</span></div>
+      </div></div>
+  </div>
+</section>
+
+<!-- 3 OUTCOMES -->
+<section class="slide" data-title="Learning outcomes" data-acc="violet">
+  <div class="kicker">Learning outcomes</div>
+  <h2>By the end, you will be able to…</h2>
+  <div class="lo-wrap">
+    <div class="lo-col"><h3><span class="tag" style="background:#4f46e5">Part A · Lecture 1</span> Probability fundamentals</h3>
+      <div class="lo"><code style="background:#2563eb">LO 5-1</code><span>Count outcomes and assign probabilities to <b>events</b>.</span></div>
+      <div class="lo"><code style="background:#0d9488">LO 5-2</code><span>Use the <b>complement, union, intersection</b> and the <b>addition law</b>.</span></div>
+      <div class="lo"><code style="background:#7c3aed">LO 5-3/5</code><span>Build <b>joint probability tables</b> and compute <b>conditional probability</b>.</span></div>
+      <div class="lo"><code style="background:#db2777">LO 5-4</code><span>Tell <b>mutually exclusive</b> from <b>independent</b> events.</span></div>
+      <div class="lo"><code style="background:#ea580c">LO 5-6</code><span>Update <b>prior</b> to <b>posterior</b> probabilities with <b>Bayes' theorem</b>.</span></div>
+    </div>
+    <div class="lo-col"><h3><span class="tag" style="background:#0d9488">Part B · Lecture 2</span> Probability distributions</h3>
+      <div class="lo"><code style="background:#2563eb">LO 5-7/8</code><span>Build discrete distributions; compute <b>E(x)</b>, <b>Var(x)</b>, <b>σ</b>.</span></div>
+      <div class="lo"><code style="background:#0891b2">LO 5-9/10</code><span>Use the <b>binomial</b> and <b>Poisson</b> distributions.</span></div>
+      <div class="lo"><code style="background:#7c3aed">LO 5-11/12</code><span>Use the <b>uniform</b> and <b>triangular</b> distributions.</span></div>
+      <div class="lo"><code style="background:#db2777">LO 5-13/14</code><span>Find <b>normal</b> probabilities and values (<b>NORM.DIST, NORM.INV</b>).</span></div>
+      <div class="lo"><code style="background:#ea580c">LO 5-15</code><span>Use the <b>exponential</b> distribution for time between events.</span></div>
+      <div class="callout" style="--acc:var(--teal)"><b>Quiz link:</b> Chapter 5 is in <b>Quiz 2</b> (Week 12, Chapters 5–8).</div>
+    </div>
+  </div>
+</section>
+
+<!-- 4 DICE WARM-UP -->
+<section class="slide" data-title="Warm-up: roll the die" data-acc="blue">
+  <div class="kicker">Part A · Warm-up</div>
+  <h2>What is the probability of rolling a 6? Let's roll</h2>
+  <div class="cols" style="grid-template-columns:1.4fr .8fr">
+    <div class="panel">
+      <div class="ctl"><button class="sbtn" data-roll="1">Roll 1</button><button class="sbtn" data-roll="10">Roll 10</button><button class="sbtn" data-roll="100">Roll 100</button><button class="sbtn" data-roll="1000">Roll 1,000</button><button class="sbtn ghost" id="dReset">Reset</button><span class="die" id="dFace">🎲</span></div>
+      <div class="chart" id="dChart"></div>
+    </div>
+    <div>
+      <div class="kpis" id="dKpi"></div>
+      <div class="out" id="dOut" style="margin-top:10px">Classical method: 6 equally likely outcomes, so P(6) = 1/6 ≈ 0.167. Roll and watch the <b>relative frequency</b> head toward it.</div>
+      <h3 style="margin-top:14px">Three ways to assign probability</h3>
+      <ul class="tidy" style="--acc:var(--blue)"><li><b>Classical</b>: equally likely outcomes (dice, coins)</li><li><b>Relative frequency</b>: from past data (40 past projects)</li><li><b>Subjective</b>: expert judgement (a new product launch)</li></ul>
+    </div>
+  </div>
+</section>
+
+<!-- 5 SAMPLE SPACE / CP&L -->
+<section class="slide" data-title="Sample space & events (CP&L)" data-acc="teal">
+  <div class="kicker">5.1 · Events and probabilities</div>
+  <h2>Events: add up the outcomes you care about</h2>
+  <div class="cols" style="grid-template-columns:.85fr 1.3fr">
+    <div class="mini-def">
+      <div><b>Random experiment</b>: a process with uncertain outcomes.</div>
+      <div><b>Sample space S</b>: the set of all outcomes. Here, S = {8, 9, 10, 11, 12} months.</div>
+      <div><b>Event</b>: a collection of outcomes. Its probability = the <b>sum</b> of their probabilities.</div>
+      <div>California Power &amp; Light (CP&amp;L): completion times from <b>40 similar past projects</b> (relative frequency method).</div>
+    </div>
+    <div class="panel">
+      <div class="ctl"><span class="lab">Quick events</span><button class="tg" data-ev="le10">≤ 10 months</button><button class="tg" data-ev="gt10">&gt; 10 months (late)</button><button class="tg" data-ev="all">Whole S</button><button class="tg" data-ev="none">Clear</button></div>
+      <div class="chart" id="cpChart"></div>
+      <div class="out" id="cpOut">Click the bars to build an event.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 6 VENN -->
+<section class="slide" data-title="Complement, union, intersection" data-acc="cyan">
+  <div class="kicker">5.2 · Basic relationships</div>
+  <h2>Complement, union, intersection and the addition law</h2>
+  <div class="cols" style="grid-template-columns:1.3fr .9fr">
+    <div class="panel">
+      <div class="ctl"><div class="seg" id="vnShow"><button data-v="A">A</button><button data-v="Ac">Aᶜ</button><button data-v="U" class="on">A ∪ B</button><button data-v="I">A ∩ B</button></div>
+        <label class="chk"><input type="checkbox" id="vnME"> Mutually exclusive</label></div>
+      <div class="chart" id="vnChart"></div>
+      <div class="ctl" style="margin-top:6px"><span class="lab">P(A)</span><input type="range" id="vnA" min="5" max="70" value="40" style="flex:1"><span class="lab">P(B)</span><input type="range" id="vnB" min="5" max="70" value="30" style="flex:1"><span class="lab">P(A∩B)</span><input type="range" id="vnI" min="0" max="30" value="10" style="flex:1"></div>
+    </div>
+    <div>
+      <div class="syntax" style="font-size:14.5px;line-height:1.75">P(Aᶜ) = 1 − P(A)<br>P(A ∪ B) = P(A) + P(B) − <span class="s">P(A ∩ B)</span></div>
+      <div class="out" id="vnOut"></div>
+      <p style="font-size:14.5px;margin-top:10px"><b>Why subtract the intersection?</b> Adding P(A) and P(B) counts the overlap twice. <b>Mutually exclusive</b> events have no overlap, so P(A ∪ B) = P(A) + P(B).</p>
+    </div>
+  </div>
+</section>
+
+<!-- 7 ADDITION LAW APPLICATION -->
+<section class="slide" data-title="Addition law in practice" data-acc="orange">
+  <div class="kicker">5.2 · Application of the addition law</div>
+  <h2>50 workers: late, defective, or both?</h2>
+  <div class="cols" style="grid-template-columns:1.2fr 1fr">
+    <div class="panel">
+      <div class="ctl"><div class="seg" id="wkShow"><button data-v="L">Late (L)</button><button data-v="D">Defective (D)</button><button data-v="I">Both (L ∩ D)</button><button data-v="U" class="on">L ∪ D</button></div></div>
+      <div class="workers" id="wkGrid"></div>
+      <div class="legend" style="margin-top:8px"><span><i style="background:#2563eb"></i>Late only</span><span><i style="background:#ea580c"></i>Defective only</span><span><i style="background:#7c3aed"></i>Both</span><span><i style="background:#e2e8f0"></i>Neither</span></div>
+    </div>
+    <div>
+      <p style="font-size:15px">A manager checks the work of <b>50 workers</b>: 5 finished late, 6 made defective products, and 2 did both. What is the probability that a worker is late <b>or</b> defective?</p>
+      <div class="out" id="wkOut"></div>
+      <div class="callout" style="--acc:var(--orange)"><b>Common mistake:</b> 5/50 + 6/50 = 0.22 counts the 2 "both" workers twice. The correct answer is 0.18.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 8 JOINT TABLE -->
+<section class="slide" data-title="Crosstab → joint probability table" data-acc="violet">
+  <div class="kicker">5.3 · Conditional probability</div>
+  <h2>From a crosstab to a joint probability table</h2>
+  <div class="cols" style="grid-template-columns:1.25fr .95fr">
+    <div class="panel">
+      <div class="ctl"><span class="lab">Show</span><div class="seg" id="jtMode"><button data-m="n" class="on">Counts</button><button data-m="j">Joint P (÷300)</button><button data-m="r">Row % = P(· | row)</button></div></div>
+      <div id="jtTable"></div>
+      <div class="out" id="jtOut" style="margin-top:8px">Click any cell.</div>
+    </div>
+    <div>
+      <p style="font-size:15px">Lancaster Savings &amp; Loan: does mortgage default depend on marital status? <span class="pill">DATAfile: mortgagedefault</span></p>
+      <ul class="tidy" style="--acc:var(--violet)"><li><b>Joint probability</b>: both events together, e.g. P(M ∩ D).</li><li><b>Marginal probability</b>: in the margins, e.g. P(M) = 0.4767.</li><li><b>Conditional</b>: P(D | M) = P(M ∩ D) / P(M).</li></ul>
+      <div class="xlsteps" style="margin-top:8px"><h3>Excel PivotTable</h3><ol class="steps"><li>Rows: Marital Status · Columns: Default · Values: Count.</li><li><b>Show Values As ▸ % of Grand Total</b> gives the joint table.</li><li><b>Show Values As ▸ % of Row Total</b> gives P(D | M), P(D | S).</li></ol></div>
+    </div>
+  </div>
+</section>
+
+<!-- 9 CONDITIONAL -->
+<section class="slide" data-title="Conditional probability" data-acc="pink">
+  <div class="kicker">5.3 · Conditional probability</div>
+  <h2>Conditional probability: zoom in on what you know</h2>
+  <div class="cols" style="grid-template-columns:1.35fr .85fr">
+    <div class="panel">
+      <div class="ctl"><span class="lab">Given</span><div class="seg" id="cdGiven"><button data-g="all" class="on">Everyone</button><button data-g="M">Married (M)</button><button data-g="S">Single (S)</button></div></div>
+      <div class="chart" id="cdChart"></div>
+    </div>
+    <div>
+      <div class="syntax" style="font-size:15px">P(A | B) = <span class="s">P(A ∩ B)</span> / <span class="a">P(B)</span></div>
+      <div class="out" id="cdOut"></div>
+      <p style="font-size:14.5px;margin-top:10px">“Given M” shrinks the sample space to the <b>143 married</b> customers. Then we ask what share of <i>them</i> defaulted.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 10 INDEPENDENCE -->
+<section class="slide" data-title="Independence & multiplication law" data-acc="indigo">
+  <div class="kicker">5.3 · Independent events · multiplication law</div>
+  <h2>Independent or not? And the multiplication law</h2>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <div class="panel">
+      <h3>Is default independent of marital status?</h3>
+      <p style="font-size:14.5px">A and B are <b>independent</b> if P(A | B) = P(A). Knowing B does not change A.</p>
+      <div class="chart" id="inChart"></div>
+      <div class="out" id="inOut"></div>
+    </div>
+    <div>
+      <div class="syntax" style="font-size:14px;line-height:1.75">Multiplication law: P(A ∩ B) = P(B) · P(A | B)<br>If independent: P(A ∩ B) = P(A) · P(B)</div>
+      <h3>Mutually exclusive ≠ independent</h3>
+      <div class="choose" id="mxGame" style="grid-template-columns:1fr"></div>
+    </div>
+  </div>
+</section>
+
+<!-- 11 BAYES -->
+<section class="slide" data-title="Bayes' theorem" data-acc="orange">
+  <div class="kicker">5.3 · Bayes' theorem</div>
+  <h2>Bayes' theorem: a bad part arrived. Which supplier?</h2>
+  <div class="cols" style="grid-template-columns:1.45fr .75fr">
+    <div class="panel">
+      <div class="ctl"><span class="lab">S1 share</span><input type="range" id="byP" min="5" max="95" value="65" style="flex:1;accent-color:#ea580c"><b id="byPL" class="monob"></b>
+        <span class="lab">Bad rate S1</span><input type="range" id="byB1" min="1" max="15" value="2" style="width:90px"><b id="byB1L" class="monob"></b>
+        <span class="lab">S2</span><input type="range" id="byB2" min="1" max="15" value="5" style="width:90px"><b id="byB2L" class="monob"></b></div>
+      <div class="chart" id="byChart"></div>
+    </div>
+    <div>
+      <div class="syntax" style="font-size:13.5px;line-height:1.7">P(A₁ | B) = P(A₁)P(B | A₁) / P(B)<br>P(B) = P(A₁)P(B | A₁) + P(A₂)P(B | A₂)</div>
+      <div class="out" id="byOut"></div>
+      <p class="note">Prior → new information (a bad part) → Bayes' theorem → posterior. Textbook default: 65% / 35% of parts; 2% / 5% bad.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 12 QUICK CHECK A -->
+<section class="slide" data-title="Quick check: probability rules" data-acc="amber">
+  <div class="kicker">Quick check · 3 questions</div>
+  <h2>Quick check: probability rules</h2>
+  <div class="quiz" data-quiz="qa"></div>
+</section>
+
+<!-- 13 EXIT A -->
+<section class="slide" data-title="Exit ticket: Part A" data-acc="violet">
+  <div class="kicker">Exit ticket · Part A · 5 questions</div>
+  <h2>Exit ticket: Part A</h2>
+  <div class="quiz" data-quiz="exitA"></div>
+</section>
+
+<!-- 14 PART B DIVIDER -->
+<section class="slide title-slide partb" data-title="Part B: second lecture starts" data-acc="teal">
+  <div class="kicker">BPMNK2033 · Chapter 5 · Part B</div>
+  <h1>Model uncertainty with <span>distributions</span></h1>
+  <p>How many customers will click? How many patients will arrive? How long will an engine last? Last time you computed probabilities of events. Today you model whole random variables.</p>
+  <div class="vizfloat" id="partbViz5"></div>
+  <div class="title-meta">
+    <div><b>Recap from Part A</b>Events · addition law · joint tables · conditional probability · Bayes</div>
+    <div><b>Tip for the lecturer</b>Double-click the timer to reset it to 00:00</div>
+  </div>
+</section>
+
+<!-- 15 RANDOM VARIABLES -->
+<section class="slide" data-title="Random variables: discrete or continuous?" data-acc="cyan">
+  <div class="kicker">5.4 · Random variables</div>
+  <h2>Discrete or continuous? <span class="pill" id="rvScore" style="font-size:16px;vertical-align:middle">0 / 8</span></h2>
+  <p style="margin-bottom:10px">A <b>random variable</b> is a numerical description of an experiment's outcome. <b>Discrete</b> = countable values (0, 1, 2, …). <b>Continuous</b> = any value in an interval.</p>
+  <div class="choose" id="rvGame"></div>
+  <div class="callout" style="margin-top:10px"><b>Line-segment test:</b> pick two possible values. If every point between them is also possible, the variable is continuous.</div>
+</section>
+
+<!-- 16 EXPECTED VALUE -->
+<section class="slide" data-title="Discrete distribution & expected value" data-acc="blue">
+  <div class="kicker">5.5 · Discrete probability distributions</div>
+  <h2>Expected value, variance and SD of a discrete variable</h2>
+  <div class="cols" style="grid-template-columns:1.2fr 1fr">
+    <div class="panel">
+      <p style="font-size:14.5px;margin-bottom:6px">Number of mortgage payments per year (x) for 300 customers. Change the counts and everything updates.</p>
+      <div id="evInputs" class="ctl"></div>
+      <div id="evTable"></div>
+      <div class="chart" id="evChart" style="margin-top:6px"></div>
+    </div>
+    <div>
+      <div class="syntax" style="font-size:14px;line-height:1.75">E(x) = μ = Σ x·f(x)<br>Var(x) = σ² = Σ (x − μ)²·f(x)<br>=<span class="f">SUMPRODUCT</span>(<span class="a">A2:A4</span>,<span class="a">B2:B4</span>)</div>
+      <div class="kpis" id="evKpi"></div>
+      <div class="out" id="evOut" style="margin-top:8px"></div>
+      <p class="note">A valid distribution needs every f(x) ≥ 0 and Σ f(x) = 1. These are relative frequencies, so it is an <b>empirical (custom) discrete distribution</b>.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 17 BINOMIAL -->
+<section class="slide" data-title="Binomial distribution" data-acc="teal">
+  <div class="kicker">5.5 · Binomial probability distribution</div>
+  <h2>Binomial: how many successes in n trials?</h2>
+  <div class="cols" style="grid-template-columns:1.45fr .75fr">
+    <div class="panel">
+      <div class="ctl"><span class="lab">n</span><input type="range" id="bnN" min="1" max="30" value="3" style="flex:1;accent-color:#0d9488"><b id="bnNL" class="monob"></b><span class="lab">p</span><input type="range" id="bnP" min="1" max="99" value="30" style="flex:1;accent-color:#0d9488"><b id="bnPL" class="monob"></b>
+        <div class="seg" id="bnC"><button data-c="eq" class="on">P(x = k)</button><button data-c="le">P(x ≤ k)</button></div></div>
+      <div class="chart" id="bnChart"></div>
+    </div>
+    <div>
+      <p style="font-size:14.5px"><b>Martin's</b> e-mails 3 customers. Each clicks the link with p = 0.30, independently. Four conditions: <b>n identical trials</b>, <b>two outcomes</b>, <b>constant p</b>, <b>independent trials</b>.</p>
+      <div class="syntax" style="font-size:13px">=<span class="f">BINOM.DIST</span>(<span class="a">x</span>,<span class="a">n</span>,<span class="a">p</span>,<span class="s">FALSE</span>)  ← P(x = k)<br>=<span class="f">BINOM.DIST</span>(<span class="a">x</span>,<span class="a">n</span>,<span class="a">p</span>,<span class="s">TRUE</span>)  ← P(x ≤ k)</div>
+      <div class="kpis" id="bnKpi"></div>
+      <div class="out" id="bnOut" style="margin-top:8px">Click a bar.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 18 POISSON -->
+<section class="slide" data-title="Poisson distribution" data-acc="indigo">
+  <div class="kicker">5.5 · Poisson probability distribution</div>
+  <h2>Poisson: how many arrivals in an interval?</h2>
+  <div class="cols" style="grid-template-columns:1.45fr .75fr">
+    <div class="panel">
+      <div class="ctl"><span class="lab">Mean μ (arrivals per hour)</span><input type="range" id="psM" min="1" max="20" value="10" style="flex:1;accent-color:#4f46e5"><b id="psML" class="monob"></b>
+        <div class="seg" id="psC"><button data-c="eq" class="on">P(x = k)</button><button data-c="le">P(x ≤ k)</button><button data-c="ge">P(x ≥ k)</button></div></div>
+      <div class="chart" id="psChart"></div>
+    </div>
+    <div>
+      <p style="font-size:14.5px">Patients arriving at an emergency room average <b>10 per hour</b>. The number of arrivals per hour is Poisson: occurrences in an <b>interval</b> (time, length, area), <b>independent</b>, with a constant average rate.</p>
+      <div class="syntax" style="font-size:13px">f(x) = μˣe^(−μ) / x!<br>=<span class="f">POISSON.DIST</span>(<span class="a">x</span>,<span class="a">μ</span>,<span class="s">FALSE</span>)</div>
+      <div class="out" id="psOut">Click a bar.</div>
+      <p class="note">Mean = variance = μ.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 19 QUICK CHECK B -->
+<section class="slide" data-title="Quick check: discrete distributions" data-acc="amber">
+  <div class="kicker">Quick check · 3 questions</div>
+  <h2>Quick check: discrete distributions</h2>
+  <div class="quiz" data-quiz="qb"></div>
+</section>
+
+<!-- 20 UNIFORM -->
+<section class="slide" data-title="Uniform distribution: area = probability" data-acc="violet">
+  <div class="kicker">5.6 · Continuous probability distributions</div>
+  <h2>Uniform distribution: probability is <i>area</i></h2>
+  <div class="cols" style="grid-template-columns:1.45fr .75fr">
+    <div class="panel">
+      <div class="ctl"><span class="lab">From</span><input type="range" id="unA" min="110" max="150" value="120" style="flex:1;accent-color:#7c3aed"><span class="lab">to</span><input type="range" id="unB" min="110" max="150" value="130" style="flex:1;accent-color:#7c3aed"></div>
+      <div class="chart" id="unChart"></div>
+      <div class="out" id="unOut"></div>
+    </div>
+    <div>
+      <p style="font-size:14.5px">Flight time from Chicago to New York is <b>uniform between 120 and 140 minutes</b>: every minute in the range is equally likely.</p>
+      <div class="syntax" style="font-size:13.5px;line-height:1.7">f(x) = 1/(b − a) for a ≤ x ≤ b<br>E(x) = (a + b)/2<br>Var(x) = (b − a)²/12</div>
+      <ul class="tidy" style="--acc:var(--violet)"><li>For continuous variables, <b>P(x = exactly 130) = 0</b>. We only find probabilities of <b>intervals</b>.</li><li>The <b>total area</b> under f(x) is always 1.</li></ul>
+    </div>
+  </div>
+</section>
+
+<!-- 21 TRIANGULAR -->
+<section class="slide" data-title="Triangular distribution" data-acc="amber">
+  <div class="kicker">5.6 · Triangular probability distribution</div>
+  <h2>Triangular: when you only know min, most likely, max</h2>
+  <div class="cols" style="grid-template-columns:1.45fr .75fr">
+    <div class="panel">
+      <div class="ctl"><span class="lab">a</span><input type="range" id="trA" min="0" max="11" value="6" style="width:80px"><span class="lab">m</span><input type="range" id="trM" min="7" max="22" value="12" style="width:90px"><span class="lab">b</span><input type="range" id="trB" min="14" max="30" value="24" style="width:90px">
+        <span class="lab" style="margin-left:6px">Interval</span><input type="range" id="trX1" min="0" max="30" value="10" style="width:80px"><input type="range" id="trX2" min="0" max="30" value="18" style="width:80px"></div>
+      <div class="chart" id="trChart"></div>
+      <div class="out" id="trOut"></div>
+    </div>
+    <div>
+      <p style="font-size:14.5px">A project's assessment phase: experts say <b>at least 6 months (a)</b>, <b>most likely 12 (m)</b>, <b>at most 24 (b)</b>. That is a subjective but practical model, common in project and simulation work.</p>
+      <div class="syntax" style="font-size:13px;line-height:1.7">P(x ≤ c) = (c − a)² / ((b − a)(m − a)) for c ≤ m<br>P(x ≤ c) = 1 − (b − c)² / ((b − a)(b − m)) for c &gt; m</div>
+      <p class="note">Check: with a = 6, m = 12, b = 24, P(10 ≤ x ≤ 18) = 0.8333 − 0.1481 = 0.6852. The pptx slide states 0.6111, which does not match these parameters.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 22 NORMAL -->
+<section class="slide" data-title="Normal distribution (NORM.DIST)" data-acc="pink">
+  <div class="kicker">5.6 · Normal probability distribution</div>
+  <h2>Normal distribution: Grear aircraft engines</h2>
+  <div class="cols" style="grid-template-columns:1.45fr .75fr">
+    <div class="panel">
+      <div class="ctl"><span class="lab">μ</span><input type="range" id="nmM" min="30000" max="43000" step="500" value="36500" style="flex:1;accent-color:#db2777"><b id="nmML" class="monob"></b><span class="lab">σ</span><input type="range" id="nmS" min="2000" max="8000" step="250" value="5000" style="flex:1;accent-color:#db2777"><b id="nmSL" class="monob"></b></div>
+      <div class="ctl"><span class="lab">x</span><input type="range" id="nmX" min="20000" max="55000" step="500" value="40000" style="flex:1;accent-color:#db2777"><b id="nmXL" class="monob"></b><div class="seg" id="nmT"><button data-t="le">P(x ≤ value)</button><button data-t="ge" class="on">P(x ≥ value)</button></div></div>
+      <div class="chart" id="nmChart"></div>
+    </div>
+    <div>
+      <p style="font-size:14.5px">Engine lifetime (flight hours) is normal with <b>μ = 36,500</b>, <b>σ = 5,000</b>. What share of engines last <b>40,000+ hours</b>?</p>
+      <div class="syntax" style="font-size:13px">=1-<span class="f">NORM.DIST</span>(<span class="a">40000</span>,<span class="a">36500</span>,<span class="a">5000</span>,<span class="s">TRUE</span>)</div>
+      <div class="out" id="nmOut"></div>
+      <ul class="tidy" style="--acc:var(--pink);margin-top:6px"><li><b>μ</b> moves the curve; <b>σ</b> makes it wider and flatter.</li><li>Symmetric: 0.5 on each side of μ. Tails never touch the axis.</li></ul>
+    </div>
+  </div>
+</section>
+
+<!-- 23 NORM.INV -->
+<section class="slide" data-title="NORM.INV: from probability to value" data-acc="rose">
+  <div class="kicker">5.6 · Finding a value for a probability</div>
+  <h2>NORM.INV: set the warranty guarantee</h2>
+  <div class="cols" style="grid-template-columns:1.45fr .75fr">
+    <div class="panel">
+      <div class="ctl"><span class="lab">% of engines eligible for discount</span><input type="range" id="niP" min="1" max="30" value="10" style="flex:1;accent-color:#e11d48"><b id="niPL" class="monob"></b></div>
+      <div class="chart" id="niChart"></div>
+      <div class="out" id="niOut"></div>
+    </div>
+    <div>
+      <p style="font-size:14.5px">Grear will give a discount on a new engine if the old one fails before a <b>guaranteed number of hours</b>. Only <b>10%</b> of engines should qualify. What guarantee should it offer?</p>
+      <div class="syntax" style="font-size:13px">=<span class="f">NORM.INV</span>(<span class="a">0.1</span>,<span class="a">36500</span>,<span class="a">5000</span>)</div>
+      <div class="callout"><b>NORM.DIST</b>: value → probability.<br><b>NORM.INV</b>: probability → value.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 24 EXPONENTIAL -->
+<section class="slide" data-title="Exponential distribution" data-acc="green">
+  <div class="kicker">5.6 · Exponential probability distribution</div>
+  <h2>Exponential: time between events</h2>
+  <div class="cols" style="grid-template-columns:1.45fr .75fr">
+    <div class="panel">
+      <div class="ctl"><span class="lab">Mean μ (months)</span><input type="range" id="exM" min="3" max="30" value="15" style="flex:1;accent-color:#16a34a"><b id="exML" class="monob"></b><span class="lab">Interval</span><input type="range" id="exX1" min="0" max="45" value="6" style="width:90px"><input type="range" id="exX2" min="0" max="45" value="18" style="width:90px"></div>
+      <div class="chart" id="exChart"></div>
+      <div class="out" id="exOut"></div>
+    </div>
+    <div>
+      <p style="font-size:14.5px">The time between business-loan defaults at a bank is exponential with a mean of <b>15 months</b>. What is the probability that the next gap is between 6 and 18 months?</p>
+      <div class="syntax" style="font-size:13px;line-height:1.7">P(x ≤ x₀) = 1 − e^(−x₀/μ)<br>=<span class="f">EXPON.DIST</span>(<span class="a">18</span>,<span class="a">1/15</span>,<span class="s">TRUE</span>)</div>
+      <p class="note">Note: Excel takes the <b>rate 1/μ</b>, not the mean. Exponential (time between events) pairs with Poisson (number of events).</p>
+    </div>
+  </div>
+</section>
+
+<!-- 25 CHOOSER -->
+<section class="slide" data-title="Which distribution?" data-acc="teal">
+  <div class="kicker">Apply it</div>
+  <h2>Which distribution models it? <span class="pill" id="dsScore" style="font-size:16px;vertical-align:middle">0 / 6</span></h2>
+  <div class="choose" id="dsGame"></div>
+</section>
+
+<!-- 26 EXIT B -->
+<section class="slide" data-title="Exit ticket: Part B" data-acc="green">
+  <div class="kicker">Exit ticket · Part B · 6 questions</div>
+  <h2>Exit ticket: Part B</h2>
+  <div class="quiz" data-quiz="exitB"></div>
+</section>
+
+<!-- 27 WRAP-UP -->
+<section class="slide" data-title="Wrap-up: Excel cheat sheet" data-acc="indigo">
+  <div class="kicker">Wrap-up</div>
+  <h2>Your probability toolkit in Excel</h2>
+  <div class="recap">
+    <div class="rc" style="background:#7c3aed"><b>PivotTable % of Grand / Row</b><span>Joint and conditional probabilities.</span></div>
+    <div class="rc" style="background:#2563eb"><b>SUMPRODUCT</b><span>E(x) and Var(x) of a discrete distribution.</span></div>
+    <div class="rc" style="background:#0d9488"><b>BINOM.DIST</b><span>Successes in n independent trials.</span></div>
+    <div class="rc" style="background:#4f46e5"><b>POISSON.DIST</b><span>Occurrences in an interval.</span></div>
+    <div class="rc" style="background:#a855f7"><b>Uniform · Triangular</b><span>Area formulas: equal likelihood / min-mode-max.</span></div>
+    <div class="rc" style="background:#db2777"><b>NORM.DIST</b><span>Normal: value → probability.</span></div>
+    <div class="rc" style="background:#e11d48"><b>NORM.INV</b><span>Normal: probability → value.</span></div>
+    <div class="rc" style="background:#16a34a"><b>EXPON.DIST(x, 1/μ, TRUE)</b><span>Time between events.</span></div>
+  </div>
+  <div class="cols even" style="margin-top:18px">
+    <div class="card tint"><h3>📝 Practise in Excel</h3><p style="margin:0">Rebuild the <b>mortgagedefault</b> joint table with a PivotTable, then compute P(D | M) and P(D | S). Check: P(x ≥ 40,000) = 0.2420 and NORM.INV(0.1, …) = 30,092 hours.</p></div>
+    <div class="card"><h3>🎯 Remember</h3><p style="margin:0">Overlap? Subtract it (addition law). New information? Condition on it (Bayes). Counting successes → binomial. Counting arrivals → Poisson. Measuring time or size → continuous.</p></div>
+  </div>
+</section>
+
+</div></div>
+
+<nav id="menu" aria-label="Slides"><h4>Chapter 5 · Slides</h4><div id="menuList"></div></nav>
+<div id="scrim"></div>
+<div id="tip"></div>
+<div id="help"><kbd>←</kbd><kbd>→</kbd> navigate · <kbd>M</kbd> menu · <kbd>F</kbd> full screen · <kbd>T</kbd> timer</div>
+<div id="hud">
+  <button id="menuBtn" title="Slide menu (M)" aria-label="Menu">☰</button>
+  <button id="timer" title="Lecture timer — click to start/pause, double-click to reset (T)">▶ 00:00</button>
+  <button id="fsBtn" title="Full screen (F)" aria-label="Full screen">⛶</button>
+  <button id="prevBtn" aria-label="Previous">‹</button>
+  <span class="count" id="count">1 / 27</span>
+  <button id="nextBtn" aria-label="Next">›</button>
+</div>
+<script>
+/* ======================= helpers ======================= */
+const NS="http://www.w3.org/2000/svg";
+const $=id=>document.getElementById(id);
+function mk(tag,a,p){const e=document.createElementNS(NS,tag);if(a)for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e}
+function T(p,x,y,s,a){const t=mk("text",Object.assign({x,y,"font-size":12,fill:"#64748b"},a||{}),p);t.textContent=s;return t}
+function svgIn(host,W,H){host.innerHTML="";return mk("svg",{viewBox:`0 0 ${W} ${H}`,preserveAspectRatio:"xMidYMid meet"},host)}
+function lin(d0,d1,r0,r1){const f=v=>r0+(v-d0)/(d1-d0)*(r1-r0);f.inv=p=>d0+(p-r0)/(r1-r0)*(d1-d0);return f}
+const fmt=n=>Number(n).toLocaleString("en-US");
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const C={b:"#2563eb",o:"#ea580c",t:"#0d9488",p:"#a855f7",y:"#ca8a04",ink:"#0f172a",mut:"#64748b",grid:"#e2e8f0",ax:"#94a3b8",up:"#16a34a",dn:"#e11d48"};
+const CAT=[C.b,C.o,C.t,C.p,C.y];
+const tip=$("tip");
+function showTip(e,h){tip.innerHTML=h;tip.style.display="block";const w=tip.offsetWidth,hh=tip.offsetHeight;
+  tip.style.left=Math.max(4,Math.min(window.innerWidth-w-8,e.clientX+14))+"px";tip.style.top=(e.clientY-hh-12<4?e.clientY+16:e.clientY-hh-12)+"px"}
+function hideTip(){tip.style.display="none"}
+function hov(node,fn,onIn,onOut){node.style.cursor="pointer";
+  node.addEventListener("mousemove",e=>{showTip(e,fn());onIn&&onIn()});
+  node.addEventListener("mouseleave",()=>{hideTip();onOut&&onOut()});
+  node.addEventListener("click",e=>{showTip(e,fn());onIn&&onIn()})}
+/* bar path with only the data end rounded: end = t|b|l|r|n */
+function rbar(x,y,w,h,end,r){r=r===undefined?4:r;if(w<0){x+=w;w=-w}if(h<0){y+=h;h=-h}r=Math.max(0,Math.min(r,w/2,h/2));const X=x+w,Y=y+h;
+  if(end==="t")return`M${x},${Y}V${y+r}Q${x},${y} ${x+r},${y}H${X-r}Q${X},${y} ${X},${y+r}V${Y}Z`;
+  if(end==="b")return`M${x},${y}H${X}V${Y-r}Q${X},${Y} ${X-r},${Y}H${x+r}Q${x},${Y} ${x},${Y-r}Z`;
+  if(end==="r")return`M${x},${y}H${X-r}Q${X},${y} ${X},${y+r}V${Y-r}Q${X},${Y} ${X-r},${Y}H${x}Z`;
+  if(end==="l")return`M${X},${y}V${Y}H${x+r}Q${x},${Y} ${x},${Y-r}V${y+r}Q${x},${y} ${x+r},${y}Z`;
+  return`M${x},${y}H${X}V${Y}H${x}Z`}
+function niceTicks(min,max,n){n=n||5;const span=max-min,s0=span/n,mag=10**Math.floor(Math.log10(s0)),f=s0/mag;const st=(f<1.5?1:f<3?2:f<7?5:10)*mag;const o=[];for(let v=Math.ceil(min/st-1e-9)*st;v<=max+1e-9;v+=st)o.push(+v.toFixed(10));return o}
+function yAxis(g,y,ticks,x0,x1,o){o=o||{};ticks.forEach(v=>{if(o.grid!==false)mk("line",{x1:x0,x2:x1,y1:y(v),y2:y(v),stroke:v===0?"#94a3b8":C.grid,"stroke-width":1},g);
+  T(g,x0-8,y(v)+4,o.f?o.f(v):fmt(v),{"text-anchor":"end","font-size":o.fs||12})});
+  if(o.title){const t=T(g,0,0,o.title,{"text-anchor":"middle","font-size":12.5,"font-weight":700,fill:"#475569",transform:`translate(${o.tx||14},${(y(ticks[0])+y(ticks[ticks.length-1]))/2}) rotate(-90)`})}}
+function xAxis(g,x,ticks,y0,y1,o){o=o||{};ticks.forEach(v=>{if(o.grid)mk("line",{x1:x(v),x2:x(v),y1:y0,y2:y1,stroke:C.grid},g);
+  T(g,x(v),y0+18,o.f?o.f(v):fmt(v),{"text-anchor":"middle","font-size":o.fs||12})});
+  if(o.title)T(g,(x(ticks[0])+x(ticks[ticks.length-1]))/2,y0+38,o.title,{"text-anchor":"middle","font-size":12.5,"font-weight":700,fill:"#475569"})}
+function svgPt(svg,e){const p=svg.createSVGPoint();p.x=e.clientX;p.y=e.clientY;return p.matrixTransform(svg.getScreenCTM().inverse())}
+function seg(id,cb){const s=$(id);s.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{s.querySelectorAll("button").forEach(x=>x.classList.toggle("on",x===b));cb(b.dataset)}))}
+function tg(id,cb){const b=$(id);b.addEventListener("click",()=>{b.classList.toggle("on");cb(b.classList.contains("on"))});return b}
+const on=id=>$(id).classList.contains("on");
+const mix=(hex,t,base)=>`color-mix(in srgb,${hex} ${Math.round(t*100)}%,${base||"#ffffff"})`;
+const MONTHS=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+function spark(host,vals,W,H,o){o=o||{};const s=svgIn(host,W,H);const mn=Math.min(...vals,o.zero?0:Infinity),mx=Math.max(...vals,o.zero?0:-Infinity);
+  const x=lin(0,vals.length-1,3,W-4),y=lin(mn,mx,H-3,3);
+  if(o.zero&&mn<0&&mx>0)mk("line",{x1:0,x2:W,y1:y(0),y2:y(0),stroke:"#94a3b8","stroke-dasharray":"2 2"},s);
+  mk("polyline",{points:vals.map((v,i)=>x(i)+","+y(v)).join(" "),fill:"none",stroke:o.c||C.b,"stroke-width":1.8,"stroke-linejoin":"round","stroke-linecap":"round"},s);
+  if(o.hl){const i=vals.indexOf(mx),j=vals.lastIndexOf(mn);mk("circle",{cx:x(i),cy:y(mx),r:2.6,fill:C.up},s);mk("circle",{cx:x(j),cy:y(mn),r:2.6,fill:C.dn},s)}
+  return s}
+
+/* ======================= CHAPTER 5 ======================= */
+function rng(seed){let s=seed>>>0;return()=>{s=(s*1664525+1013904223)>>>0;return s/4294967296}}
+const FOOT_A="Chapter 5 · Probability Distributions & Data Modelling (Part A)",FOOT_B="Chapter 5 · Probability Distributions & Data Modelling (Part B)",MENU_A="Part A · Lecture 1",MENU_B="Part B · Lecture 2";
+const fact=n=>{let f=1;for(let i=2;i<=n;i++)f*=i;return f};
+const comb=(n,k)=>{let c=1;for(let i=1;i<=k;i++)c=c*(n-k+i)/i;return c};
+const binom=(k,n,p)=>comb(n,k)*p**k*(1-p)**(n-k);
+const pois=(k,m)=>{let v=Math.exp(-m);for(let i=1;i<=k;i++)v*=m/i;return v};
+function erf(x){const s=x<0?-1:1;x=Math.abs(x);const t=1/(1+.3275911*x);const y=1-(((((1.061405429*t-1.453152027)*t)+1.421413741)*t-.284496736)*t+.254829592)*t*Math.exp(-x*x);return s*y}
+const Phi=z=>.5*(1+erf(z/Math.SQRT2));
+const normCdf=(x,m,s)=>Phi((x-m)/s);
+function normInvStd(p){const a=[-39.69683028665376,220.9460984245205,-275.9285104469687,138.357751867269,-30.66479806614716,2.506628277459239],b=[-54.47609879822406,161.5858368580409,-155.6989798598866,66.80131188771972,-13.28068155288572],c=[-.007784894002430293,-.3223964580411365,-2.400758277161838,-2.549732539343734,4.374664141464968,2.938163982698783],d=[.007784695709041462,.3224671290700398,2.445134137142996,3.754408661907416];const pl=.02425;let q,r;
+  if(p<pl){q=Math.sqrt(-2*Math.log(p));return(((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5])/((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1)}
+  if(p>1-pl){q=Math.sqrt(-2*Math.log(1-p));return-(((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5])/((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1)}
+  q=p-.5;r=q*q;return(((((a[0]*r+a[1])*r+a[2])*r+a[3])*r+a[4])*r+a[5])*q/(((((b[0]*r+b[1])*r+b[2])*r+b[3])*r+b[4])*r+1)}
+const npdf=(x,m,s)=>Math.exp(-(((x-m)/s)**2)/2)/(s*Math.sqrt(2*Math.PI));
+const f4=v=>v.toFixed(4);
+function headTicks(mx){const t=niceTicks(0,mx*1.15,4);const st=t[1]-t[0];while(t[t.length-1]<mx*1.15)t.push(+(t[t.length-1]+st).toFixed(10));return t}
+function cardGame(hostId,scoreId,Q,total){let score=0;const host=$(hostId);
+  Q.forEach(([q,a,opts,why])=>{const d=document.createElement("div");d.className="chc";d.innerHTML=`<div class="q">${q}</div><div class="opts">${opts.map(t=>`<button>${t}</button>`).join("")}</div><div class="why"></div>`;
+    d.querySelectorAll("button").forEach(b=>b.onclick=()=>{const ok=b.textContent===a;if(ok)score++;d.classList.add(ok?"ok":"no");d.querySelectorAll("button").forEach(x=>{x.disabled=true;if(x.textContent===a)x.classList.add("r")});if(!ok)b.classList.add("w");
+      d.querySelector(".why").innerHTML=(ok?"✅ ":"❌ <b>"+a+"</b>. ")+why;if(scoreId)$(scoreId).textContent=score+" / "+total});host.appendChild(d)})}
+function curve(s,f,x0,x1,x,y,o){const pts=[];for(let i=0;i<=240;i++){const t=x0+(x1-x0)*i/240;pts.push([t,f(t)])};mk("path",{d:"M"+pts.map(([t,v])=>x(t)+","+y(v)).join(" L"),fill:"none",stroke:o.c,"stroke-width":o.w||2.6,"stroke-dasharray":o.dash||"",opacity:o.op||1},s);return pts}
+function shade(s,f,a,b,x,y,col){if(b<=a)return;const pts=[];for(let i=0;i<=160;i++){const t=a+(b-a)*i/160;pts.push(x(t)+","+y(f(t)))}mk("path",{d:`M${x(a)},${y(0)} L${pts.join(" L")} L${x(b)},${y(0)}Z`,fill:col,"fill-opacity":.32},s)}
+
+/* floaters */
+function floaters(id,cards){const host=$(id);if(!host)return;cards.forEach(([l,t,lbl,w,draw])=>{const d=document.createElement("div");d.className="fc";d.style.left=l+"px";d.style.top=t+"px";d.style.width=w+"px";d.innerHTML=`<b>${lbl}</b><div></div>`;host.appendChild(d);draw(svgIn(d.lastChild,w-20,100))})}
+const mBin=s=>{[0,1,2,3,4,5,6,7,8].forEach(k=>{const v=binom(k,8,.4);mk("rect",{x:6+k*22,y:96-v*300,width:18,height:v*300,rx:3,fill:C.t},s)})};
+const mBell=s=>{const pts=[];for(let i=0;i<=60;i++){const z=-3+i*.1;pts.push((6+i*3.2)+","+(94-80*Math.exp(-z*z/2)))}mk("path",{d:"M6,94 L"+pts.join(" L")+" L198,94Z",fill:"#db2777","fill-opacity":.25,stroke:"#db2777","stroke-width":2},s)};
+const mExp=s=>{const pts=[];for(let i=0;i<=60;i++)pts.push((6+i*3.2)+","+(94-84*Math.exp(-i/16)));mk("path",{d:"M6,94 L"+pts.join(" L")+" L198,94Z",fill:C.up,"fill-opacity":.22,stroke:C.up,"stroke-width":2},s)};
+const mTree=s=>{[[10,50,90,22],[10,50,90,78],[90,22,180,10],[90,22,180,34],[90,78,180,66],[90,78,180,90]].forEach(([a,b,c,d])=>mk("line",{x1:a,y1:b,x2:c,y2:d,stroke:C.o,"stroke-width":2.4},s));[[10,50],[90,22],[90,78]].forEach(([a,b])=>mk("circle",{cx:a,cy:b,r:5,fill:C.o},s))};
+floaters("titleViz5",[[0,0,"Binomial",220,mBin],[210,90,"Normal",230,mBell],[20,220,"Bayes tree",230,mTree],[220,330,"Exponential",220,mExp]]);
+floaters("partbViz5",[[0,0,"Binomial",220,mBin],[200,150,"Normal",230,mBell],[20,300,"Exponential",220,mExp]]);
+
+/* 4 · dice */
+(function(){
+  let cnt=[0,0,0,0,0,0],hist=[];const faces=["1","2","3","4","5","6"];
+  function draw(){const n=cnt.reduce((a,b)=>a+b,0),W=660,H=400,s=svgIn($("dChart"),W,H);
+    // bars
+    const L=50,R=640,Tp=10,B=170,x=lin(0,6,L,R),y=lin(0,.4,B,Tp);yAxis(s,y,[0,.1,.2,.3,.4],L,R,{f:v=>v.toFixed(1),title:"Rel. freq",fs:11});
+    mk("line",{x1:L,x2:R,y1:y(1/6),y2:y(1/6),stroke:C.o,"stroke-width":2,"stroke-dasharray":"6 4"},s);T(s,R,y(1/6)-6,"1/6",{"text-anchor":"end",fill:C.o,"font-weight":800});
+    cnt.forEach((c,i)=>{const v=n?c/n:0;const bw=(R-L)/6;if(v)mk("path",{d:rbar(L+i*bw+bw*.2,y(v),bw*.6,B-y(v),"t"),fill:i===5?C.b:"#94a3b8"},s);T(s,L+i*bw+bw/2,B+22,faces[i],{"text-anchor":"middle","font-size":16,"font-weight":800,fill:i===5?C.b:"#334155"});T(s,L+i*bw+bw/2,y(v)-5,c,{"text-anchor":"middle","font-size":11,"font-weight":700,fill:"#0f172a"})});
+    // running
+    const T2=225,B2=380,yr=lin(0,.5,B2,T2),N=Math.max(10,hist.length),xr=lin(1,N,L,R);yAxis(s,yr,[0,.25,.5],L,R,{f:v=>v.toFixed(2),title:"P(6) so far",fs:11});
+    mk("line",{x1:L,x2:R,y1:yr(1/6),y2:yr(1/6),stroke:C.o,"stroke-width":2,"stroke-dasharray":"6 4"},s);
+    if(hist.length>1){const step=Math.max(1,Math.floor(hist.length/400));const pts=[];for(let i=0;i<hist.length;i+=step)pts.push(xr(i+1)+","+yr(hist[i]));pts.push(xr(hist.length)+","+yr(hist[hist.length-1]));mk("polyline",{points:pts.join(" "),fill:"none",stroke:C.b,"stroke-width":2},s)}
+    T(s,R,B2+16,"number of rolls →",{"text-anchor":"end","font-size":11});
+    const p6=n?cnt[5]/n:0;$("dKpi").innerHTML=`<div class="kpi">Rolls<b>${fmt(n)}</b></div><div class="kpi">Sixes<b>${fmt(cnt[5])}</b></div><div class="kpi">Rel. freq of 6<b>${p6.toFixed(3)}</b></div>`;
+    if(n)$("dOut").innerHTML=`After <b>${fmt(n)}</b> roll${n>1?"s":""}, the relative frequency of a 6 is <b>${p6.toFixed(3)}</b> vs the classical 0.167.`+(n>=500?" With many trials it settles near 1/6: the <b>law of large numbers</b>.":" Small samples bounce around. Keep rolling!")}
+  document.querySelectorAll("[data-roll]").forEach(b=>b.onclick=()=>{const k=+b.dataset.roll;let f=0;for(let i=0;i<k;i++){f=Math.floor(Math.random()*6);cnt[f]++;hist.push(cnt[5]/cnt.reduce((a,c)=>a+c,0))}$("dFace").textContent=["⚀","⚁","⚂","⚃","⚄","⚅"][f];draw()});
+  $("dReset").onclick=()=>{cnt=[0,0,0,0,0,0];hist=[];$("dFace").textContent="🎲";draw();$("dOut").innerHTML="Reset. Roll again!"};draw();
+})();
+
+/* 5 · CP&L */
+(function(){
+  const X=[8,9,10,11,12],N=[6,10,12,6,6];let sel=new Set();
+  function draw(){const W=660,H=300,L=56,R=640,Tp=14,B=250,s=svgIn($("cpChart"),W,H),y=lin(0,.35,B,Tp),bw=(R-L)/5;yAxis(s,y,[0,.1,.2,.3],L,R,{f:v=>v.toFixed(1),title:"Probability"});
+    X.forEach((x,i)=>{const p=N[i]/40,on_=sel.has(x),g=mk("g",{},s);mk("path",{d:rbar(L+i*bw+bw*.18,y(p),bw*.64,B-y(p),"t"),fill:on_?C.t:"#cbd5e1"},g);
+      T(g,L+i*bw+bw/2,y(p)-8,`${N[i]}/40 = ${p.toFixed(2)}`,{"text-anchor":"middle","font-weight":800,fill:"#0f172a","font-size":12.5});T(g,L+i*bw+bw/2,B+20,x+" months",{"text-anchor":"middle","font-weight":700,fill:"#334155"});
+      mk("rect",{x:L+i*bw,y:Tp,width:bw,height:B-Tp,fill:"transparent"},g);g.style.cursor="pointer";g.onclick=()=>{sel.has(x)?sel.delete(x):sel.add(x);draw()}});
+    const xs=[...sel].sort((a,b)=>a-b),p=xs.reduce((a,x)=>a+N[X.indexOf(x)]/40,0);
+    $("cpOut").innerHTML=xs.length?`Event = {${xs.join(", ")}} → P = ${xs.map(x=>(N[X.indexOf(x)]/40).toFixed(2)).join(" + ")} = <b>${p.toFixed(2)}</b>.`+(xs.join()==="8,9,10"?" CP&L meets its 10-month goal with probability 0.70.":xs.join()==="11,12"?" Late: 0.30. That is the <b>complement</b> of finishing in ≤ 10 months: 1 − 0.70.":xs.length===5?" The whole sample space always has probability 1.":""):"Click the bars to build an event."}
+  document.querySelectorAll("[data-ev]").forEach(b=>b.onclick=()=>{const e=b.dataset.ev;sel=new Set(e==="le10"?[8,9,10]:e==="gt10"?[11,12]:e==="all"?X:[]);draw()});draw();
+})();
+
+/* 6 · Venn */
+(function(){
+  let show="U";
+  function draw(){const me=$("vnME").checked;let pA=+$("vnA").value/100,pB=+$("vnB").value/100,pI=me?0:+$("vnI").value/100;pI=Math.min(pI,pA,pB);if(pA+pB-pI>1)pI=pA+pB-1;
+    const W=600,H=300,s=svgIn($("vnChart"),W,H),k=Math.sqrt(W*H*.55/Math.PI),rA=k*Math.sqrt(pA),rB=k*Math.sqrt(pB),cy=H/2;
+    const d=me?rA+rB+16:Math.max(Math.abs(rA-rB)+4,rA+rB-2*Math.min(rA,rB)*(pI/Math.min(pA,pB))*1.05);const cxA=W/2-d/2,cxB=W/2+d/2;
+    const S=mk("rect",{x:6,y:6,width:W-12,height:H-12,rx:14,fill:show==="Ac"?"#a5f3fc":"#f8fafc",stroke:"#94a3b8","stroke-width":1.5},s);
+    const id="cl"+Math.random().toString(36).slice(2);const df=mk("defs",{},s);const cp=mk("clipPath",{id},df);mk("circle",{cx:cxA,cy,r:rA},cp);
+    const fill="#0891b2";
+    if(show==="Ac")mk("circle",{cx:cxA,cy,r:rA,fill:"#f8fafc"},s);
+    if(show==="A")mk("circle",{cx:cxA,cy,r:rA,fill,"fill-opacity":.45},s);
+    if(show==="U"){mk("circle",{cx:cxA,cy,r:rA,fill,"fill-opacity":.45},s);mk("circle",{cx:cxB,cy,r:rB,fill,"fill-opacity":.45},s)}
+    if(show==="I")mk("circle",{cx:cxB,cy,r:rB,fill,"fill-opacity":.6,"clip-path":`url(#${id})`},s);
+    mk("circle",{cx:cxA,cy,r:rA,fill:"none",stroke:"#0f172a","stroke-width":2},s);mk("circle",{cx:cxB,cy,r:rB,fill:"none",stroke:"#0f172a","stroke-width":2},s);
+    T(s,cxA-rA*.45,cy+5,"A",{"font-size":22,"font-weight":800,fill:"#0f172a","text-anchor":"middle"});T(s,cxB+rB*.45,cy+5,"B",{"font-size":22,"font-weight":800,fill:"#0f172a","text-anchor":"middle"});T(s,22,32,"S",{"font-size":18,"font-weight":800,fill:"#475569"});
+    const u=pA+pB-pI;$("vnI").disabled=me;
+    const t={A:`P(A) = <b>${pA.toFixed(2)}</b>`,Ac:`P(Aᶜ) = 1 − ${pA.toFixed(2)} = <b>${(1-pA).toFixed(2)}</b>. Everything in S that is not in A.`,U:`P(A ∪ B) = ${pA.toFixed(2)} + ${pB.toFixed(2)} − ${pI.toFixed(2)} = <b>${u.toFixed(2)}</b>. A, or B, or both.`,I:`P(A ∩ B) = <b>${pI.toFixed(2)}</b>. Both A and B.`+(me?" Mutually exclusive, so it is 0.":"")};
+    $("vnOut").innerHTML=t[show]}
+  seg("vnShow",d=>{show=d.v;draw()});["vnA","vnB","vnI"].forEach(i=>$(i).oninput=draw);$("vnME").onchange=draw;draw();
+})();
+
+/* 7 · workers */
+(function(){
+  const kind=[];for(let i=0;i<50;i++)kind.push(i<3?"L":i<7?"D":i<9?"B":"N");const r=rng(5);for(let i=49;i>0;i--){const j=Math.floor(r()*(i+1));[kind[i],kind[j]]=[kind[j],kind[i]]}
+  const g=$("wkGrid");kind.forEach(k=>{const d=document.createElement("span");d.dataset.k=k;d.innerHTML="👷";g.appendChild(d)});
+  const COL={L:"#2563eb",D:"#ea580c",B:"#7c3aed",N:"#e2e8f0"};
+  function draw(v){g.querySelectorAll("span").forEach(d=>{const k=d.dataset.k,inS=v==="L"?(k==="L"||k==="B"):v==="D"?(k==="D"||k==="B"):v==="I"?k==="B":k!=="N";d.style.background=inS?COL[k]:"#f1f5f9";d.style.opacity=inS?1:.45});
+    $("wkOut").innerHTML={L:"P(L) = 5/50 = <b>0.10</b>",D:"P(D) = 6/50 = <b>0.12</b>",I:"P(L ∩ D) = 2/50 = <b>0.04</b>",U:"P(L ∪ D) = 0.10 + 0.12 − 0.04 = <b>0.18</b>. That is 9 of 50 workers: count the coloured ones!"}[v]}
+  seg("wkShow",d=>draw(d.v));draw("U");
+})();
+
+/* 8 · joint table */
+const MD={M:[64,79],S:[116,41]};
+(function(){
+  let mode="n";const RN={M:"Married",S:"Single"},CN=["No default (Dᶜ)","Default (D)"];
+  function v(r,c){const n=r==="T"?(c==="T"?300:MD.M[c]+MD.S[c]):(c==="T"?MD[r][0]+MD[r][1]:MD[r][c]);const rt=r==="T"?300:MD[r][0]+MD[r][1];return mode==="n"?String(n):mode==="j"?(n/300).toFixed(4):(n/rt*100).toFixed(1)+"%"}
+  function draw(){let h=`<table class="xt"><thead><tr><th class="rl"></th>${CN.map(c=>`<th>${c}</th>`).join("")}<th>Total</th></tr></thead><tbody>`;
+    ["M","S","T"].forEach(r=>{h+=`<tr><td class="rl"><b>${r==="T"?"Total":RN[r]+" ("+r+")"}</b></td>`;[0,1,"T"].forEach(c=>{const tot=r==="T"||c==="T";h+=`<td data-r="${r}" data-c="${c}" class="${tot?"tot":""}" style="${tot?"":"background:"+mix("#7c3aed",.12+.5*(MD[r][c]/116))+";color:"+(MD[r][c]>90?"#fff":"#0f172a")}">${v(r,c)}</td>`});h+="</tr>"});
+    $("jtTable").innerHTML=h+"</tbody></table>";
+    $("jtTable").querySelectorAll("td[data-r]").forEach(td=>td.onclick=()=>{$("jtTable").querySelectorAll(".sel").forEach(x=>x.classList.remove("sel"));td.classList.add("sel");const r=td.dataset.r,c=td.dataset.c;
+      const ev=(r==="T"?"":r)+(c==="T"?"":(r==="T"?"":" ∩ ")+(c==0?"Dᶜ":"D"));
+      $("jtOut").innerHTML=mode==="r"&&r!=="T"&&c!=="T"?`P(${c==0?"Dᶜ":"D"} | ${r}) = <b>${td.textContent}</b>: among ${RN[r].toLowerCase()} customers, ${td.textContent} ${c==0?"did not default":"defaulted"}.`:
+        mode==="j"?(r==="T"&&c==="T"?"All joint probabilities add up to 1.":`${r!=="T"&&c!=="T"?"Joint":"Marginal"} probability P(${ev}) = <b>${td.textContent}</b>.`):`${td.textContent} customers${r!=="T"?" are "+RN[r].toLowerCase():""}${c!=="T"?(r!=="T"?" and":"")+(c==0?" did not default":" defaulted"):""}.`})}
+  seg("jtMode",d=>{mode=d.m;draw();$("jtOut").innerHTML=mode==="j"?"Each count ÷ 300. The margins are the <b>marginal probabilities</b>, e.g. P(M) = 0.4767.":mode==="r"?"Each row ÷ its row total gives <b>conditional probabilities</b> given marital status.":"Click any cell."});draw();
+})();
+
+/* 9 · conditional */
+(function(){
+  let g="all";
+  function draw(){const W=660,H=300,L=120,R=640,s=svgIn($("cdChart"),W,H),x=lin(0,380,L,R);
+    [["Everyone","all",300,120,30],["Married (M)","M",143,79,130],["Single (S)","S",157,41,210]].forEach(([lab,key,n,d,y0])=>{const act=g===key,op=act?1:.3;
+      T(s,L-10,y0+30,lab,{"text-anchor":"end","font-weight":800,fill:"#334155","font-size":14,opacity:op});
+      mk("rect",{x:L,y:y0,width:x(n-d)-L,height:48,rx:6,fill:"#cbd5e1",opacity:op},s);mk("rect",{x:x(n-d)+2,y:y0,width:x(n)-x(n-d)-2,height:48,rx:6,fill:"#db2777",opacity:op},s);
+      T(s,L+8,y0+30,`${n-d} no default`,{fill:"#0f172a","font-weight":700,opacity:op});T(s,x(n)-8,y0+30,`${d} default`,{"text-anchor":"end",fill:"#fff","font-weight":800,opacity:op});
+      if(act)T(s,x(n)+8,y0+30,`P = ${(d/n).toFixed(4)}`,{fill:"#9d174d","font-weight":800,"font-size":15})});
+    $("cdOut").innerHTML=g==="all"?"P(D) = 120/300 = <b>0.4000</b>":g==="M"?"P(D | M) = P(M ∩ D)/P(M) = 0.2633/0.4767 = 79/143 = <b>0.5524</b>":"P(D | S) = P(S ∩ D)/P(S) = 0.1367/0.5233 = 41/157 = <b>0.2611</b>";
+    if(g!=="all")$("cdOut").innerHTML+=g==="M"?". Married customers default <b>more than twice</b> as often as single ones!":". Single customers default less often than average."}
+  seg("cdGiven",d=>{g=d.g;draw()});draw();
+})();
+
+/* 10 · independence */
+(function(){
+  const W=520,H=210,s=svgIn($("inChart"),W,H),x=lin(0,.6,140,500);[["P(D)",.4,"#64748b"],["P(D | M)",79/143,"#db2777"],["P(D | S)",41/157,"#2563eb"]].forEach(([l,v,c],i)=>{const y0=14+i*62;T(s,132,y0+27,l,{"text-anchor":"end","font-weight":800,fill:"#334155","font-size":14});mk("path",{d:rbar(140,y0,x(v)-140,40,"r"),fill:c},s);T(s,x(v)+8,y0+27,v.toFixed(4),{"font-weight":800,fill:"#0f172a"})});
+  mk("line",{x1:x(.4),x2:x(.4),y1:6,y2:200,stroke:"#0f172a","stroke-dasharray":"5 4"},s);
+  $("inOut").innerHTML="P(D | M) = 0.5524 ≠ P(D) = 0.40, so default and marital status are <b>not independent</b>. Multiplication law: P(M ∩ D) = P(M)·P(D | M) = 0.4767 × 0.5524 = <b>0.2633</b>, which matches the joint table.";
+  cardGame("mxGame",null,[["A customer is Married / the same customer is Single","Mutually exclusive",["Mutually exclusive","Independent","Neither"],"They cannot both happen. (Mutually exclusive events with P &gt; 0 are always <b>dependent</b>: if one happens, the other has probability 0.)"],
+    ["A 6 on the first roll / a 6 on the second roll","Independent",["Mutually exclusive","Independent","Neither"],"The first roll doesn't change the second: P(6 | 6 first) = 1/6."],
+    ["A customer is Married / the customer Defaulted","Neither",["Mutually exclusive","Independent","Neither"],"They can happen together (79 customers), and P(D | M) ≠ P(D), so they are dependent."]],0);
+})();
+
+/* 11 · Bayes */
+(function(){
+  function draw(){const p1=+$("byP").value/100,b1=+$("byB1").value/100,b2=+$("byB2").value/100,p2=1-p1;$("byPL").textContent=(p1*100).toFixed(0)+"%";$("byB1L").textContent=(b1*100).toFixed(0)+"%";$("byB2L").textContent=(b2*100).toFixed(0)+"%";
+    const j=[p1*(1-b1),p1*b1,p2*(1-b2),p2*b2],pB=j[1]+j[3],post1=j[1]/pB,post2=j[3]/pB;
+    const W=680,H=400,s=svgIn($("byChart"),W,H);const X0=20,X1=190,X2=360,ys=[60,140,230,310],y1=[100,270];
+    T(s,X0+60,22,"Supplier",{"text-anchor":"middle","font-weight":800,fill:"#475569"});T(s,X1+90,22,"Part condition",{"text-anchor":"middle","font-weight":800,fill:"#475569"});T(s,X2+150,22,"Joint probability",{"text-anchor":"middle","font-weight":800,fill:"#475569"});
+    mk("circle",{cx:X0,cy:185,r:6,fill:"#334155"},s);
+    [[p1,"A₁"],[p2,"A₂"]].forEach(([p,l],i)=>{mk("line",{x1:X0,y1:185,x2:X1,y2:y1[i],stroke:"#334155","stroke-width":1+p*6},s);mk("circle",{cx:X1,cy:y1[i],r:6,fill:"#334155"},s);T(s,(X0+X1)/2,(185+y1[i])/2+(i?16:-8),`P(${l}) = ${p.toFixed(2)}`,{"text-anchor":"middle","font-weight":700,fill:"#0f172a","font-size":12.5})});
+    const cond=[[1-b1,"G | A₁"],[b1,"B | A₁"],[1-b2,"G | A₂"],[b2,"B | A₂"]];
+    cond.forEach(([p,l],i)=>{const from=y1[Math.floor(i/2)],bad=i%2===1,col=bad?C.o:"#16a34a";mk("line",{x1:X1,y1:from,x2:X2,y2:ys[i],stroke:col,"stroke-width":1+p*5},s);mk("circle",{cx:X2,cy:ys[i],r:5,fill:col},s);
+      T(s,(X1+X2)/2,(from+ys[i])/2+(bad?16:-8),`P(${l}) = ${p.toFixed(2)}`,{"text-anchor":"middle","font-size":12,fill:"#0f172a"});
+      mk("rect",{x:X2+20,y:ys[i]-16,width:Math.max(2,j[i]*300),height:32,rx:5,fill:col,"fill-opacity":bad?.9:.25},s);T(s,X2+28+Math.max(2,j[i]*300),ys[i]+5,j[i].toFixed(4),{"font-weight":800,fill:"#0f172a"})});
+    T(s,X2+20,385,`P(B) = ${j[1].toFixed(4)} + ${j[3].toFixed(4)} = ${pB.toFixed(4)}`,{"font-weight":800,fill:"#9a3412","font-size":13.5});
+    $("byOut").innerHTML=`Given a <b>bad</b> part: P(A₁ | B) = ${j[1].toFixed(4)}/${pB.toFixed(4)} = <b>${post1.toFixed(4)}</b>, P(A₂ | B) = <b>${post2.toFixed(4)}</b>. `+(post2>p2?`Supplier 2 supplies only ${(p2*100).toFixed(0)}% of parts, but it is now the <b>more likely</b> source, because its parts go bad more often.`:"")+`<br><span style="font-size:13px">Per 10,000 parts: ${fmt(Math.round(j[1]*1e4))} bad from S1 and ${fmt(Math.round(j[3]*1e4))} bad from S2.</span>`}
+  ["byP","byB1","byB2"].forEach(i=>$(i).oninput=draw);draw();
+})();
+
+/* 15 · RV game */
+cardGame("rvGame","rvScore",[["Number of customers who place an order (out of 5 contacted)","Discrete",["Discrete","Continuous"],"Countable: 0–5."],
+  ["Time a customer spends on a web page","Continuous",["Discrete","Continuous"],"Any value x ≥ 0, e.g. 2.37 minutes."],
+  ["Number of patients arriving at a clinic in a day","Discrete",["Discrete","Continuous"],"0, 1, 2, … an infinite but countable sequence."],
+  ["Ounces in a soft-drink can (max 12.1)","Continuous",["Discrete","Continuous"],"Any value between 0 and 12.1."],
+  ["Product chosen: 0 = none, 1 = A, 2 = B","Discrete",["Discrete","Continuous"],"Codes for outcomes, but still a finite set of values."],
+  ["Value of a RM10,000 investment after one year","Continuous",["Discrete","Continuous"],"Treated as any value x ≥ 0."],
+  ["Number of dots on a rolled die","Discrete",["Discrete","Continuous"],"1, 2, 3, 4, 5, 6."],
+  ["Temperature when a chemical reaction occurs (150–212°F)","Continuous",["Discrete","Continuous"],"Any value in the interval."]],8);
+
+/* 16 · expected value */
+(function(){
+  const X=[4,12,24];const cnt=[45,180,75];
+  $("evInputs").innerHTML=X.map((x,i)=>`<label class="chk">x = ${x}: <input type="number" min="0" max="500" value="${cnt[i]}" data-i="${i}" class="numin"> customers</label>`).join("");
+  function draw(){const n=cnt.reduce((a,b)=>a+b,0)||1,f=cnt.map(c=>c/n),mu=X.reduce((s,x,i)=>s+x*f[i],0),vr=X.reduce((s,x,i)=>s+(x-mu)**2*f[i],0),sd=Math.sqrt(vr);
+    $("evTable").innerHTML=`<table class="dt hi"><thead><tr><th class="n">x</th><th class="n">f(x)</th><th class="n">x·f(x)</th><th class="n">(x − μ)²·f(x)</th></tr></thead><tbody>${X.map((x,i)=>`<tr><td class="n">${x}</td><td class="n">${f[i].toFixed(2)}</td><td class="n">${(x*f[i]).toFixed(2)}</td><td class="n">${((x-mu)**2*f[i]).toFixed(3)}</td></tr>`).join("")}<tr><td class="n"><b>Σ</b></td><td class="n"><b>${f.reduce((a,b)=>a+b,0).toFixed(2)}</b></td><td class="n"><b>${mu.toFixed(2)}</b></td><td class="n"><b>${vr.toFixed(3)}</b></td></tr></tbody></table>`;
+    const W=520,H=150,s=svgIn($("evChart"),W,H),x=lin(0,26,30,510),y=lin(0,Math.max(.7,...f)*1.05,128,8);mk("line",{x1:30,x2:510,y1:128,y2:128,stroke:"#94a3b8"},s);
+    X.forEach((xv,i)=>{mk("line",{x1:x(xv),x2:x(xv),y1:128,y2:y(f[i]),stroke:C.b,"stroke-width":5,"stroke-linecap":"round"},s);mk("circle",{cx:x(xv),cy:y(f[i]),r:6,fill:C.b},s);T(s,x(xv),145,"x = "+xv,{"text-anchor":"middle","font-size":11.5})});
+    mk("line",{x1:x(mu),x2:x(mu),y1:8,y2:128,stroke:C.o,"stroke-width":2.5,"stroke-dasharray":"5 4"},s);T(s,x(mu)+5,20,"μ = "+mu.toFixed(2),{fill:C.o,"font-weight":800});
+    $("evKpi").innerHTML=`<div class="kpi">E(x) = μ<b>${mu.toFixed(2)}</b></div><div class="kpi">Var(x)<b>${vr.toFixed(3)}</b></div><div class="kpi">σ<b>${sd.toFixed(3)}</b></div>`;
+    $("evOut").innerHTML=cnt.join()==="45,180,75"?"Textbook: E(x) = <b>13.80</b> payments a year, Var = <b>42.360</b>, σ = <b>6.508</b>. The mean need not be a possible value of x!":`With your counts, a customer makes <b>${mu.toFixed(2)}</b> payments a year on average.`}
+  document.querySelectorAll(".numin").forEach(inp=>inp.oninput=()=>{cnt[+inp.dataset.i]=Math.max(0,+inp.value||0);draw()});draw();
+})();
+
+/* 17 · binomial */
+(function(){
+  let sel=1,mode="eq";
+  function draw(){const n=+$("bnN").value,p=+$("bnP").value/100;sel=Math.min(sel,n);$("bnNL").textContent=n;$("bnPL").textContent=p.toFixed(2);
+    const P=[...Array(n+1)].map((_,k)=>binom(k,n,p)),W=660,H=360,L=56,R=645,Tp=14,B=314,mx=Math.max(...P),yt=headTicks(mx),y=lin(0,yt[yt.length-1],B,Tp),bw=(R-L)/(n+1),s=svgIn($("bnChart"),W,H);
+    yAxis(s,y,yt,L,R,{f:v=>v.toFixed(2),title:"f(x)"});
+    P.forEach((v,k)=>{const hi=mode==="eq"?k===sel:k<=sel,g=mk("g",{},s);mk("path",{d:rbar(L+k*bw+bw*.15,y(v),bw*.7,B-y(v),"t",Math.min(4,bw/4)),fill:hi?C.t:"#cbd5e1"},g);
+      if(n<=12)T(g,L+k*bw+bw/2,y(v)-6,v.toFixed(3),{"text-anchor":"middle","font-size":11,"font-weight":700,fill:"#0f172a"});if(n<=15||k%2===0)T(g,L+k*bw+bw/2,B+18,k,{"text-anchor":"middle"});
+      mk("rect",{x:L+k*bw,y:Tp,width:bw,height:B-Tp,fill:"transparent"},g);g.style.cursor="pointer";g.onclick=()=>{sel=k;draw()};hov(g,()=>`<b>x = ${k}</b><br>P(x = ${k}) = ${v.toFixed(4)}`)});
+    T(s,(L+R)/2,B+38,"Number of successes (x)",{"text-anchor":"middle","font-weight":700,fill:"#475569"});
+    const cum=P.slice(0,sel+1).reduce((a,b)=>a+b,0);$("bnKpi").innerHTML=`<div class="kpi">E(x) = np<b>${(n*p).toFixed(2)}</b></div><div class="kpi">Var = np(1−p)<b>${(n*p*(1-p)).toFixed(3)}</b></div><div class="kpi">σ<b>${Math.sqrt(n*p*(1-p)).toFixed(3)}</b></div>`;
+    $("bnOut").innerHTML=mode==="eq"?`P(x = ${sel}) = C(${n},${sel})·${p.toFixed(2)}<sup>${sel}</sup>·${(1-p).toFixed(2)}<sup>${n-sel}</sup> = <b>${P[sel].toFixed(4)}</b>`+(n===3&&p===.3?` (textbook: 0.343, 0.441, 0.189, 0.027).`:"."):`P(x ≤ ${sel}) = <b>${cum.toFixed(4)}</b>. With TRUE, Excel adds up the bars from 0 to ${sel}.`}
+  ["bnN","bnP"].forEach(i=>$(i).oninput=draw);seg("bnC",d=>{mode=d.c;draw()});draw();
+})();
+
+/* 18 · Poisson */
+(function(){
+  let sel=10,mode="eq";
+  function draw(){const m=+$("psM").value;$("psML").textContent=m;const K=Math.max(15,Math.ceil(m+4*Math.sqrt(m)));sel=Math.min(sel,K);const P=[...Array(K+1)].map((_,k)=>pois(k,m)),W=660,H=360,L=56,R=645,Tp=14,B=314,mx=Math.max(...P),yt=headTicks(mx),y=lin(0,yt[yt.length-1],B,Tp),bw=(R-L)/(K+1),s=svgIn($("psChart"),W,H);
+    yAxis(s,y,yt,L,R,{f:v=>v.toFixed(2),title:"f(x)"});
+    P.forEach((v,k)=>{const hi=mode==="eq"?k===sel:mode==="le"?k<=sel:k>=sel,g=mk("g",{},s);mk("path",{d:rbar(L+k*bw+bw*.12,y(v),bw*.76,B-y(v),"t",Math.min(4,bw/4)),fill:hi?"#4f46e5":"#cbd5e1"},g);if(K<=26||k%2===0)T(g,L+k*bw+bw/2,B+18,k,{"text-anchor":"middle","font-size":11});
+      mk("rect",{x:L+k*bw,y:Tp,width:bw,height:B-Tp,fill:"transparent"},g);g.style.cursor="pointer";g.onclick=()=>{sel=k;draw()};hov(g,()=>`<b>x = ${k}</b><br>P = ${v.toFixed(4)}`)});
+    T(s,(L+R)/2,B+38,"Arrivals in one hour (x)",{"text-anchor":"middle","font-weight":700,fill:"#475569"});
+    const le=P.slice(0,sel+1).reduce((a,b)=>a+b,0),ge=1-le+P[sel];
+    $("psOut").innerHTML=mode==="eq"?`P(x = ${sel}) = ${m}<sup>${sel}</sup>e<sup>−${m}</sup>/${sel}! = <b>${P[sel].toFixed(4)}</b>`:mode==="le"?`P(x ≤ ${sel}) = <b>${le.toFixed(4)}</b> <code>=POISSON.DIST(${sel},${m},TRUE)</code>`:`P(x ≥ ${sel}) = 1 − P(x ≤ ${sel-1}) = <b>${ge.toFixed(4)}</b>. Useful for staffing: how likely is a rush?`}
+  $("psM").oninput=draw;seg("psC",d=>{mode=d.c;draw()});draw();
+})();
+
+/* 20 · uniform */
+(function(){
+  function draw(){let a=+$("unA").value,b=+$("unB").value;if(a>b)[a,b]=[b,a];const W=660,H=280,L=50,R=640,Tp=20,B=230,s=svgIn($("unChart"),W,H),x=lin(110,150,L,R),y=lin(0,.07,B,Tp);
+    const lo=Math.max(a,120),hi=Math.min(b,140);if(hi>lo)mk("rect",{x:x(lo),y:y(.05),width:x(hi)-x(lo),height:B-y(.05),fill:"#7c3aed","fill-opacity":.35},s);
+    mk("path",{d:`M${x(110)},${B} H${x(120)} V${y(.05)} H${x(140)} V${B} H${x(150)}`,fill:"none",stroke:"#7c3aed","stroke-width":2.8},s);
+    [a,b].forEach(v=>mk("line",{x1:x(v),x2:x(v),y1:Tp,y2:B,stroke:C.o,"stroke-width":2,"stroke-dasharray":"5 4"},s));
+    [110,115,120,125,130,135,140,145,150].forEach(v=>T(s,x(v),B+18,v,{"text-anchor":"middle"}));T(s,L-6,y(.05)+4,"1/20",{"text-anchor":"end","font-weight":800,fill:"#7c3aed"});T(s,(L+R)/2,B+40,"Flight time (minutes)",{"text-anchor":"middle","font-weight":700,fill:"#475569"});
+    const p=Math.max(0,hi-lo)/20;$("unOut").innerHTML=`P(${a} ≤ x ≤ ${b}) = width × height = ${Math.max(0,hi-lo)} × 1/20 = <b>${p.toFixed(2)}</b>.`+(a===120&&b===130?" Textbook: 0.50.":"")+` E(x) = 130 min, σ = ${Math.sqrt(400/12).toFixed(2)} min.`+(a<120||b>140?" Outside 120–140 the height is 0, so it adds no probability.":"")}
+  ["unA","unB"].forEach(i=>$(i).oninput=draw);draw();
+})();
+
+/* 21 · triangular */
+(function(){
+  function cdf(c,a,m,b){if(c<=a)return 0;if(c>=b)return 1;return c<=m?(c-a)**2/((b-a)*(m-a)):1-(b-c)**2/((b-a)*(b-m))}
+  function draw(){let a=+$("trA").value,m=+$("trM").value,b=+$("trB").value;if(m<=a)m=a+1;if(b<=m)b=m+1;let x1=+$("trX1").value,x2=+$("trX2").value;if(x1>x2)[x1,x2]=[x2,x1];
+    const h=2/(b-a),f=t=>t<a||t>b?0:t<=m?h*(t-a)/(m-a):h*(b-t)/(b-m);const W=660,H=300,L=50,R=640,Tp=20,B=250,s=svgIn($("trChart"),W,H),x=lin(0,30,L,R),y=lin(0,Math.max(h,.12)*1.15,B,Tp);
+    shade(s,f,Math.max(x1,a),Math.min(x2,b),x,y,"#d97706");mk("path",{d:`M${x(0)},${B} H${x(a)} L${x(m)},${y(h)} L${x(b)},${B} H${x(30)}`,fill:"none",stroke:"#d97706","stroke-width":2.8},s);
+    [x1,x2].forEach(v=>mk("line",{x1:x(v),x2:x(v),y1:Tp,y2:B,stroke:"#0f172a","stroke-width":1.6,"stroke-dasharray":"5 4"},s));
+    for(let v=0;v<=30;v+=3)T(s,x(v),B+18,v,{"text-anchor":"middle"});[[a,"a"],[m,"m"],[b,"b"]].forEach(([v,l])=>T(s,x(v),B+36,`${l} = ${v}`,{"text-anchor":"middle","font-weight":800,fill:"#92400e"}));T(s,x(m),y(h)-8,`f(m) = 2/(b−a) = ${h.toFixed(3)}`,{"text-anchor":"middle","font-size":12,fill:"#92400e","font-weight":700});
+    const p=cdf(x2,a,m,b)-cdf(x1,a,m,b);$("trOut").innerHTML=`P(${x1} ≤ x ≤ ${x2}) = P(x ≤ ${x2}) − P(x ≤ ${x1}) = ${cdf(x2,a,m,b).toFixed(4)} − ${cdf(x1,a,m,b).toFixed(4)} = <b>${p.toFixed(4)}</b>`+(a===6&&m===12&&b===24&&x1===10&&x2===18?". The pptx slide states 0.6111, but the formula with a = 6, m = 12, b = 24 gives 0.6852.":"")}
+  ["trA","trM","trB","trX1","trX2"].forEach(i=>$(i).oninput=draw);draw();
+})();
+
+/* 22 · normal */
+(function(){
+  let t="ge";
+  function draw(){const m=+$("nmM").value,sd=+$("nmS").value,xv=+$("nmX").value;$("nmML").textContent=fmt(m);$("nmSL").textContent=fmt(sd);$("nmXL").textContent=fmt(xv);
+    const W=660,H=310,L=30,R=640,Tp=16,B=260,s=svgIn($("nmChart"),W,H),x=lin(15000,58000,L,R),y=lin(0,npdf(0,0,2000)*1.05,B,Tp),f=v=>npdf(v,m,sd);
+    if(t==="le")shade(s,f,15000,xv,x,y,"#db2777");else shade(s,f,xv,58000,x,y,"#db2777");
+    if(m!==36500||sd!==5000)curve(s,v=>npdf(v,36500,5000),15000,58000,x,y,{c:"#94a3b8",w:1.6,dash:"5 4"});
+    curve(s,f,15000,58000,x,y,{c:"#db2777"});mk("line",{x1:L,x2:R,y1:B,y2:B,stroke:"#94a3b8"},s);
+    mk("line",{x1:x(m),x2:x(m),y1:y(f(m)),y2:B,stroke:"#9d174d","stroke-dasharray":"4 3"},s);T(s,x(m),B+34,"μ",{"text-anchor":"middle","font-weight":800,fill:"#9d174d","font-size":15});
+    mk("line",{x1:x(xv),x2:x(xv),y1:Tp,y2:B,stroke:"#0f172a","stroke-width":2},s);
+    [20000,25000,30000,35000,40000,45000,50000,55000].forEach(v=>T(s,x(v),B+18,(v/1000)+"k",{"text-anchor":"middle"}));
+    const c=normCdf(xv,m,sd),p=t==="le"?c:1-c;T(s,t==="le"?x(xv)-8:x(xv)+8,Tp+14,`P = ${p.toFixed(4)}`,{"text-anchor":t==="le"?"end":"start","font-weight":800,fill:"#9d174d","font-size":16});
+    $("nmOut").innerHTML=`z = (${fmt(xv)} − ${fmt(m)})/${fmt(sd)} = ${((xv-m)/sd).toFixed(2)}. P(x ${t==="le"?"≤":"≥"} ${fmt(xv)}) = <b>${p.toFixed(4)}</b>`+(m===36500&&sd===5000&&xv===40000&&t==="ge"?". ✓ Textbook: <b>0.2420</b>, so about 24% of engines last 40,000+ hours.":".")}
+  ["nmM","nmS","nmX"].forEach(i=>$(i).oninput=draw);seg("nmT",d=>{t=d.t;draw()});draw();
+})();
+
+/* 23 · NORM.INV */
+(function(){
+  function draw(){const p=+$("niP").value/100,m=36500,sd=5000,xv=m+sd*normInvStd(p);$("niPL").textContent=(p*100).toFixed(0)+"%";
+    const W=660,H=300,L=30,R=640,Tp=16,B=250,s=svgIn($("niChart"),W,H),x=lin(18000,55000,L,R),y=lin(0,npdf(0,0,sd)*1.05,B,Tp),f=v=>npdf(v,m,sd);
+    shade(s,f,18000,xv,x,y,"#e11d48");curve(s,f,18000,55000,x,y,{c:"#e11d48"});mk("line",{x1:L,x2:R,y1:B,y2:B,stroke:"#94a3b8"},s);
+    mk("line",{x1:x(xv),x2:x(xv),y1:Tp+20,y2:B,stroke:"#0f172a","stroke-width":2},s);T(s,x(xv),Tp+12,`Guarantee = ${fmt(Math.round(xv*100)/100)} h`,{"text-anchor":"middle","font-weight":800,fill:"#0f172a","font-size":14});
+    T(s,x(xv)-10,B-14,`${(p*100).toFixed(0)}% get a discount`,{"text-anchor":"end","font-weight":700,fill:"#9f1239","font-size":12.5});
+    [20000,25000,30000,35000,40000,45000,50000,55000].forEach(v=>T(s,x(v),B+18,(v/1000)+"k",{"text-anchor":"middle"}));
+    $("niOut").innerHTML=`<code>=NORM.INV(${p.toFixed(2)},36500,5000)</code> = <b>${xv.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2})}</b> hours.`+(Math.round(p*100)===10?" ✓ Textbook: 30,092.24. Grear can guarantee about <b>30,000 hours</b>, and only about 10% of engines will qualify for the discount.":" A larger share of engines qualifying means a higher guarantee.")}
+  $("niP").oninput=draw;draw();
+})();
+
+/* 24 · exponential */
+(function(){
+  function draw(){const m=+$("exM").value;let x1=+$("exX1").value,x2=+$("exX2").value;if(x1>x2)[x1,x2]=[x2,x1];$("exML").textContent=m;
+    const f=t=>t<0?0:Math.exp(-t/m)/m,F=t=>1-Math.exp(-t/m),W=660,H=300,L=50,R=640,Tp=20,B=250,s=svgIn($("exChart"),W,H),x=lin(0,45,L,R),y=lin(0,Math.max(f(0),.07)*1.08,B,Tp);
+    shade(s,f,x1,x2,x,y,C.up);curve(s,f,0,45,x,y,{c:C.up});mk("line",{x1:L,x2:R,y1:B,y2:B,stroke:"#94a3b8"},s);mk("line",{x1:L,x2:L,y1:Tp,y2:B,stroke:"#94a3b8"},s);
+    [x1,x2].forEach(v=>mk("line",{x1:x(v),x2:x(v),y1:Tp,y2:B,stroke:"#0f172a","stroke-dasharray":"5 4","stroke-width":1.6},s));
+    for(let v=0;v<=45;v+=6)T(s,x(v),B+18,v,{"text-anchor":"middle"});T(s,(L+R)/2,B+40,"Months between defaults",{"text-anchor":"middle","font-weight":700,fill:"#475569"});
+    const p=F(x2)-F(x1);$("exOut").innerHTML=`P(${x1} ≤ x ≤ ${x2}) = (1 − e<sup>−${x2}/${m}</sup>) − (1 − e<sup>−${x1}/${m}</sup>) = ${F(x2).toFixed(4)} − ${F(x1).toFixed(4)} = <b>${p.toFixed(4)}</b>`+(m===15&&x1===6&&x2===18?". ✓ Textbook 0.3691.":".")+" The curve is right-skewed: short gaps are most likely."}
+  ["exM","exX1","exX2"].forEach(i=>$(i).oninput=draw);draw();
+})();
+
+/* 25 · distribution chooser */
+cardGame("dsGame","dsScore",[["Number of defective items in a sample of 20, each defective with p = 0.03","Binomial",["Binomial","Poisson","Uniform","Triangular","Normal","Exponential"],"A fixed n of independent trials, each a success or failure with constant p."],
+  ["Number of calls arriving at a call centre in 10 minutes","Poisson",["Binomial","Poisson","Uniform","Triangular","Normal","Exponential"],"A count of occurrences in an interval of time."],
+  ["Minutes until the next customer walks into the shop","Exponential",["Binomial","Poisson","Uniform","Triangular","Normal","Exponential"],"Time between events, and short gaps are most likely."],
+  ["Weight of cereal boxes filled by a machine targeting 500 g","Normal",["Binomial","Poisson","Uniform","Triangular","Normal","Exponential"],"Symmetric, bell-shaped variation around a target."],
+  ["A delivery arrives at any minute between 2:00 and 2:30 pm, all equally likely","Uniform",["Binomial","Poisson","Uniform","Triangular","Normal","Exponential"],"Equal likelihood across an interval."],
+  ["Project duration: experts give min 6, most likely 12, max 24 months","Triangular",["Binomial","Poisson","Uniform","Triangular","Normal","Exponential"],"Min, mode and max only: the triangular distribution."]],6);
+const QUIZ={
+  qa:[
+    {q:"P(A) = 0.30. What is P(Aᶜ)?",o:["0.30","0.70","1.30","0"],a:1,w:"Complement: P(Aᶜ) = 1 − P(A) = 0.70."},
+    {q:"P(A) = 0.5, P(B) = 0.4, P(A ∩ B) = 0.2. What is P(A ∪ B)?",o:["0.9","0.7","0.2","0.1"],a:1,w:"Addition law: 0.5 + 0.4 − 0.2 = 0.7."},
+    {q:"Of 157 single customers, 41 defaulted. P(D | S) is…",o:["41/300","41/120","41/157 = 0.2611","157/300"],a:2,w:"Given S, the sample space shrinks to the 157 single customers: 41/157 = 0.2611."}
+  ],
+  exitA:[
+    {q:"CP&L: P(8) = 0.15, P(9) = 0.25, P(10) = 0.30. P(finish in ≤ 10 months) is…",o:["0.30","0.55","0.70","1.00"],a:2,w:"Add the outcomes in the event: 0.15 + 0.25 + 0.30 = 0.70."},
+    {q:"Two events that <b>cannot occur together</b> are…",o:["independent","mutually exclusive","complements of S","conditional"],a:1,w:"Mutually exclusive: P(A ∩ B) = 0."},
+    {q:"If P(A | B) = P(A), then A and B are…",o:["mutually exclusive","independent","complements","impossible"],a:1,w:"Knowing B does not change the probability of A, so they are independent."},
+    {q:"In the joint probability table, the <b>marginal</b> probability P(Married) is…",o:["0.2633","0.5524","0.4767","143"],a:2,w:"Marginal = row total of joint probabilities: 0.2133 + 0.2633 = 0.4767 (143/300)."},
+    {q:"Supplier 1 makes 65% of parts (2% bad); Supplier 2 makes 35% (5% bad). A bad part arrives. Which supplier is more likely?",o:["Supplier 1 (0.65)","Supplier 2 (posterior ≈ 0.57)","Equal","Cannot tell"],a:1,w:"P(A₂ | B) = 0.0175/0.0305 = 0.5738. The new information reverses the prior."}
+  ],
+  qb:[
+    {q:"x = 4, 12, 24 with f(x) = 0.15, 0.60, 0.25. E(x) is…",o:["13.33","13.80","12","40"],a:1,w:"Σx·f(x) = 0.60 + 7.20 + 6.00 = 13.80."},
+    {q:"Binomial n = 3, p = 0.30. P(x = 0) is…",o:["0.000","0.300","0.343","0.700"],a:2,w:"(1 − 0.3)³ = 0.7³ = 0.343. In Excel: =BINOM.DIST(0,3,0.3,FALSE)."},
+    {q:"Which Excel formula gives P(exactly 5 arrivals) when arrivals average 10 per hour?",o:["=POISSON.DIST(5,10,FALSE)","=POISSON.DIST(10,5,TRUE)","=BINOM.DIST(5,10,0.5,FALSE)","=NORM.DIST(5,10,1,FALSE)"],a:0,w:"POISSON.DIST(x, mean, FALSE) gives P(x = 5). TRUE would give P(x ≤ 5)."}
+  ],
+  exitB:[
+    {q:"Flight time is uniform on 120–140 min. P(120 ≤ x ≤ 130) is…",o:["0.25","0.50","0.10","1/20"],a:1,w:"Area = width × height = 10 × 1/20 = 0.50."},
+    {q:"For a continuous random variable, P(x = exactly 130) equals…",o:["1/20","0","0.5","it depends on σ"],a:1,w:"A single point has no width, so no area. We only find probabilities of intervals."},
+    {q:"Engine life ~ Normal(36,500, 5,000). P(x ≥ 40,000) is…",o:["0.7580","0.2420","0.5000","0.1000"],a:1,w:"1 − NORM.DIST(40000,36500,5000,TRUE) = 1 − 0.7580 = 0.2420."},
+    {q:"To find the guarantee that only 10% of engines fall below, use…",o:["NORM.DIST","NORM.INV","EXPON.DIST","PERCENTILE.EXC"],a:1,w:"NORM.INV turns a probability into a value: NORM.INV(0.1,36500,5000) = 30,092."},
+    {q:"In <code>=EXPON.DIST(18, ?, TRUE)</code> with a mean of 15 months, the second argument is…",o:["15","1/15","18","0.5"],a:1,w:"Excel takes the rate λ = 1/μ = 1/15."},
+    {q:"“Minutes between customer arrivals” is best modelled by the…",o:["Poisson","binomial","exponential","uniform"],a:2,w:"Time between events = exponential. The <i>number</i> of arrivals in an interval would be Poisson."}
+  ]
+};
+function buildQuiz(el){
+  const qs=QUIZ[el.dataset.quiz];let i=0,score=0;const res=[];
+  function render(){
+    if(i>=qs.length){const pct=Math.round(score/qs.length*100);
+      el.innerHTML=`<div class="qcard qdone"><div class="big">${score} / ${qs.length}</div><p class="lead">${pct===100?"Perfect. You have the chart sense!":pct>=60?"Good work. Review the ones you missed.":"Worth another look: revisit the slides, then try again."}</p><div class="qnav" style="justify-content:center"><button class="btn ghost" type="button">Try again</button></div></div>`;
+      el.querySelector("button").onclick=()=>{i=0;score=0;res.length=0;render()};return}
+    const q=qs[i];const L="ABCD";
+    el.innerHTML=`<div class="qhead"><div class="qdots">${qs.map((_,k)=>`<i class="${res[k]===true?"ok":res[k]===false?"no":k===i?"cur":""}"></i>`).join("")}</div><div class="qscore">Question ${i+1} of ${qs.length} · Score ${score}</div></div>
+      <div class="qcard"><div class="qq">${q.q}</div><div class="qopts">${q.o.map((o,k)=>`<button class="qopt" type="button" data-k="${k}"><span class="L">${L[k]}</span><span>${o}</span></button>`).join("")}</div>
+      <div class="qwhy"></div><div class="qnav"><button class="btn" type="button" disabled>${i===qs.length-1?"See score":"Next question"} →</button></div></div>`;
+    const why=el.querySelector(".qwhy"),nx=el.querySelector(".qnav .btn");
+    el.querySelectorAll(".qopt").forEach(b=>b.onclick=()=>{const k=+b.dataset.k,ok=k===q.a;if(ok)score++;res[i]=ok;
+      el.querySelectorAll(".qopt").forEach(x=>{x.disabled=true;if(+x.dataset.k===q.a)x.classList.add("right")});if(!ok)b.classList.add("wrong");
+      why.innerHTML=(ok?"✅ <b>Correct.</b> ":"❌ <b>Not quite.</b> ")+q.w;why.classList.add("show");
+      el.querySelector(".qscore").textContent=`Question ${i+1} of ${qs.length} · Score ${score}`;el.querySelectorAll(".qdots i")[i].className=ok?"ok":"no";nx.disabled=false;nx.focus()});
+    nx.onclick=()=>{i++;render()};
+  }
+  render();
+}
+
+/* ======================= DECK ======================= */
+const slides=[...document.querySelectorAll(".slide")];
+const deck=$("deck");
+slides.forEach(s=>s.querySelectorAll(".quiz").forEach(buildQuiz));
+document.querySelectorAll("[data-go]").forEach(b=>b.addEventListener("click",()=>go(+b.dataset.go-1)));
+const menuList=$("menuList");
+const accOf=s=>getComputedStyle(s).getPropertyValue("--acc").trim()||"#2563eb";
+const PARTB=slides.findIndex(s=>s.classList.contains("partb"));
+slides.forEach((s,i)=>{
+  if(i===0){const h=document.createElement("h4");h.textContent=MENU_A;menuList.appendChild(h)}
+  if(i===PARTB){const h=document.createElement("h4");h.textContent=MENU_B;h.style.marginTop="14px";menuList.appendChild(h)}
+  if(!s.classList.contains("title-slide")){const f=document.createElement("div");f.className="foot";f.innerHTML=`<span>BPMNK2033 · ${i<PARTB?FOOT_A:FOOT_B}</span><span>${i+1}</span>`;s.appendChild(f)}
+  const a=document.createElement("a");a.href="#"+(i+1);a.innerHTML=`<span class="n" style="background:${accOf(s)}">${i+1}</span>${esc(s.dataset.title||"Slide "+(i+1))}`;
+  a.onclick=e=>{e.preventDefault();go(i);toggleMenu(false)};menuList.appendChild(a)});
+let cur=-1;
+function go(n){
+  n=Math.max(0,Math.min(slides.length-1,n));if(n===cur)return;
+  if(document.body.classList.contains("mobile")){cur=n;slides[n].scrollIntoView({behavior:"smooth"});return}
+  slides.forEach((s,i)=>{s.classList.toggle("active",i===n);s.classList.toggle("prev",i<n)});
+  cur=n;$("count").textContent=`${n+1} / ${slides.length}`;
+  $("progress").style.width=((n+1)/slides.length*100)+"%";
+  menuList.querySelectorAll("a").forEach((a,i)=>a.classList.toggle("cur",i===n));
+  if(location.hash!=="#"+(n+1))history.replaceState(null,"","#"+(n+1));
+  hideTip();
+  if(!timerStarted&&n>0&&n!==PARTB)startTimer();
+}
+function fit(){
+  const mobile=window.innerWidth<760;document.body.classList.toggle("mobile",mobile);
+  if(mobile){deck.style.transform="";return}
+  const sc=Math.min(window.innerWidth/1320,(window.innerHeight-70)/736);deck.style.transform=`scale(${sc})`;
+}
+window.addEventListener("resize",fit);
+document.addEventListener("keydown",e=>{
+  if(e.target.matches("input,select,textarea"))return;
+  if(document.body.classList.contains("mobile"))return;
+  const k=e.key;
+  if(["ArrowRight","PageDown"," "].includes(k)){e.preventDefault();go(cur+1)}
+  else if(["ArrowLeft","PageUp"].includes(k)){e.preventDefault();go(cur-1)}
+  else if(k==="Home")go(0);else if(k==="End")go(slides.length-1);
+  else if(k==="m"||k==="M")toggleMenu();else if(k==="f"||k==="F")toggleFs();else if(k==="t"||k==="T")toggleTimer();
+  else if(k==="Escape")toggleMenu(false);
+});
+$("prevBtn").onclick=()=>go(cur-1);
+$("nextBtn").onclick=()=>go(cur+1);
+$("menuBtn").onclick=()=>toggleMenu();
+$("scrim").onclick=()=>toggleMenu(false);
+$("fsBtn").onclick=toggleFs;
+function toggleMenu(v){const m=$("menu");const o=v===undefined?!m.classList.contains("open"):v;m.classList.toggle("open",o);$("scrim").classList.toggle("show",o)}
+function toggleFs(){if(!document.fullscreenElement)document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen().catch(()=>{});else document.exitFullscreen()}
+let tx=null;document.addEventListener("touchstart",e=>{if(e.target.closest(".panel,.quiz,select,.chart,.choose,.tdes,.dash,.heatwrap"))return;tx=e.touches[0].clientX},{passive:true});
+document.addEventListener("touchend",e=>{if(tx===null||document.body.classList.contains("mobile"))return;const dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>60)go(cur+(dx<0?1:-1));tx=null});
+const LIMIT=70*60;let tStart=0,tAcc=0,tRun=false,timerStarted=false;const tEl=$("timer");
+function startTimer(){timerStarted=true;if(!tRun){tRun=true;tStart=Date.now()}}
+function toggleTimer(){timerStarted=true;if(tRun){tAcc+=Date.now()-tStart;tRun=false}else{tRun=true;tStart=Date.now()}paint()}
+function paint(){const s=Math.floor((tAcc+(tRun?Date.now()-tStart:0))/1000);const mm=String(Math.floor(s/60)).padStart(2,"0"),ss=String(s%60).padStart(2,"0");
+  tEl.textContent=(tRun?"⏸ ":"▶ ")+mm+":"+ss;tEl.classList.toggle("over",s>LIMIT)}
+setInterval(paint,1000);
+tEl.onclick=toggleTimer;tEl.ondblclick=()=>{tAcc=0;tRun=false;timerStarted=false;paint()};
+fit();
+const h0=parseInt(location.hash.slice(1),10);go(isNaN(h0)?0:h0-1);
+window.addEventListener("hashchange",()=>{const n=parseInt(location.hash.slice(1),10);if(!isNaN(n))go(n-1)});
+
+</script>
+</body>
+</html>

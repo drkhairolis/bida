@@ -7,8 +7,10 @@ bida/
 │   └── index.html        ← Chapter 1: Introduction to Business Analytics
 ├── chapter2/
 │   └── index.html        ← Chapter 2: Basic Excel Formulas & Functions
+├── chapter3/
+│   └── index.html        ← Chapter 3: Data Visualisation & Exploration (2 lectures)
 ├── chapter4-5/
-│   └── index.html        ← Chapters 4 & 5: Data Visualization & Exploration (2 lectures)
+│   └── index.html        ← redirect to chapter3/ (old link)
 └── README.md
 ```
 
@@ -50,6 +52,6 @@ On phones, the slides stack into one scrolling page so students can follow along
 
 Near the top of the `<script>` block in `chapter2/index.html`, find `const DATA = [...]`. Each row is `[Rank, Make, Model, Sales 2021, Sales 2020]`. Replace these rows with the figures from your class `top20vehicles2021` file, and every demo, lookup and highlight will update automatically. Check the quiz explanations afterwards: the IF question uses the F-Series figures, so update that text if the numbers change.
 
-## Chapters 4 & 5 (two lectures in one module)
+## Chapter 3 (two lectures in one module)
 
-`chapter4-5/index.html` has 32 slides. **Part A (Chapter 4)** is slides 1–18 and **Part B (Chapter 5)** is slides 19–32. For the second lecture, open `…/chapter4-5/#19`. The timer starts from 00:00 when you move past slide 19; double-click it to reset at any time.
+`chapter3/index.html` has 32 slides. **Part A (lecture 1)** is slides 1–18 and **Part B (lecture 2)** is slides 19–32. For the second lecture, open `…/chapter3/#19`. The timer starts from 00:00 when you move past slide 19; double-click it to reset at any time. The old `chapter4-5/` link redirects here.

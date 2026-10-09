@@ -1,0 +1,1438 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 4 · Descriptive Statistics | BPMNK2033</title>
+<meta name="description" content="BPMNK2033 Business Intelligence & Data Analytics — Chapter 4: Descriptive Statistics. Interactive slides with live distributions, summary measures, boxplots and quizzes.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#e9eef6; --paper:#ffffff; --ink:#0f172a; --muted:#475569; --soft:#64748b; --line:#e2e8f0; --line2:#cbd5e1;
+  --blue:#2563eb; --teal:#0d9488; --violet:#7c3aed; --amber:#d97706; --orange:#ea580c; --green:#16a34a;
+  --rose:#e11d48; --pink:#db2777; --cyan:#0891b2; --indigo:#4f46e5; --xl:#107c41;
+  --acc:var(--blue);
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --sans:'Plus Jakarta Sans',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+body{overflow:hidden;background:radial-gradient(1200px 600px at 10% 0%,#dbeafe 0,transparent 60%),radial-gradient(900px 600px at 100% 100%,#fce7f3 0,transparent 55%),var(--bg)}
+button{font-family:inherit}
+/* ---------- stage ---------- */
+#viewport{position:fixed;inset:0 0 58px 0;display:flex;align-items:center;justify-content:center}
+#deck{width:1280px;height:720px;position:relative;transform-origin:center center;flex:none}
+.slide{position:absolute;inset:0;background:var(--paper);border-radius:22px;box-shadow:0 30px 80px -30px rgba(15,23,42,.35),0 2px 6px rgba(15,23,42,.06);
+  padding:44px 56px 64px;overflow:hidden;opacity:0;visibility:hidden;transform:translateX(40px) scale(.985);transition:opacity .45s ease,transform .45s cubic-bezier(.2,.7,.2,1),visibility 0s .45s}
+.slide.active{opacity:1;visibility:visible;transform:none;transition:opacity .45s ease,transform .45s cubic-bezier(.2,.7,.2,1)}
+.slide.prev{transform:translateX(-40px) scale(.985)}
+.slide::before{content:"";position:absolute;left:0;top:0;right:0;height:6px;background:linear-gradient(90deg,var(--acc),color-mix(in srgb,var(--acc) 40%,#fff))}
+.slide::after{content:"";position:absolute;right:-120px;top:-120px;width:340px;height:340px;border-radius:50%;background:color-mix(in srgb,var(--acc) 9%,transparent);pointer-events:none}
+[data-acc=blue]{--acc:var(--blue)}[data-acc=teal]{--acc:var(--teal)}[data-acc=violet]{--acc:var(--violet)}[data-acc=amber]{--acc:var(--amber)}
+[data-acc=orange]{--acc:var(--orange)}[data-acc=green]{--acc:var(--green)}[data-acc=rose]{--acc:var(--rose)}[data-acc=pink]{--acc:var(--pink)}
+[data-acc=cyan]{--acc:var(--cyan)}[data-acc=indigo]{--acc:var(--indigo)}[data-acc=xl]{--acc:var(--xl)}
+.kicker{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--acc);margin-bottom:6px}
+.kicker::before{content:"";width:18px;height:3px;border-radius:2px;background:var(--acc)}
+h1,h2,h3{margin:0;letter-spacing:-.02em}
+h2{font-size:38px;font-weight:800;line-height:1.1;margin-bottom:18px}
+h2 .fn{font-family:var(--mono);color:var(--acc);font-weight:700}
+h3{font-size:18px;font-weight:700;margin-bottom:8px}
+p{margin:0 0 12px;line-height:1.55;font-size:17px;color:var(--muted)}
+.lead{font-size:19px;color:#334155}
+code,.code{font-family:var(--mono);font-size:.92em}
+/* show >=, <=, <> exactly as typed (JetBrains Mono would draw them as ≥ ≤ ≠) */
+*,*::before,*::after{font-variant-ligatures:none;font-feature-settings:"liga" 0,"calt" 0}
+.cols{display:grid;grid-template-columns:1fr 1.25fr;gap:32px;align-items:start}
+.cols.even{grid-template-columns:1fr 1fr}
+.cols.wide-r{grid-template-columns:.86fr 1.5fr}
+.syntax{font-family:var(--mono);font-size:17px;background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:12px;margin:4px 0 14px;line-height:1.5;overflow-x:auto}
+.syntax .f{color:#7dd3fc;font-weight:700}.syntax .a{color:#fcd34d}.syntax .o{color:#94a3b8}.syntax .s{color:#86efac}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px;box-shadow:0 1px 2px rgba(15,23,42,.04)}
+.tint{background:color-mix(in srgb,var(--acc) 7%,#fff);border-color:color-mix(in srgb,var(--acc) 25%,#fff)}
+.callout{border-left:4px solid var(--acc);background:color-mix(in srgb,var(--acc) 7%,#fff);padding:10px 14px;border-radius:0 12px 12px 0;font-size:15px;color:#334155;line-height:1.5;margin:10px 0}
+.callout b{color:var(--ink)}
+.callout.warn{--acc:var(--rose)}
+ul.tidy{margin:0;padding:0;list-style:none}
+ul.tidy li{position:relative;padding:6px 0 6px 26px;font-size:16.5px;line-height:1.45;color:#334155}
+ul.tidy li::before{content:"";position:absolute;left:4px;top:13px;width:10px;height:10px;border-radius:3px;background:var(--acc);transform:rotate(45deg)}
+.pill{display:inline-block;font-family:var(--mono);font-size:13px;font-weight:600;padding:3px 9px;border-radius:999px;background:color-mix(in srgb,var(--acc) 12%,#fff);color:color-mix(in srgb,var(--acc) 80%,#000);border:1px solid color-mix(in srgb,var(--acc) 30%,#fff)}
+.foot{position:absolute;left:56px;right:56px;bottom:18px;display:flex;justify-content:space-between;font-size:12px;color:var(--soft);pointer-events:none}
+table.mini{border-collapse:collapse;width:100%;font-size:15px}
+table.mini th,table.mini td{padding:7px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+table.mini th{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--soft);font-weight:700}
+table.mini td code{color:var(--acc);font-weight:600}
+/* ---------- chrome ---------- */
+#progress{position:fixed;left:0;top:0;height:4px;background:linear-gradient(90deg,var(--blue),var(--violet),var(--pink),var(--orange));width:0;transition:width .4s ease;z-index:30}
+#hud{position:fixed;right:16px;bottom:14px;display:flex;gap:8px;align-items:center;z-index:30}
+#hud button,#hud .count{height:38px;min-width:38px;border-radius:12px;border:1px solid var(--line2);background:rgba(255,255,255,.92);backdrop-filter:blur(6px);color:var(--ink);font-size:15px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:0 10px;box-shadow:0 4px 14px -6px rgba(15,23,42,.25)}
+#hud button:hover{border-color:var(--blue);color:var(--blue)}
+#hud .count{cursor:default;font-variant-numeric:tabular-nums;font-size:13px}
+#timer{font-variant-numeric:tabular-nums;font-size:13px!important}
+#timer.over{color:var(--rose)!important;border-color:var(--rose)!important}
+#menu{position:fixed;left:0;top:0;bottom:0;width:340px;background:#fff;box-shadow:20px 0 60px -20px rgba(15,23,42,.35);z-index:40;transform:translateX(-105%);transition:transform .3s ease;overflow-y:auto;padding:20px 14px}
+#menu.open{transform:none}
+#menu h4{margin:4px 10px 12px;font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--soft)}
+#menu a{display:flex;gap:10px;align-items:center;padding:8px 10px;border-radius:10px;color:var(--ink);text-decoration:none;font-size:14.5px;font-weight:500}
+#menu a:hover{background:#f1f5f9}
+#menu a.cur{background:#eff6ff;color:var(--blue);font-weight:700}
+#menu a .n{width:26px;height:26px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex:none}
+#scrim{position:fixed;inset:0;background:rgba(15,23,42,.25);z-index:35;display:none}
+#scrim.show{display:block}
+#help{position:fixed;left:16px;bottom:14px;font-size:12px;color:var(--soft);z-index:30;background:rgba(255,255,255,.8);padding:6px 10px;border-radius:10px;border:1px solid var(--line)}
+kbd{font-family:var(--mono);font-size:11px;border:1px solid var(--line2);border-bottom-width:2px;border-radius:5px;padding:0 5px;background:#fff;color:var(--ink)}
+/* ---------- title ---------- */
+.title-slide{background:linear-gradient(135deg,#0b3d2e 0%,#107c41 45%,#16a34a 100%)!important;color:#fff}
+.title-slide::before{display:none}
+.title-slide::after{background:rgba(255,255,255,.07);width:520px;height:520px;right:-160px;top:-160px}
+.title-slide .kicker{color:#bbf7d0}.title-slide .kicker::before{background:#bbf7d0}
+.title-slide h1{font-size:64px;line-height:1.02;font-weight:800;margin:14px 0 18px;max-width:700px}
+.title-slide h1 span{color:#bbf7d0}
+.title-slide p{color:#dcfce7;font-size:20px;max-width:600px}
+.title-meta{position:absolute;left:56px;bottom:56px;display:flex;gap:28px;font-size:14px;color:#dcfce7}
+.title-meta b{display:block;color:#fff;font-size:16px}
+.floaters{position:absolute;right:40px;top:120px;width:400px;height:480px}
+.floater{position:absolute;font-family:var(--mono);font-size:17px;font-weight:600;background:rgba(255,255,255,.96);color:#0f172a;padding:10px 14px;border-radius:12px;box-shadow:0 18px 40px -16px rgba(0,0,0,.45);animation:bob 6s ease-in-out infinite;white-space:nowrap}
+.floater i{font-style:normal;color:var(--xl)}
+.floater.b{animation-delay:-1.5s}.floater.c{animation-delay:-3s}.floater.d{animation-delay:-4.5s}.floater.e{animation-delay:-2.2s}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+/* ---------- agenda ---------- */
+.agenda{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;margin-top:22px}
+.ag{border-radius:16px;padding:16px 14px;color:#fff;min-height:250px;display:flex;flex-direction:column;position:relative;overflow:hidden;transition:transform .2s}
+.ag:hover{transform:translateY(-4px)}
+.ag .t{font-family:var(--mono);font-size:13px;opacity:.9}
+.ag .h{font-size:18px;font-weight:800;margin:8px 0 6px;line-height:1.2}
+.ag .d{font-size:13.5px;opacity:.95;line-height:1.45}
+.ag .m{margin-top:auto;font-size:30px;font-weight:800;opacity:.9}
+.ag .m small{font-size:13px;font-weight:600}
+.bar70{display:flex;height:14px;border-radius:8px;overflow:hidden;margin-top:18px}
+/* ---------- outcomes ---------- */
+.oc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:8px}
+.oc{border-radius:16px;padding:18px;border:1px solid var(--line);background:#fff;position:relative}
+.oc .num{width:34px;height:34px;border-radius:10px;color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;margin-bottom:10px}
+.oc h3{font-size:17px}
+.oc p{font-size:14.5px;margin:0}
+.oc .fns{margin-top:10px;display:flex;flex-wrap:wrap;gap:6px}
+/* ---------- anatomy ---------- */
+.anat{font-family:var(--mono);font-size:44px;font-weight:700;display:flex;flex-wrap:wrap;gap:2px;padding:26px 24px;background:#0f172a;border-radius:18px;color:#e2e8f0;margin:6px 0 16px}
+.anat span{padding:4px 6px;border-radius:8px;cursor:pointer;transition:background .15s,transform .15s;position:relative}
+.anat span:hover,.anat span.on{background:rgba(255,255,255,.12);transform:translateY(-2px)}
+.anat .p-eq{color:#fda4af}.anat .p-fn{color:#7dd3fc}.anat .p-br{color:#cbd5e1}.anat .p-rg{color:#fcd34d}.anat .p-cm{color:#94a3b8}.anat .p-tx{color:#86efac}.anat .p-lt{color:#c4b5fd}
+.anat.small{font-size:30px;padding:20px}
+.anat-explain{min-height:90px;display:flex;gap:14px;align-items:flex-start}
+.anat-explain .big{font-family:var(--mono);font-size:22px;font-weight:700;color:var(--acc);min-width:120px}
+/* ---------- sheet widget ---------- */
+.sheet-w{border:1px solid var(--line2);border-radius:14px;overflow:hidden;background:#fff;box-shadow:0 10px 30px -18px rgba(15,23,42,.35)}
+.sheet-w .fbar{display:flex;align-items:center;gap:0;border-bottom:1px solid var(--line2);background:#f8fafc}
+.sheet-w .fbar .nm{font-family:var(--mono);font-size:12.5px;color:var(--soft);width:56px;text-align:center;border-right:1px solid var(--line2);padding:10px 0;font-weight:600}
+.sheet-w .fbar .fx{font-family:Georgia,serif;font-style:italic;color:var(--xl);font-weight:700;padding:0 10px;font-size:16px}
+.sheet-w .fbar input{flex:1;border:0;outline:0;background:#fff;font-family:var(--mono);font-size:15px;padding:10px 12px;color:var(--ink);min-width:0;border-left:1px solid var(--line)}
+.sheet-w .fbar input:focus{box-shadow:inset 0 -2px 0 var(--xl)}
+.sheet-w .fbar button{border:0;background:var(--xl);color:#fff;font-weight:700;font-size:13px;padding:0 14px;align-self:stretch;cursor:pointer}
+.sheet-w .fbar button:hover{filter:brightness(1.1)}
+.sheet-w .presets{display:flex;flex-wrap:wrap;gap:6px;padding:8px 10px;border-bottom:1px solid var(--line);background:#fff}
+.sheet-w .presets button{font-family:var(--mono);font-size:12px;border:1px solid var(--line2);background:#f8fafc;border-radius:8px;padding:4px 8px;cursor:pointer;color:#334155;transition:all .15s}
+.sheet-w .presets button.mistake{border:1px dashed #fda4af;background:#fff1f2;color:#9f1239}
+.sheet-w .presets button.mistake::before{content:"✗ mistake · ";font-family:var(--sans);font-weight:700;font-size:11px}
+.sheet-w .presets button.mistake.on{border:1.5px solid var(--rose);background:#ffe4e6;color:#9f1239}
+.sheet-w .presets button:not(.mistake):hover,.sheet-w .presets button.on:not(.mistake){border-color:var(--acc);color:var(--acc);background:color-mix(in srgb,var(--acc) 8%,#fff)}
+.sheet-w .out{display:flex;align-items:center;gap:12px;padding:9px 12px;border-bottom:1px solid var(--line);min-height:44px;background:linear-gradient(90deg,color-mix(in srgb,var(--acc) 6%,#fff),#fff)}
+.sheet-w .out .lbl{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--soft)}
+.sheet-w .out .val{font-family:var(--mono);font-size:20px;font-weight:700;color:var(--ink)}
+.sheet-w .out .val.err{color:var(--rose)}
+.sheet-w .out .msg{font-size:13px;color:var(--muted);line-height:1.35;flex:1}
+.sheet-w .out .msg.err{color:#9f1239}
+.sheet-w .out .fixbtn{flex:none;align-self:center;border:0;border-radius:999px;background:#15803d;color:#fff;font:700 13px var(--sans);padding:8px 14px;cursor:pointer;white-space:nowrap}
+.sheet-w .out .fixbtn:hover{background:#166534}
+.sheet-w .hint{font-size:12.5px;color:#92400e;background:#fffbeb;border-bottom:1px solid #fde68a;padding:6px 12px;display:none}
+.sheet-w .hint.show{display:block}
+.sheet-w .opts{display:flex;gap:14px;align-items:center;padding:6px 12px;font-size:13px;color:var(--muted);border-bottom:1px solid var(--line)}
+.sheet-w .opts label{display:flex;gap:6px;align-items:center;cursor:pointer}
+.gridwrap{overflow:auto;max-height:396px}
+.slide[data-title="Formula playground"] .gridwrap{max-height:360px}
+table.grid{border-collapse:separate;border-spacing:0;font-size:12.5px;width:100%;font-variant-numeric:tabular-nums}
+table.grid th,table.grid td{border-right:1px solid #e5e7eb;border-bottom:1px solid #e5e7eb;padding:0 8px;height:17px;line-height:17px;white-space:nowrap;transition:background .2s,box-shadow .2s}
+table.grid thead th{position:sticky;top:0;background:#f1f5f9;color:#475569;font-weight:600;font-size:11.5px;text-align:center;z-index:2;height:22px}
+table.grid tbody th{background:#f1f5f9;color:#64748b;font-weight:600;font-size:11px;text-align:center;width:34px;position:sticky;left:0;z-index:1}
+table.grid td.num{text-align:right}
+table.grid td.hdr{font-weight:700;color:#0f172a;background:#f8fafc}
+table.grid td.used{background:color-mix(in srgb,var(--acc) 14%,#fff);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--acc) 40%,#fff)}
+table.grid td.hit{background:#fde68a!important;box-shadow:inset 0 0 0 2px #d97706!important;font-weight:700}
+table.grid td.scan{background:#bfdbfe!important}
+table.grid td.fillc{font-weight:700;text-align:center}
+table.grid td.good{color:#15803d;background:#f0fdf4}
+table.grid td.bad{color:#be123c;background:#fff1f2}
+table.grid td.neu{color:#1e3a8a;background:#eff6ff}
+table.grid td.f2{box-shadow:inset 0 0 0 2px var(--xl)!important}
+table.grid th.colsel{background:color-mix(in srgb,var(--acc) 22%,#f1f5f9);color:var(--ink)}
+.sheet-w.nogrid .gridwrap{display:none}
+/* ---------- quiz ---------- */
+.quiz{max-width:880px}
+.qmini .qhead{margin-bottom:6px}
+.qmini .qcard{padding:12px 14px;border-radius:14px}
+.qmini .qcard .qq{font-size:16px;margin-bottom:10px}
+.qmini .qopts{gap:7px}
+.qmini .qopt{padding:6px 9px;font-size:14px;border-radius:10px}
+.qmini .qopt code{font-size:12.5px}
+.qmini .qopt .L{width:22px;height:22px;font-size:12px}
+.qmini .qwhy{margin-top:8px;font-size:13.5px;padding:7px 10px;line-height:1.4}
+.qmini .qnav{margin-top:8px}
+.qmini .btn{padding:6px 14px;font-size:14px}
+.qhead{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.qdots{display:flex;gap:6px}
+.qdots i{width:28px;height:8px;border-radius:4px;background:var(--line)}
+.qdots i.cur{background:var(--acc)}.qdots i.ok{background:var(--green)}.qdots i.no{background:var(--rose)}
+.qscore{margin-left:auto;font-weight:700;color:var(--muted);font-size:14px}
+.qcard{border:1px solid var(--line);border-radius:18px;padding:22px 24px;background:#fff;box-shadow:0 14px 34px -22px rgba(15,23,42,.35)}
+.qcard .qq{font-size:22px;font-weight:700;line-height:1.35;margin-bottom:16px}
+.qcard .qq code{background:#f1f5f9;padding:1px 6px;border-radius:6px;color:#0f172a}
+.qopts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.qopt{text-align:left;border:2px solid var(--line);background:#fff;border-radius:14px;padding:12px 14px;font-size:16px;cursor:pointer;display:flex;gap:10px;align-items:flex-start;transition:all .15s;color:var(--ink);line-height:1.35}
+.qopt:hover:not(:disabled){border-color:var(--acc);background:color-mix(in srgb,var(--acc) 5%,#fff)}
+.qopt .L{flex:none;width:26px;height:26px;border-radius:8px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:var(--muted)}
+.qopt code{font-size:14.5px}
+.qopt.right{border-color:var(--green);background:#f0fdf4}.qopt.right .L{background:var(--green);color:#fff}
+.qopt.wrong{border-color:var(--rose);background:#fff1f2}.qopt.wrong .L{background:var(--rose);color:#fff}
+.qopt:disabled{cursor:default}
+.qwhy{margin-top:14px;font-size:15px;color:#334155;padding:10px 14px;border-radius:12px;background:#f8fafc;display:none;line-height:1.5}
+.qwhy.show{display:block}
+.qnav{display:flex;justify-content:flex-end;margin-top:14px;gap:10px}
+.btn{border:0;border-radius:12px;padding:10px 18px;font-weight:700;font-size:15px;cursor:pointer;background:var(--acc);color:#fff;box-shadow:0 8px 20px -10px var(--acc)}
+.btn.ghost{background:#fff;color:var(--acc);border:2px solid var(--acc);box-shadow:none}
+.btn:disabled{opacity:.4;cursor:default}
+.qdone{text-align:center;padding:26px}
+.qdone .big{font-size:64px;font-weight:800;color:var(--acc)}
+/* ---------- misc components ---------- */
+.ops{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.op{border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:#fff}
+.op b{font-family:var(--mono);font-size:22px;color:var(--acc)}
+.op span{display:block;font-size:13px;color:var(--muted)}
+.tt{border-collapse:collapse;font-size:15px;margin-top:6px}
+.tt th,.tt td{padding:6px 12px;border:1px solid var(--line);text-align:center}
+.tt th{background:#f8fafc;font-size:12.5px;color:var(--soft)}
+.T{color:var(--green);font-weight:800}.F{color:var(--rose);font-weight:800}
+.errgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.errc{border-radius:14px;padding:14px;border:1px solid var(--line);background:#fff;cursor:pointer;transition:transform .15s,box-shadow .15s}
+.errc:hover{transform:translateY(-3px);box-shadow:0 14px 30px -18px rgba(15,23,42,.4)}
+.errc .code{font-family:var(--mono);font-weight:800;font-size:20px;color:var(--rose)}
+.errc p{font-size:13.5px;margin:6px 0 0;line-height:1.45}
+.errc .try{font-family:var(--mono);font-size:12px;color:var(--soft);margin-top:8px;display:block}
+.recap{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.rc{border-radius:14px;padding:14px;color:#fff}
+.rc b{font-family:var(--mono);font-size:17px;display:block;margin-bottom:4px}
+.rc span{font-size:13.5px;opacity:.95;line-height:1.4;display:block}
+.build{display:flex;flex-direction:column;gap:10px}
+.build label{font-size:13px;font-weight:700;color:var(--soft);text-transform:uppercase;letter-spacing:.06em}
+.build select{font-family:var(--sans);font-size:15px;padding:9px 10px;border-radius:10px;border:1px solid var(--line2);background:#fff;width:100%}
+.vparts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:6px 0 10px}
+.vparts div{border-radius:10px;padding:8px 10px;font-size:13.5px;line-height:1.35;color:#334155;background:#f8fafc;border:1px solid var(--line)}
+.vparts b{font-family:var(--mono);display:block;font-size:13px}
+.dict td:first-child{font-family:var(--mono);font-weight:700;color:var(--acc);width:40px}
+.src{font-size:12px;color:var(--soft);margin-top:10px;line-height:1.4}
+.vh{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}
+.vh .card{font-size:14px;color:#334155;line-height:1.45}
+.arrowdemo{display:flex;gap:4px;margin:8px 0}
+.arrowdemo i{width:26px;height:18px;border-radius:4px;background:#e2e8f0}
+.arrowdemo i.k{background:var(--acc)}.arrowdemo i.r{background:#fcd34d}
+/* ---------- mobile: stacked scroll ---------- */
+body.mobile{overflow:auto}
+body.mobile #viewport{position:static;inset:auto;display:block;padding:12px 12px 90px}
+body.mobile #deck{width:auto;height:auto;transform:none!important}
+body.mobile .slide{position:relative;inset:auto;opacity:1;visibility:visible;transform:none;margin-bottom:16px;padding:28px 16px 40px;border-radius:18px}
+body.mobile .cols,body.mobile .cols.even,body.mobile .cols.wide-r,body.mobile .vh{grid-template-columns:minmax(0,1fr)!important;gap:18px}
+body.mobile .cols>*,body.mobile .vh>*,body.mobile .errgrid>*,body.mobile .oc-grid>*,body.mobile .qopts>*{min-width:0}
+body.mobile .slide{max-width:100%}
+body.mobile .sheet-w{max-width:100%}
+body.mobile .gridwrap{max-height:60vh;-webkit-overflow-scrolling:touch}
+body.mobile .gridwrap::before{content:"← swipe the table sideways to see all columns →";display:block;position:sticky;left:0;font-size:11px;color:#64748b;padding:4px 8px;background:#f8fafc;border-bottom:1px solid #e2e8f0}
+body.mobile .sheet-w .fbar input{font-size:16px}
+body.mobile table.grid{font-size:11px}
+body.mobile table.grid th,body.mobile table.grid td{padding:0 5px}
+body.mobile table.grid tbody th{width:24px}
+body.mobile .sheet-w .presets button{max-width:100%;white-space:normal;overflow-wrap:anywhere;text-align:left}
+body.mobile .sheet-w .out{flex-wrap:wrap}
+body.mobile .syntax{font-size:14px;white-space:pre-wrap;word-break:break-word}
+body.mobile .qcard{padding:16px}
+body.mobile .qcard .qq{font-size:18px}
+body.mobile .qopt span{min-width:0;overflow-wrap:anywhere}
+body.mobile .qopt code{white-space:normal;overflow-wrap:anywhere}
+body.mobile table.mini{font-size:14px}
+body.mobile table.mini td,body.mobile table.mini th{padding:6px}
+body.mobile .anat{font-size:22px;padding:14px}
+body.mobile .anat.small{font-size:16px}
+body.mobile p,body.mobile .callout,body.mobile li{overflow-wrap:anywhere}
+body.mobile .agenda{grid-template-columns:1fr 1fr}
+body.mobile .ag{min-height:0}
+body.mobile .oc-grid,body.mobile .errgrid,body.mobile .recap{grid-template-columns:1fr}
+body.mobile .qopts{grid-template-columns:1fr}
+body.mobile h2{font-size:28px}
+body.mobile .title-slide h1{font-size:40px}
+body.mobile .floaters{display:none}
+body.mobile .title-meta{position:static;margin-top:24px;flex-wrap:wrap}
+body.mobile .anat{font-size:24px}
+body.mobile .foot{position:static;margin-top:16px}
+body.mobile #help,body.mobile #hud .count,body.mobile #prevBtn,body.mobile #nextBtn,body.mobile #timer,body.mobile #fsBtn{display:none}
+body.mobile .ops{grid-template-columns:1fr 1fr}
+@media print{body{overflow:visible}#hud,#help,#progress,#menu{display:none}#viewport{position:static;display:block}#deck{transform:none!important;width:auto;height:auto}.slide{position:relative;opacity:1;visibility:visible;transform:none;page-break-after:always;box-shadow:none;border:1px solid #ddd;width:1280px;height:720px;margin:0 auto 20px}}
+
+/* ================= Chapter 4 & 5 additions ================= */
+.title-slide.viz{background:linear-gradient(135deg,#1e1b4b 0%,#4338ca 42%,#7c3aed 72%,#db2777 100%)!important}
+.title-slide.viz .kicker{color:#e0e7ff}.title-slide.viz .kicker::before{background:#e0e7ff}
+.title-slide.viz h1 span{color:#fbcfe8}
+.title-slide.viz p{color:#e0e7ff}
+.title-slide.viz .title-meta{color:#e0e7ff}
+.title-slide.partb{background:linear-gradient(135deg,#083344 0%,#0e7490 45%,#0d9488 75%,#4f46e5 100%)!important}
+.title-slide.partb .kicker{color:#ccfbf1}.title-slide.partb .kicker::before{background:#ccfbf1}
+.title-slide.partb h1 span{color:#a5f3fc}
+.title-slide.partb p{color:#ccfbf1}
+.vizfloat{position:absolute;right:48px;top:96px;width:430px;height:500px}
+.vizfloat .fc{position:absolute;background:rgba(255,255,255,.96);border-radius:16px;padding:12px;box-shadow:0 22px 50px -20px rgba(0,0,0,.55);animation:bob 6s ease-in-out infinite}
+.vizfloat .fc:nth-child(2){animation-delay:-1.6s}.vizfloat .fc:nth-child(3){animation-delay:-3.1s}.vizfloat .fc:nth-child(4){animation-delay:-4.4s}
+.vizfloat .fc b{display:block;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#64748b;margin-bottom:4px}
+/* controls */
+.ctl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 10px}
+.ctl .lab{font-size:12px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--soft);margin-right:2px}
+.seg{display:inline-flex;border:1px solid var(--line2);border-radius:12px;overflow:hidden;background:#f8fafc;flex:none}
+.seg button{border:0;background:none;padding:7px 12px;font-weight:700;font-size:13.5px;color:var(--muted);cursor:pointer;border-right:1px solid var(--line)}
+.seg button:last-child{border-right:0}
+.seg button.on{background:var(--acc);color:#fff}
+.seg button:not(.on):hover{color:var(--acc);background:#fff}
+.tg{border:1px solid var(--line2);border-radius:999px;padding:6px 12px;font-size:13px;font-weight:700;background:#fff;cursor:pointer;color:var(--muted);transition:all .15s}
+.tg.on{background:color-mix(in srgb,var(--acc) 12%,#fff);border-color:var(--acc);color:color-mix(in srgb,var(--acc) 80%,#000)}
+.tg:hover{border-color:var(--acc)}
+.sbtn{border:0;border-radius:10px;padding:7px 14px;font-weight:700;font-size:13.5px;cursor:pointer;background:var(--acc);color:#fff;box-shadow:0 6px 16px -8px var(--acc)}
+.sbtn.ghost{background:#fff;color:var(--acc);border:1.5px solid var(--acc);box-shadow:none}
+.sbtn:disabled{opacity:.45;cursor:default}
+.chk{display:inline-flex;gap:6px;align-items:center;font-size:13.5px;color:#334155;cursor:pointer;font-weight:600}
+.chk input{accent-color:var(--acc);width:16px;height:16px}
+.panel{background:#fff;border:1px solid var(--line);border-radius:16px;padding:12px 14px;box-shadow:0 10px 30px -22px rgba(15,23,42,.35)}
+.chart svg{display:block;width:100%;height:auto;overflow:visible}
+.chart text{font-family:var(--sans)}
+.out{font-size:14.5px;color:#334155;line-height:1.45;background:color-mix(in srgb,var(--acc) 6%,#fff);border:1px solid color-mix(in srgb,var(--acc) 22%,#fff);border-radius:12px;padding:9px 12px;min-height:42px}
+.out b{color:var(--ink)}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:13px;color:#334155;font-weight:600;margin:4px 0 6px}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.legend span.lg{cursor:pointer;padding:3px 8px;border-radius:999px;border:1px solid var(--line)}
+.legend span.lg.off{opacity:.35}
+.steps{margin:0;padding:0 0 0 0;list-style:none;counter-reset:st}
+.steps li{counter-increment:st;position:relative;padding:5px 0 5px 32px;font-size:14px;line-height:1.4;color:#334155}
+.steps li::before{content:counter(st);position:absolute;left:0;top:5px;width:22px;height:22px;border-radius:7px;background:var(--xl);color:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center}
+.steps li b{color:var(--ink)}
+.xlsteps{border:1px solid #bbf7d0;background:#f0fdf4;border-radius:14px;padding:10px 14px}
+.xlsteps h3{font-size:14px;color:#166534;margin-bottom:4px;display:flex;align-items:center;gap:6px}
+.xlsteps h3::before{content:"X";display:inline-flex;width:20px;height:20px;border-radius:5px;background:#107c41;color:#fff;font-size:12px;align-items:center;justify-content:center;font-weight:800}
+.mini-def{display:grid;gap:8px}
+.mini-def>div{border-left:4px solid var(--acc);background:#f8fafc;border-radius:0 10px 10px 0;padding:8px 12px;font-size:14.5px;line-height:1.45;color:#334155}
+.mini-def>div b{color:var(--ink)}
+#tip{position:fixed;z-index:60;pointer-events:none;background:#0f172a;color:#f8fafc;font-size:13px;line-height:1.4;padding:8px 10px;border-radius:10px;box-shadow:0 12px 30px -10px rgba(0,0,0,.5);display:none;max-width:280px}
+#tip b{color:#fff}#tip .k{color:#94a3b8}
+/* outcomes */
+.lo-wrap{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.lo-col h3{display:flex;align-items:center;gap:10px;font-size:17px}
+.lo-col h3 .tag{font-size:12px;font-weight:800;color:#fff;border-radius:8px;padding:3px 8px}
+.lo{display:flex;gap:12px;align-items:flex-start;padding:9px 12px;border:1px solid var(--line);border-radius:12px;margin-bottom:8px;background:#fff;transition:transform .15s}
+.lo:hover{transform:translateX(4px)}
+.lo code{flex:none;font-weight:800;font-size:12.5px;padding:3px 7px;border-radius:7px;color:#fff}
+.lo span{font-size:14.5px;line-height:1.4;color:#334155}
+/* roadmap */
+.road{display:grid;gap:18px;margin-top:6px}
+.road .rw{border:1px solid var(--line);border-radius:18px;padding:14px 16px;background:#fff}
+.road .rw h3{display:flex;align-items:center;gap:10px}
+.road .rw h3 small{font-weight:600;color:var(--soft);font-size:13px}
+.blocks{display:flex;gap:6px;margin-top:8px}
+.blk{border-radius:12px;padding:10px 10px;color:#fff;cursor:pointer;min-width:0;transition:transform .15s,filter .15s;display:flex;flex-direction:column;gap:2px}
+.blk:hover{transform:translateY(-3px);filter:brightness(1.07)}
+.blk .t{font-family:var(--mono);font-size:11.5px;opacity:.9}
+.blk .h{font-size:14px;font-weight:800;line-height:1.2}
+.blk .d{font-size:12px;opacity:.95;line-height:1.3}
+/* sevens */
+.sevens{display:grid;grid-template-columns:repeat(10,1fr);gap:2px 6px;font-family:var(--mono);font-size:19px;font-weight:600;background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px 16px;user-select:none}
+.sevens span{text-align:center;line-height:1.25;color:#334155;transition:all .2s}
+.sevens.color span.s{color:#ea580c;font-weight:800}
+.sevens.size span.s{font-size:28px;font-weight:800;color:#0f172a;line-height:.9}
+.sevens.reveal span.s{background:#fde68a;border-radius:6px;box-shadow:0 0 0 2px #d97706}
+.sevens.hide{filter:blur(7px)}
+.stopw{font-family:var(--mono);font-size:42px;font-weight:800;color:var(--acc);font-variant-numeric:tabular-nums}
+.restab{width:100%;border-collapse:collapse;font-size:14.5px}
+.restab td{padding:6px 8px;border-bottom:1px solid var(--line)}
+.restab td:last-child{text-align:right;font-family:var(--mono);font-weight:700}
+/* spot it */
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.shake{animation:shake .25s 2}
+/* tables */
+table.dt{border-collapse:collapse;font-size:14px;width:100%;font-variant-numeric:tabular-nums}
+table.dt th,table.dt td{padding:6px 9px}
+table.dt td.n,table.dt th.n{text-align:right}
+table.dt .lbl{text-align:left}
+table.dt.hi thead th{font-size:12px;color:var(--soft);font-weight:700;border-bottom:1.5px solid #334155}
+table.dt.hi tbody tr:last-child td{border-bottom:1px solid var(--line)}
+table.dt.lo{border:3px double #111}
+table.dt.lo th,table.dt.lo td{border:2px solid #111;background:#fef9c3;font-weight:700;font-family:Georgia,serif}
+table.dt.lo thead th{background:#1d4ed8;color:#fff}
+table.dt.lo tbody tr:nth-child(even) td{background:#bbf7d0}
+.tdes{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.tdes .opt{border:2px solid var(--line);border-radius:14px;padding:10px;cursor:pointer;background:#fff;transition:all .15s;position:relative}
+.tdes .opt:hover{border-color:var(--acc)}
+.tdes .opt.pick{border-color:var(--rose);background:#fff1f2}
+.tdes .opt.best{border-color:var(--green);background:#f0fdf4}
+.tdes .opt .L{display:block;font-weight:800;color:var(--soft);font-size:12.5px;margin-bottom:4px}
+.tdes table{border-collapse:collapse;font-size:11px;width:100%;font-variant-numeric:tabular-nums}
+.tdes td,.tdes th{padding:3px 4px;white-space:nowrap;text-align:right}
+.tdes td:first-child,.tdes th:first-child{text-align:left}
+.dA td,.dA th{border:2px solid #0f172a}.dA table{border:3px solid #0f172a}
+.dB td,.dB th{border:1px solid #94a3b8}.dB thead th{background:#e2e8f0}.dB table{border:2px solid #475569}
+.dC td,.dC th{border-left:2px solid #334155;border-right:2px solid #334155}.dC thead th{border-bottom:2px solid #334155}
+.dD thead tr:first-child th.m{border-bottom:1px solid #94a3b8}.dD thead tr:last-child th{border-bottom:1.5px solid #334155}.dD td.tot,.dD th.tot{border-left:1px solid #94a3b8}.dD tr.pr td{border-top:1px solid #94a3b8}
+.xt{border-collapse:separate;border-spacing:3px;width:100%;font-variant-numeric:tabular-nums}
+.xt th{font-size:12.5px;color:var(--soft);font-weight:800;padding:6px 8px;text-align:right}
+.xt th.rl{text-align:left}
+.xt td{padding:9px 10px;text-align:right;font-family:var(--mono);font-size:16px;font-weight:700;border-radius:8px;cursor:pointer;transition:outline .1s}
+.xt td.rl{text-align:left;font-family:var(--sans);font-size:14.5px;color:var(--ink);cursor:default;background:#f8fafc}
+.xt td.tot{background:#f1f5f9;color:#334155}
+.xt td.sel{outline:3px solid #d97706}
+.xt td.na{color:#94a3b8}
+/* pivot builder */
+.pv{display:grid;grid-template-columns:1fr 250px;gap:14px}
+.pvpane{border:1px solid var(--line2);border-radius:12px;background:#fff;padding:10px 12px;font-size:13px}
+.pvpane h4{margin:0 0 6px;font-size:12px;text-transform:uppercase;letter-spacing:.07em;color:#166534}
+.pvpane .fld{display:flex;align-items:center;gap:6px;padding:3px 0;color:#334155;font-weight:600}
+.pvpane .fld i{width:14px;height:14px;border:1.5px solid #94a3b8;border-radius:3px;display:inline-flex;align-items:center;justify-content:center;font-style:normal;font-size:10px;color:#fff}
+.pvpane .fld i.on{background:#107c41;border-color:#107c41}
+.pvpane label{display:block;font-size:11px;font-weight:800;color:var(--soft);text-transform:uppercase;letter-spacing:.06em;margin:8px 0 3px}
+.pvpane select{width:100%;font:600 13px var(--sans);padding:6px 8px;border-radius:8px;border:1px solid var(--line2);background:#f8fafc}
+.pvt{border-collapse:collapse;font-size:14px;width:100%;font-variant-numeric:tabular-nums}
+.pvt th,.pvt td{padding:6px 9px;border-bottom:1px solid #e2e8f0;text-align:right;white-space:nowrap}
+.pvt th{background:#e8f5ee;color:#14532d;font-size:12.5px}
+.pvt td:first-child,.pvt th:first-child{text-align:left}
+.pvt tr.gt td{font-weight:800;border-top:1.5px solid #14532d}
+.pvt td.gt{font-weight:800}
+/* chooser */
+.choose{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.chc{border:1px solid var(--line);border-radius:14px;padding:11px 12px;background:#fff;display:flex;flex-direction:column;gap:8px}
+.chc.ok{border-color:var(--green);background:#f0fdf4}.chc.no{border-color:var(--rose);background:#fff1f2}
+.chc .q{font-size:16px;font-weight:700;line-height:1.35;color:var(--ink)}
+.chc .opts{display:flex;flex-wrap:wrap;gap:5px}
+.chc .opts button{border:1px solid var(--line2);background:#f8fafc;border-radius:8px;padding:6px 10px;font:600 13.5px var(--sans);cursor:pointer;color:#334155}
+.chc .opts button:hover:not(:disabled){border-color:var(--acc);color:var(--acc)}
+.chc .opts button.r{background:var(--green);color:#fff;border-color:var(--green)}
+.chc .opts button.w{background:var(--rose);color:#fff;border-color:var(--rose)}
+.chc .why{font-size:12.5px;color:#334155;line-height:1.4;display:none}
+.chc.ok .why,.chc.no .why{display:block}
+/* lens */
+.lens{font-size:12px}
+.lens .hd{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:4px}
+.lens .hd button{border:1px solid var(--line2);background:#f8fafc;border-radius:8px;padding:5px 6px;font:700 12px var(--sans);color:#334155;cursor:pointer;text-align:left}
+.lens .hd button.on{background:var(--acc);color:#fff;border-color:var(--acc)}
+.lens .rows{position:relative}
+.lens .r{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;height:6.6px;align-items:stretch;transition:transform .5s ease;position:absolute;left:0;right:0}
+.lens .r .nm{font-size:0;overflow:hidden}
+.lens .r .b{background:#f1f5f9;position:relative}
+.lens .r .b i{position:absolute;left:0;top:.6px;bottom:.6px;background:var(--acc);border-radius:0 2px 2px 0}
+.lens .r:hover .b i,.lens .r.hl .b i{background:#d97706}
+.lens .r:hover .nm,.lens .r.hl .nm{font-size:0}
+/* heat */
+.heat{border-collapse:separate;border-spacing:2px;font-variant-numeric:tabular-nums;width:100%}
+.heat th{font-size:11px;color:var(--soft);font-weight:800;padding:2px 3px}
+.heat td{font-family:var(--mono);font-size:11.5px;font-weight:600;text-align:center;padding:2px 2px;border-radius:4px;transition:background .3s,color .3s}
+.heat td.cty{font-family:var(--sans);text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;padding-right:6px;cursor:pointer}
+.heat tr.hl td.cty{color:var(--acc)}
+.heat tr.hl td{outline:1.5px solid #0f172a}
+.heat td.sp{padding:0 4px;width:92px}
+/* tiles */
+.tiles{display:grid;grid-template-columns:repeat(11,1fr);gap:4px}
+.tiles div{aspect-ratio:1.25;border-radius:7px;display:flex;align-items:center;justify-content:center;font:800 12.5px var(--sans);cursor:default;transition:opacity .2s,transform .15s}
+.tiles div.st:hover{transform:scale(1.12)}
+.tiles div.dim{opacity:.15}
+.tiles div.e{background:transparent}
+.ramp{display:flex;gap:4px;align-items:center;flex-wrap:wrap}
+.ramp span{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;color:#334155;padding:4px 8px;border-radius:999px;border:1px solid var(--line);cursor:pointer;background:#fff}
+.ramp span i{width:14px;height:14px;border-radius:4px;display:inline-block}
+.ramp span.on{border-color:#0f172a;box-shadow:0 0 0 1px #0f172a}
+/* dashboard */
+.dash{border:1px solid #cbd5e1;border-radius:16px;background:#f8fafc;padding:10px}
+.dash .top{display:flex;align-items:center;gap:12px;margin-bottom:8px;flex-wrap:wrap}
+.dash .top b{font-size:15px}
+.dash .grid5{display:grid;grid-template-columns:1.15fr 1fr 1fr;grid-template-rows:auto auto;gap:8px}
+.dash .p{background:#fff;border:1px solid var(--line);border-radius:12px;padding:6px 8px}
+.dash .p h5{margin:0 0 2px;font-size:11.5px;color:#334155;letter-spacing:.02em}
+.prin{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:10px}
+.prin div{border-radius:12px;padding:8px 10px;color:#fff;font-size:12.5px;line-height:1.35;font-weight:600}
+.prin div b{display:block;font-size:13.5px}
+.note{font-size:11.5px;color:var(--soft);line-height:1.35;margin-top:6px}
+.kpis{display:flex;gap:8px}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:10px;padding:4px 10px;font-size:11px;color:var(--soft);font-weight:700}
+.kpi b{display:block;font-size:17px;color:var(--ink);font-family:var(--mono)}
+/* mobile extras */
+body.mobile .lo-wrap,body.mobile .pv,body.mobile .tdes,body.mobile .choose,body.mobile .prin{grid-template-columns:minmax(0,1fr)!important}
+body.mobile .blocks{flex-wrap:wrap}
+body.mobile .blk{flex:1 1 45%!important}
+body.mobile .vizfloat{display:none}
+body.mobile .dash .grid5{grid-template-columns:minmax(0,1fr)!important}
+body.mobile .dash .grid5>*{grid-column:auto!important;grid-row:auto!important}
+body.mobile .sevens{font-size:15px;padding:8px}
+body.mobile .sevens.size span.s{font-size:21px}
+body.mobile .heatwrap,body.mobile .lenswrap{overflow-x:auto}
+body.mobile .heat{min-width:640px}
+body.mobile .lens{min-width:520px}
+body.mobile .tiles div{font-size:9px;border-radius:4px}
+body.mobile .xt td{font-size:13px;padding:6px}
+body.mobile .pvt{font-size:12px}
+body.mobile .pvwrap{overflow-x:auto}
+
+#spMatrix svg{max-height:400px}
+.dash .chart svg{max-height:126px}
+.prin div{padding:6px 10px}
+#pieBar.hidden{filter:blur(7px);opacity:.55}
+.title-slide.d4{background:linear-gradient(135deg,#0c1a4b 0%,#1d4ed8 45%,#0891b2 75%,#14b8a6 100%)!important}
+.title-slide.d4 .kicker{color:#dbeafe}.title-slide.d4 .kicker::before{background:#dbeafe}
+.title-slide.d4 h1 span{color:#a5f3fc}.title-slide.d4 p,.title-slide.d4 .title-meta{color:#e0f2fe}
+.choose#classify{grid-template-columns:repeat(4,1fr)}
+#classify .chc .q{font-size:14.5px}
+table.obs{border-collapse:collapse;width:100%;font-size:14px;font-variant-numeric:tabular-nums}
+table.obs th,table.obs td{padding:7px 9px;border:1px solid #e2e8f0}
+table.obs th{background:#f1f5f9;cursor:pointer;font-size:12.5px;text-align:left}
+table.obs th:hover{background:#ccfbf1}
+table.obs td.n{text-align:right}
+table.obs tbody tr{cursor:pointer}
+table.obs tbody tr:hover td{background:#f0fdfa}
+table.obs th.hl{background:#0d9488;color:#fff}
+table.obs td.hlc{background:#ccfbf1;font-weight:700}
+table.obs tr.hl td{background:#fef3c7;font-weight:700}
+.selx{font:600 13.5px var(--sans);padding:6px 10px;border-radius:10px;border:1px solid var(--line2);background:#fff}
+table.xlt{border-collapse:collapse;width:100%;font-size:13px;font-variant-numeric:tabular-nums}
+table.xlt th,table.xlt td{border:1px solid #e5e7eb;padding:4px 8px;white-space:nowrap}
+table.xlt thead th{background:#f1f5f9;position:sticky;top:0;cursor:pointer;font-size:12px;z-index:1}
+table.xlt thead th.sorted{background:#dcfce7;color:#14532d}
+table.xlt th.rh{background:#f1f5f9;color:#94a3b8;font-weight:600;width:28px;cursor:default}
+table.xlt td.n{text-align:right}
+table.xlt td.neg{background:#ffc7ce;color:#9c0006;font-weight:700}
+.chips50{display:grid;grid-template-columns:repeat(5,1fr);gap:4px}
+.chips50 span{font-size:11.5px;font-weight:700;text-align:center;padding:4px 2px;border-radius:7px;background:#f1f5f9;color:#334155;border:1.5px solid transparent;transition:all .15s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chips50 span.done{background:color-mix(in srgb,var(--c) 16%,#fff);border-color:var(--c)}
+.chips50 span.now{transform:scale(1.15);background:var(--c);color:#fff}
+.chips50 span.mode{background:#fef3c7;border-color:#d97706;color:#78350f}
+#moChips span{font-size:14px;padding:8px 4px;font-family:var(--mono)}
+i.sw{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:7px;vertical-align:-1px}
+#cuT tr.hlrow td{background:#e0e7ff;font-weight:800}
+body.mobile .choose#classify{grid-template-columns:minmax(0,1fr)!important}
+body.mobile .chips50{grid-template-columns:repeat(3,1fr)}
+body.mobile #tvTable,body.mobile #obsTable{overflow-x:auto}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<filter id="deut" color-interpolation-filters="linearRGB"><feColorMatrix type="matrix" values="0.367 0.861 -0.228 0 0  0.280 0.673 0.047 0 0  -0.012 0.043 0.969 0 0  0 0 0 1 0"/></filter>
+<marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" fill="#7c3aed"/></marker>
+</defs></svg>
+<div id="progress"></div>
+<div id="viewport"><div id="deck">
+
+<!-- 1 TITLE -->
+<section class="slide title-slide d4" data-title="Descriptive Statistics" data-acc="blue">
+  <div class="kicker">BPMNK2033 · Chapter 4</div>
+  <h1>Descriptive <span>Statistics</span></h1>
+  <p>Describe data with a few honest numbers and pictures: types of data, distributions, centre, spread, position, outliers and relationships. Every example is live, so drag, sort and test it.</p>
+  <div class="vizfloat" id="titleViz4"></div>
+  <div class="title-meta">
+    <div><b>Business Intelligence &amp; Data Analytics</b>School of Business Management, UUM</div>
+    <div><b>Dr. Khairol Anuar Ishak</b>Session A261 · Sep Sem 2026/2027</div>
+    <div><b>Navigate</b><kbd>→</kbd> <kbd>Space</kbd> next · <kbd>M</kbd> menu · <kbd>F</kbd> full screen</div>
+  </div>
+</section>
+
+<!-- 2 ROADMAP -->
+<section class="slide" data-title="Roadmap: two lectures" data-acc="indigo">
+  <div class="kicker">Roadmap</div>
+  <h2>Chapter 4 in two lectures: from raw data to relationships</h2>
+  <p class="lead" style="margin-bottom:6px">Based on Camm et al., <i>Business Analytics</i> 5e, Chapter 2. Click any block to jump there.</p>
+  <div class="road">
+    <div class="rw"><h3><span class="pill" style="--acc:var(--indigo)">Part A</span> Lecture 1: Data and distributions <small>· 70 min · slides 4–13</small></h3>
+      <div class="blocks">
+        <div class="blk" data-go="4" style="flex:7;background:linear-gradient(160deg,#2563eb,#3b82f6)"><span class="t">00–07</span><span class="h">Warm-up</span><span class="d">Classify the data</span></div>
+        <div class="blk" data-go="5" style="flex:12;background:linear-gradient(160deg,#0d9488,#14b8a6)"><span class="t">07–19</span><span class="h">Data basics</span><span class="d">Variables · observations · population vs sample</span></div>
+        <div class="blk" data-go="7" style="flex:11;background:linear-gradient(160deg,#107c41,#16a34a)"><span class="t">19–30</span><span class="h">Explore in Excel</span><span class="d">Sort · filter · conditional formatting</span></div>
+        <div class="blk" data-go="8" style="flex:28;background:linear-gradient(160deg,#7c3aed,#8b5cf6)"><span class="t">30–58</span><span class="h">Distributions</span><span class="d">Frequency tables · histograms · cumulative · skewness</span></div>
+        <div class="blk" data-go="12" style="flex:12;background:linear-gradient(160deg,#db2777,#ec4899)"><span class="t">58–70</span><span class="h">Check + exit</span></div>
+      </div></div>
+    <div class="rw"><h3><span class="pill" style="--acc:var(--teal)">Part B</span> Lecture 2: Summary measures <small>· 70 min · slides 14–26</small></h3>
+      <div class="blocks">
+        <div class="blk" data-go="14" style="flex:4;background:linear-gradient(160deg,#0e7490,#0891b2)"><span class="t">00–04</span><span class="h">Recap</span></div>
+        <div class="blk" data-go="15" style="flex:14;background:linear-gradient(160deg,#2563eb,#3b82f6)"><span class="t">04–18</span><span class="h">Location</span><span class="d">Mean · median · mode · geometric mean</span></div>
+        <div class="blk" data-go="17" style="flex:14;background:linear-gradient(160deg,#ea580c,#f97316)"><span class="t">18–32</span><span class="h">Variability</span><span class="d">Range · variance · SD · CV</span></div>
+        <div class="blk" data-go="19" style="flex:18;background:linear-gradient(160deg,#7c3aed,#a855f7)"><span class="t">32–50</span><span class="h">Position &amp; outliers</span><span class="d">Percentiles · quartiles · z · empirical rule · boxplots</span></div>
+        <div class="blk" data-go="23" style="flex:12;background:linear-gradient(160deg,#0d9488,#14b8a6)"><span class="t">50–62</span><span class="h">Association</span><span class="d">Scatter · covariance · correlation</span></div>
+        <div class="blk" data-go="25" style="flex:8;background:linear-gradient(160deg,#16a34a,#22c55e)"><span class="t">62–70</span><span class="h">Exit ticket</span></div>
+      </div></div>
+  </div>
+</section>
+
+<!-- 3 OUTCOMES -->
+<section class="slide" data-title="Learning outcomes" data-acc="violet">
+  <div class="kicker">Learning outcomes</div>
+  <h2>By the end, you will be able to…</h2>
+  <div class="lo-wrap">
+    <div class="lo-col"><h3><span class="tag" style="background:#4f46e5">Part A · Lecture 1</span> Data &amp; distributions</h3>
+      <div class="lo"><code style="background:#2563eb">LO 2-1</code><span>Identify <b>population vs sample</b>, <b>quantitative vs categorical</b>, <b>cross-sectional vs time-series</b> data.</span></div>
+      <div class="lo"><code style="background:#107c41">LO 2-2</code><span>Generate insights by <b>sorting, filtering and conditional formatting</b>.</span></div>
+      <div class="lo"><code style="background:#7c3aed">LO 2-3/4</code><span>Build <b>frequency, relative and percent frequency</b> distributions.</span></div>
+      <div class="lo"><code style="background:#0891b2">LO 2-5/6</code><span>Read <b>histograms, frequency polygons</b> and <b>cumulative</b> distributions.</span></div>
+      <div class="lo"><code style="background:#ea580c">LO 2-7</code><span>Recognise <b>left-skewed, right-skewed and symmetric</b> shapes.</span></div>
+    </div>
+    <div class="lo-col"><h3><span class="tag" style="background:#0d9488">Part B · Lecture 2</span> Summary measures</h3>
+      <div class="lo"><code style="background:#2563eb">LO 2-8</code><span>Calculate <b>mean, median, mode</b> and <b>geometric mean</b>.</span></div>
+      <div class="lo"><code style="background:#ea580c">LO 2-9</code><span>Calculate <b>range, variance, standard deviation, CV</b>.</span></div>
+      <div class="lo"><code style="background:#7c3aed">LO 2-10/11</code><span>Use <b>percentiles, quartiles, z-scores</b>, the <b>empirical rule</b>, and spot <b>outliers</b>.</span></div>
+      <div class="lo"><code style="background:#db2777">LO 2-12</code><span>Build and read a <b>boxplot</b>.</span></div>
+      <div class="lo"><code style="background:#0d9488">LO 2-13/14</code><span>Interpret <b>scatter charts, covariance</b> and the <b>correlation coefficient</b>.</span></div>
+      <div class="callout" style="--acc:var(--teal)"><b>Quiz link:</b> all of Chapter 4 is in <b>Quiz 1</b> (Week 6, Chapters 1–4).</div>
+    </div>
+  </div>
+</section>
+
+<!-- 4 CLASSIFY GAME -->
+<section class="slide" data-title="Warm-up: classify the data" data-acc="blue">
+  <div class="kicker">Part A · Warm-up</div>
+  <h2>Classify the data <span class="pill" id="clScore" style="font-size:16px;vertical-align:middle">0 / 8</span></h2>
+  <div class="choose" id="classify"></div>
+  <div class="callout" style="margin-top:12px"><b>Quick guide:</b> <b>Quantitative</b> = you can do arithmetic on it. <b>Categorical</b> = labels, even if written as numbers. <b>Cross-sectional</b> = many entities at one time. <b>Time series</b> = one thing over many periods.</div>
+</section>
+
+<!-- 5 DATA BASICS -->
+<section class="slide" data-title="Variables, observations & variation" data-acc="teal">
+  <div class="kicker">2.1 · Overview of using data</div>
+  <h2>Variables, observations and variation</h2>
+  <div class="cols" style="grid-template-columns:.8fr 1.35fr">
+    <div class="mini-def">
+      <div><b>Data</b>: facts and figures collected, analysed and summarised.</div>
+      <div><b>Variable</b>: a characteristic that can take different values (a <b>column</b>).</div>
+      <div><b>Observation</b>: the set of values for one entity (a <b>row</b>).</div>
+      <div><b>Variation</b>: how a variable differs across observations. Descriptive analytics is about understanding it.</div>
+      <div><b>Random variable</b>: a quantity whose value is not known with certainty, such as next month's sales.</div>
+    </div>
+    <div class="panel">
+      <div class="ctl"><span class="lab">Click a column header or a row</span></div>
+      <div id="obsTable"></div>
+      <div class="out" id="obsOut" style="margin-top:8px">Top-selling US vehicles (first 8 of 20). Click <b>Sales 2021</b> to see a variable, or a row to see an observation.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 6 POPULATION VS SAMPLE -->
+<section class="slide" data-title="Population vs sample" data-acc="cyan">
+  <div class="kicker">2.2 · Types &amp; sources of data</div>
+  <h2>Population vs sample: draw your own sample</h2>
+  <div class="cols" style="grid-template-columns:1.35fr .8fr">
+    <div class="panel">
+      <div class="ctl"><span class="lab">Sample size</span><div class="seg" id="smN"><button data-n="10" class="on">n = 10</button><button data-n="30">n = 30</button><button data-n="100">n = 100</button></div>
+        <button class="sbtn" id="smDraw">🎲 Draw a random sample</button><button class="sbtn ghost" id="smReset">Reset</button></div>
+      <div class="chart" id="smChart"></div>
+      <div class="out" id="smOut">Population: 700 ages at death. Population mean <b id="smMu"></b> years. Draw samples and watch the sample means vary.</div>
+    </div>
+    <div>
+      <ul class="tidy" style="--acc:var(--cyan)">
+        <li>A <b>population</b> is all the elements of interest. A <b>sample</b> is a subset of it.</li>
+        <li><b>Random sampling</b> gives a representative sample.</li>
+        <li>Bigger samples give sample means that sit <b>closer</b> to the population mean.</li>
+      </ul>
+      <h3 style="margin-top:12px">Where data come from</h3>
+      <div class="card tint" style="--acc:var(--violet)"><p style="margin:0;font-size:14.5px"><b>Experimental study:</b> control or change a variable to see its effect (e.g., test two prices in two stores).</p></div>
+      <div class="card tint" style="--acc:var(--orange);margin-top:8px"><p style="margin:0;font-size:14.5px"><b>Observational study:</b> no control, just observe. A <b>survey</b> is the most common type.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 7 SORT / FILTER / CF -->
+<section class="slide" data-title="Explore in Excel: sort, filter, format" data-acc="xl">
+  <div class="kicker">2.3 · Exploring data in Excel</div>
+  <h2>Sort, filter and highlight to find the story</h2>
+  <div class="cols" style="grid-template-columns:1.45fr .75fr">
+    <div class="panel">
+      <div class="ctl"><span class="lab">Filter make</span><select id="tvMake" class="selx"></select>
+        <button class="tg" id="tvNeg">Highlight % change &lt; 0</button><button class="tg" id="tvBars">Data bars</button></div>
+      <div id="tvTable" style="max-height:395px;overflow:auto"></div>
+    </div>
+    <div>
+      <p style="font-size:15px">Click a <b>column header</b> to sort (click again to reverse). <span class="pill">top20vehicles2021</span></p>
+      <div class="out" id="tvOut">Sorted by 2021 sales (the original order).</div>
+      <div class="xlsteps" style="margin-top:10px"><h3>Excel steps</h3><ol class="steps">
+        <li><b>Data ▸ Sort</b>: My data has headers ✓, sort by Sales 2020, Largest to Smallest.</li>
+        <li><b>Data ▸ Filter</b>: use the arrow on Manufacturer, tick Toyota only.</li>
+        <li><b>Home ▸ Conditional Formatting ▸ Highlight Cells ▸ Less Than</b> 0%.</li></ol></div>
+      <p class="note">% change from 2020 = <code>=(D2-E2)/E2</code>. The textbook slide divides by D2, but change <i>from</i> 2020 uses the 2020 value (E2). Sales figures here are approximate.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 8 CATEGORICAL FREQUENCY -->
+<section class="slide" data-title="Frequency distributions (categorical)" data-acc="violet">
+  <div class="kicker">2.4 · Creating distributions from data</div>
+  <h2>Frequency distribution: count each category</h2>
+  <div class="cols" style="grid-template-columns:.95fr 1.2fr">
+    <div>
+      <p>50 soft-drink purchases. <span class="pill">DATAfile: softdrinks</span> Press <b>Count</b> to tally them.</p>
+      <div class="chips50" id="sdChips"></div>
+      <div class="ctl" style="margin-top:10px"><button class="sbtn" id="sdCount">▶ Count</button><div class="seg" id="sdMode"><button data-m="f" class="on">Frequency</button><button data-m="r">Relative</button><button data-m="p">Percent</button></div></div>
+      <div class="syntax" style="font-size:14px">=<span class="f">COUNTIF</span>(<span class="a">$A$2:$A$51</span>,<span class="s">D2</span>)</div>
+    </div>
+    <div class="panel"><div id="sdTable"></div><div class="chart" id="sdChart" style="margin-top:6px"></div></div>
+  </div>
+</section>
+
+<!-- 9 HISTOGRAM -->
+<section class="slide" data-title="Histograms & bins" data-acc="cyan">
+  <div class="kicker">2.4 · Quantitative data</div>
+  <h2>Histograms: choose bins, see the shape</h2>
+  <div class="cols" style="grid-template-columns:1.45fr .75fr">
+    <div class="panel">
+      <div class="ctl"><span class="lab">Bin width</span><div class="seg" id="hgW"><button data-w="4">4 yr</button><button data-w="7" class="on">7 yr</button><button data-w="14">14 yr</button><button data-w="28">28 yr</button></div>
+        <div class="seg" id="hgY"><button data-y="f" class="on">Frequency</button><button data-y="p">Percent</button></div><button class="tg" id="hgPoly">Frequency polygon</button></div>
+      <div class="chart" id="hgChart"></div>
+    </div>
+    <div>
+      <p style="font-size:15px">Ages at death for 700 people. <span class="pill">DATAfile: agedeath</span> A histogram is a column chart with <b>no gaps</b>, because age is continuous.</p>
+      <div class="out" id="hgOut"></div>
+      <div class="syntax" style="font-size:13.5px">=<span class="f">FREQUENCY</span>(<span class="a">A2:A701</span>,<span class="s">D2:D17</span>)</div>
+      <div class="xlsteps"><h3>Excel steps</h3><ol class="steps"><li>Select <code>A1:A701</code> ▸ <b>Insert ▸ Statistic Chart ▸ Histogram</b>.</li><li>Or build a column chart from FREQUENCY, then set <b>Gap Width = 0%</b>.</li></ol></div>
+    </div>
+  </div>
+</section>
+
+<!-- 10 CUMULATIVE -->
+<section class="slide" data-title="Cumulative distributions" data-acc="indigo">
+  <div class="kicker">2.4 · Cumulative distributions</div>
+  <h2>Cumulative distribution: “how many up to here?”</h2>
+  <div class="cols" style="grid-template-columns:1.35fr .85fr">
+    <div class="panel">
+      <div class="ctl"><span class="lab">Age ≤</span><input type="range" id="cuSl" min="0" max="15" value="10" style="flex:1;accent-color:#4f46e5"><b id="cuLab" style="font-family:var(--mono);min-width:56px"></b></div>
+      <div class="chart" id="cuChart"></div>
+      <div class="out" id="cuOut"></div>
+    </div>
+    <div><div id="cuTable" style="max-height:470px;overflow:auto"></div></div>
+  </div>
+</section>
+
+<!-- 11 SKEWNESS -->
+<section class="slide" data-title="Shape: skewness" data-acc="orange">
+  <div class="kicker">2.4 · Shape of a distribution</div>
+  <h2>Skewness: which way does the tail point?</h2>
+  <div class="cols" style="grid-template-columns:1.4fr .8fr">
+    <div class="panel">
+      <div class="ctl"><span class="lab">Skew</span><span class="note" style="margin:0">left</span><input type="range" id="skSl" min="-3" max="3" step="1" value="0" style="flex:1;accent-color:#ea580c"><span class="note" style="margin:0">right</span></div>
+      <div class="legend"><span><i style="background:#2563eb"></i>Mean</span><span><i style="background:#ea580c"></i>Median</span></div>
+      <div class="chart" id="skChart"></div>
+    </div>
+    <div>
+      <div class="out" id="skOut"></div>
+      <ul class="tidy" style="--acc:var(--orange);margin-top:10px">
+        <li><b>Skewed left</b>: long tail on the left. Mean &lt; median (e.g., exam scores when most do well).</li>
+        <li><b>Symmetric</b>: mean ≈ median (e.g., heights).</li>
+        <li><b>Skewed right</b>: long tail on the right. Mean &gt; median (e.g., house prices, incomes).</li>
+      </ul>
+      <p class="note">The age-at-death histogram on slide 9 is <b>skewed left</b>.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 12 QUICK CHECK A -->
+<section class="slide" data-title="Quick check: data & distributions" data-acc="amber">
+  <div class="kicker">Quick check · 3 questions</div>
+  <h2>Quick check: data &amp; distributions</h2>
+  <div class="quiz" data-quiz="qa"></div>
+</section>
+
+<!-- 13 EXIT A -->
+<section class="slide" data-title="Exit ticket: Part A" data-acc="violet">
+  <div class="kicker">Exit ticket · Part A · 5 questions</div>
+  <h2>Exit ticket: Part A</h2>
+  <div class="quiz" data-quiz="exitA"></div>
+</section>
+
+<!-- 14 PART B DIVIDER -->
+<section class="slide title-slide partb" data-title="Part B: second lecture starts" data-acc="teal">
+  <div class="kicker">BPMNK2033 · Chapter 4 · Part B</div>
+  <h1>Summarise data with <span>a few numbers</span></h1>
+  <p>Where is the centre? How spread out is it? Where does one value stand? Are two variables related? Last time you saw the shape. Today you measure it.</p>
+  <div class="vizfloat" id="partbViz4"></div>
+  <div class="title-meta">
+    <div><b>Recap from Part A</b>Data types · sort/filter · frequency tables · histograms · skewness</div>
+    <div><b>Tip for the lecturer</b>Double-click the timer to reset it to 00:00</div>
+  </div>
+</section>
+
+<!-- 15 MEAN / MEDIAN -->
+<section class="slide" data-title="Mean vs median" data-acc="blue">
+  <div class="kicker">2.5 · Measures of location</div>
+  <h2>Mean vs median: drag the mansion</h2>
+  <div class="cols" style="grid-template-columns:1.4fr .8fr">
+    <div class="panel">
+      <div class="ctl"><span class="lab">Most expensive home</span><input type="range" id="mmSl" min="300000" max="2000000" step="6250" value="456250" style="flex:1;accent-color:#2563eb"><b id="mmLab" style="font-family:var(--mono);min-width:96px"></b></div>
+      <div class="legend"><span><i style="background:#2563eb"></i>Mean</span><span><i style="background:#ea580c"></i>Median</span></div>
+      <div class="chart" id="mmChart"></div>
+      <div class="kpis" id="mmKpi" style="margin-top:8px"></div>
+    </div>
+    <div>
+      <p style="font-size:15px">Selling prices of 12 homes. <span class="pill">DATAfile: homesales</span></p>
+      <div class="mini-def">
+        <div><b>Mean</b> x̄ = Σxᵢ / n. Uses every value, so extremes pull it. <code>=AVERAGE(B2:B13)</code></div>
+        <div><b>Median</b>: the middle value once sorted. With even n, average the two middle values. <code>=MEDIAN(B2:B13)</code></div>
+      </div>
+      <div class="out" id="mmOut" style="margin-top:8px"></div>
+    </div>
+  </div>
+</section>
+
+<!-- 16 MODE & GEOMEAN -->
+<section class="slide" data-title="Mode & geometric mean" data-acc="teal">
+  <div class="kicker">2.5 · Measures of location</div>
+  <h2>Mode and geometric mean</h2>
+  <div class="cols even">
+    <div class="panel">
+      <h3>Mode: the most frequent value</h3>
+      <div id="moChips" class="chips50" style="grid-template-columns:repeat(4,1fr)"></div>
+      <div class="out" style="margin-top:8px">Two values appear twice, so the data are <b>bimodal</b>: $138,000 and $254,000.<br><code>=MODE.SNGL()</code> returns one mode. <code>=MODE.MULT(B2:B13)</code> returns both. More than two modes = <b>multimodal</b>.</div>
+    </div>
+    <div class="panel">
+      <h3>Geometric mean: the average growth rate</h3>
+      <div class="ctl"><div class="seg" id="gmMode"><button data-m="g" class="on">Geometric mean</button><button data-m="a">Arithmetic mean</button></div></div>
+      <div class="chart" id="gmChart"></div>
+      <div class="out" id="gmOut"></div>
+    </div>
+  </div>
+</section>
+
+<!-- 17 VARIABILITY -->
+<section class="slide" data-title="Variability: same mean, different risk" data-acc="orange">
+  <div class="kicker">2.6 · Measures of variability</div>
+  <h2>Same average, very different risk</h2>
+  <div class="cols" style="grid-template-columns:1.3fr .9fr">
+    <div class="panel">
+      <div class="ctl"><div class="seg" id="fdSel"><button data-f="A" class="on">Fund A</button><button data-f="B">Fund B</button></div><span class="note" style="margin:0">Annual payouts over 20 years, both averaging about $1,100</span></div>
+      <div class="chart" id="fdChart"></div>
+    </div>
+    <div>
+      <table class="mini" id="varTab"></table>
+      <div class="callout" style="--acc:var(--orange)"><b>Which fund would you pick?</b> Both pay about $1,100 on average. Fund A pays exactly that every year; Fund B swings from $0 to $2,500. Variability is <b>risk</b>.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 18 VARIANCE BUILDER -->
+<section class="slide" data-title="Variance & SD step by step" data-acc="rose">
+  <div class="kicker">2.6 · Variance, standard deviation, CV</div>
+  <h2>Variance and standard deviation, step by step</h2>
+  <div class="cols" style="grid-template-columns:1.4fr .8fr">
+    <div class="panel">
+      <div class="ctl"><button class="sbtn" id="vbNext">Next step ▶</button><button class="sbtn ghost" id="vbReset">Reset</button><span class="out" id="vbStep" style="flex:1;min-height:0;padding:6px 10px"></span></div>
+      <div class="chart" id="vbChart"></div>
+    </div>
+    <div>
+      <div class="syntax" style="font-size:14px;line-height:1.7">s² = <span class="f">Σ(xᵢ − x̄)²</span> / <span class="a">(n − 1)</span><br>s = √s²<br>CV = <span class="s">(s / x̄)</span> × 100%</div>
+      <div id="vbRes"></div>
+      <p class="note">Sample data use n − 1 (Excel <code>VAR.S</code>, <code>STDEV.S</code>). For a whole population use <code>VAR.P</code>, <code>STDEV.P</code>.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 19 PERCENTILES -->
+<section class="slide" data-title="Percentiles & quartiles" data-acc="violet">
+  <div class="kicker">2.7 · Analysing distributions</div>
+  <h2>Percentiles and quartiles</h2>
+  <div class="cols" style="grid-template-columns:1.4fr .8fr">
+    <div class="panel">
+      <div class="ctl"><span class="lab">p</span><input type="range" id="pcSl" min="8" max="92" value="85" style="flex:1;accent-color:#7c3aed"><b id="pcLab" style="font-family:var(--mono);min-width:50px"></b>
+        <button class="tg" id="pcQ">Show quartiles</button></div>
+      <div class="chart" id="pcChart"></div>
+      <div class="out" id="pcOut"></div>
+    </div>
+    <div>
+      <ul class="tidy" style="--acc:var(--violet)">
+        <li>The <b>p-th percentile</b>: about p% of values are below it.</li>
+        <li>Position <b>L = (p/100)(n + 1)</b>, then interpolate between neighbours.</li>
+        <li><b>Quartiles</b>: Q1 = 25th, Q2 = median = 50th, Q3 = 75th. <b>IQR</b> = Q3 − Q1.</li>
+      </ul>
+      <div class="syntax" style="font-size:13.5px">=<span class="f">PERCENTILE.EXC</span>(<span class="a">B2:B13</span>,<span class="s">0.85</span>)<br>=<span class="f">QUARTILE.EXC</span>(<span class="a">B2:B13</span>,<span class="s">1</span>)</div>
+      <p class="note">You do not need to sort the data before using the Excel functions.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 20 QUICK CHECK B -->
+<section class="slide" data-title="Quick check: location & spread" data-acc="amber">
+  <div class="kicker">Quick check · 3 questions</div>
+  <h2>Quick check: location &amp; spread</h2>
+  <div class="quiz" data-quiz="qb"></div>
+</section>
+
+<!-- 21 Z & EMPIRICAL -->
+<section class="slide" data-title="z-scores & empirical rule" data-acc="cyan">
+  <div class="kicker">2.7 · z-scores &amp; the empirical rule</div>
+  <h2>z-scores and the empirical rule</h2>
+  <div class="cols" style="grid-template-columns:1.4fr .8fr">
+    <div class="panel">
+      <div class="ctl"><span class="lab">Within</span><div class="seg" id="erK"><button data-k="1">±1 SD</button><button data-k="2" class="on">±2 SD</button><button data-k="3">±3 SD</button></div>
+        <span class="lab" style="margin-left:8px">Height</span><input type="range" id="erH" min="58" max="81" step="0.5" value="75.5" style="flex:1;accent-color:#0891b2"><b id="erHL" style="font-family:var(--mono);min-width:48px"></b></div>
+      <div class="chart" id="erChart"></div>
+      <div class="out" id="erOut"></div>
+    </div>
+    <div>
+      <div class="syntax" style="font-size:14px">z = (x − x̄) / s<br>=<span class="f">STANDARDIZE</span>(<span class="a">x</span>,<span class="s">mean</span>,<span class="s">sd</span>)</div>
+      <p style="font-size:15px">A <b>z-score</b> says how many standard deviations a value is from the mean.</p>
+      <p style="font-size:15px">For <b>bell-shaped</b> data: about <b>68%</b> lie within ±1 SD, <b>95%</b> within ±2 SD, and almost all within ±3 SD.</p>
+      <p class="note">Example: US adult male heights, mean 69.5 in, SD 3 in.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 22 OUTLIERS & BOXPLOT -->
+<section class="slide" data-title="Outliers & boxplots" data-acc="pink">
+  <div class="kicker">2.7 · Outliers &amp; boxplots</div>
+  <h2>Boxplots and outliers</h2>
+  <div class="cols" style="grid-template-columns:1.4fr .8fr">
+    <div class="panel">
+      <div class="ctl"><div class="seg" id="bxView"><button data-v="one" class="on">Home sales</button><button data-v="many">Compare communities</button></div></div>
+      <div class="chart" id="bxChart"></div>
+      <div class="out" id="bxOut"></div>
+    </div>
+    <div>
+      <ul class="tidy" style="--acc:var(--pink)">
+        <li><b>Box</b> = Q1 to Q3, with a line at the median.</li>
+        <li><b>Fences</b> = Q1 − 1.5·IQR and Q3 + 1.5·IQR. Points beyond them are <b>outliers</b>.</li>
+        <li><b>Whiskers</b> reach the most extreme values inside the fences.</li>
+        <li>For bell-shaped data, |z| &gt; 3 also flags a possible outlier.</li>
+      </ul>
+      <div class="callout warn">An outlier may be a <b>typo</b>, a value that <b>doesn't belong</b>, or a <b>real</b> extreme. Check it before deleting it!</div>
+      <p class="note">Excel: select <code>B1:B13</code> ▸ <b>Insert ▸ Statistic Chart ▸ Box and Whisker</b>.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 23 SCATTER & COVARIANCE -->
+<section class="slide" data-title="Scatter & covariance" data-acc="teal">
+  <div class="kicker">2.8 · Measures of association</div>
+  <h2>Scatter charts and covariance</h2>
+  <div class="cols" style="grid-template-columns:1.4fr .8fr">
+    <div class="panel">
+      <div class="ctl"><button class="tg on" id="cvQ">Quadrants at the means</button><button class="tg" id="cvP">Show (x − x̄)(y − ȳ) signs</button></div>
+      <div class="chart" id="cvChart"></div>
+    </div>
+    <div>
+      <p style="font-size:15px">Daily high temperature vs bottled-water sales (cases). <span class="pill">DATAfile: bottledwater</span></p>
+      <div class="syntax" style="font-size:14px">s<sub>xy</sub> = Σ(xᵢ − x̄)(yᵢ − ȳ) / (n − 1)<br>=<span class="f">COVARIANCE.S</span>(<span class="a">x</span>,<span class="a">y</span>)</div>
+      <div class="out" id="cvOut"></div>
+      <p class="note">Points read from the textbook figure (approximate).</p>
+    </div>
+  </div>
+</section>
+
+<!-- 24 CORRELATION -->
+<section class="slide" data-title="Correlation coefficient" data-acc="indigo">
+  <div class="kicker">2.8 · Correlation</div>
+  <h2>Correlation: strength and direction, from −1 to +1</h2>
+  <div class="cols" style="grid-template-columns:1.4fr .8fr">
+    <div class="panel">
+      <div class="ctl"><div class="seg" id="crMode"><button data-m="sl" class="on">Set r</button><button data-m="u">Curved pattern</button></div>
+        <input type="range" id="crSl" min="-100" max="100" value="80" style="flex:1;accent-color:#4f46e5"><b id="crLab" style="font-family:var(--mono);min-width:64px"></b></div>
+      <div class="chart" id="crChart"></div>
+    </div>
+    <div>
+      <div class="syntax" style="font-size:14px">r<sub>xy</sub> = s<sub>xy</sub> / (s<sub>x</sub> s<sub>y</sub>)<br>=<span class="f">CORREL</span>(<span class="a">x</span>,<span class="a">y</span>)</div>
+      <ul class="tidy" style="--acc:var(--indigo)"><li>r near <b>+1</b>: strong positive linear relationship</li><li>r near <b>−1</b>: strong negative</li><li>r near <b>0</b>: no <b>linear</b> relationship</li><li>Unlike covariance, r has <b>no units</b>, so it is comparable across data sets.</li></ul>
+      <div class="out" id="crOut"></div>
+    </div>
+  </div>
+</section>
+
+<!-- 25 EXIT B -->
+<section class="slide" data-title="Exit ticket: Part B" data-acc="green">
+  <div class="kicker">Exit ticket · Part B · 6 questions</div>
+  <h2>Exit ticket: Part B</h2>
+  <div class="quiz" data-quiz="exitB"></div>
+</section>
+
+<!-- 26 WRAP-UP -->
+<section class="slide" data-title="Wrap-up: Excel cheat sheet" data-acc="indigo">
+  <div class="kicker">Wrap-up</div>
+  <h2>Your descriptive-statistics toolkit in Excel</h2>
+  <div class="recap">
+    <div class="rc" style="background:#7c3aed"><b>COUNTIF · FREQUENCY</b><span>Frequency distributions.</span></div>
+    <div class="rc" style="background:#2563eb"><b>AVERAGE · MEDIAN</b><span>Centre. Median resists outliers.</span></div>
+    <div class="rc" style="background:#0d9488"><b>MODE.SNGL / MULT · GEOMEAN</b><span>Most frequent value · average growth.</span></div>
+    <div class="rc" style="background:#ea580c"><b>VAR.S · STDEV.S</b><span>Spread for sample data.</span></div>
+    <div class="rc" style="background:#a855f7"><b>PERCENTILE.EXC · QUARTILE.EXC</b><span>Position, IQR, boxplot fences.</span></div>
+    <div class="rc" style="background:#0891b2"><b>STANDARDIZE</b><span>z-score: SDs from the mean.</span></div>
+    <div class="rc" style="background:#db2777"><b>Box &amp; Whisker chart</b><span>Quartiles and outliers at a glance.</span></div>
+    <div class="rc" style="background:#16a34a"><b>COVARIANCE.S · CORREL</b><span>Linear association between two variables.</span></div>
+  </div>
+  <div class="cols even" style="margin-top:18px">
+    <div class="card tint"><h3>📝 Practise in Excel</h3><p style="margin:0">With <b>homesales</b>, compute the mean, median, both modes, SD, CV, Q1, Q3 and IQR, then build a boxplot. Is $456,250 an outlier by the fence rule? By the z-score rule?</p></div>
+    <div class="card"><h3>🎯 Remember</h3><p style="margin:0">Skewed data or outliers → report the <b>median</b> and <b>IQR</b>. Symmetric data → the <b>mean</b> and <b>SD</b> work well. Correlation is not causation.</p></div>
+  </div>
+</section>
+
+</div></div>
+
+<nav id="menu" aria-label="Slides"><h4>Chapter 4 · Slides</h4><div id="menuList"></div></nav>
+<div id="scrim"></div>
+<div id="tip"></div>
+<div id="help"><kbd>←</kbd><kbd>→</kbd> navigate · <kbd>M</kbd> menu · <kbd>F</kbd> full screen · <kbd>T</kbd> timer</div>
+<div id="hud">
+  <button id="menuBtn" title="Slide menu (M)" aria-label="Menu">☰</button>
+  <button id="timer" title="Lecture timer — click to start/pause, double-click to reset (T)">▶ 00:00</button>
+  <button id="fsBtn" title="Full screen (F)" aria-label="Full screen">⛶</button>
+  <button id="prevBtn" aria-label="Previous">‹</button>
+  <span class="count" id="count">1 / 26</span>
+  <button id="nextBtn" aria-label="Next">›</button>
+</div>
+<script>
+/* ======================= helpers ======================= */
+const NS="http://www.w3.org/2000/svg";
+const $=id=>document.getElementById(id);
+function mk(tag,a,p){const e=document.createElementNS(NS,tag);if(a)for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e}
+function T(p,x,y,s,a){const t=mk("text",Object.assign({x,y,"font-size":12,fill:"#64748b"},a||{}),p);t.textContent=s;return t}
+function svgIn(host,W,H){host.innerHTML="";return mk("svg",{viewBox:`0 0 ${W} ${H}`,preserveAspectRatio:"xMidYMid meet"},host)}
+function lin(d0,d1,r0,r1){const f=v=>r0+(v-d0)/(d1-d0)*(r1-r0);f.inv=p=>d0+(p-r0)/(r1-r0)*(d1-d0);return f}
+const fmt=n=>Number(n).toLocaleString("en-US");
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const C={b:"#2563eb",o:"#ea580c",t:"#0d9488",p:"#a855f7",y:"#ca8a04",ink:"#0f172a",mut:"#64748b",grid:"#e2e8f0",ax:"#94a3b8",up:"#16a34a",dn:"#e11d48"};
+const CAT=[C.b,C.o,C.t,C.p,C.y];
+const tip=$("tip");
+function showTip(e,h){tip.innerHTML=h;tip.style.display="block";const w=tip.offsetWidth,hh=tip.offsetHeight;
+  tip.style.left=Math.max(4,Math.min(window.innerWidth-w-8,e.clientX+14))+"px";tip.style.top=(e.clientY-hh-12<4?e.clientY+16:e.clientY-hh-12)+"px"}
+function hideTip(){tip.style.display="none"}
+function hov(node,fn,onIn,onOut){node.style.cursor="pointer";
+  node.addEventListener("mousemove",e=>{showTip(e,fn());onIn&&onIn()});
+  node.addEventListener("mouseleave",()=>{hideTip();onOut&&onOut()});
+  node.addEventListener("click",e=>{showTip(e,fn());onIn&&onIn()})}
+/* bar path with only the data end rounded: end = t|b|l|r|n */
+function rbar(x,y,w,h,end,r){r=r===undefined?4:r;if(w<0){x+=w;w=-w}if(h<0){y+=h;h=-h}r=Math.max(0,Math.min(r,w/2,h/2));const X=x+w,Y=y+h;
+  if(end==="t")return`M${x},${Y}V${y+r}Q${x},${y} ${x+r},${y}H${X-r}Q${X},${y} ${X},${y+r}V${Y}Z`;
+  if(end==="b")return`M${x},${y}H${X}V${Y-r}Q${X},${Y} ${X-r},${Y}H${x+r}Q${x},${Y} ${x},${Y-r}Z`;
+  if(end==="r")return`M${x},${y}H${X-r}Q${X},${y} ${X},${y+r}V${Y-r}Q${X},${Y} ${X-r},${Y}H${x}Z`;
+  if(end==="l")return`M${X},${y}V${Y}H${x+r}Q${x},${Y} ${x},${Y-r}V${y+r}Q${x},${y} ${x+r},${y}Z`;
+  return`M${x},${y}H${X}V${Y}H${x}Z`}
+function niceTicks(min,max,n){n=n||5;const span=max-min,s0=span/n,mag=10**Math.floor(Math.log10(s0)),f=s0/mag;const st=(f<1.5?1:f<3?2:f<7?5:10)*mag;const o=[];for(let v=Math.ceil(min/st-1e-9)*st;v<=max+1e-9;v+=st)o.push(+v.toFixed(10));return o}
+function yAxis(g,y,ticks,x0,x1,o){o=o||{};ticks.forEach(v=>{if(o.grid!==false)mk("line",{x1:x0,x2:x1,y1:y(v),y2:y(v),stroke:v===0?"#94a3b8":C.grid,"stroke-width":1},g);
+  T(g,x0-8,y(v)+4,o.f?o.f(v):fmt(v),{"text-anchor":"end","font-size":o.fs||12})});
+  if(o.title){const t=T(g,0,0,o.title,{"text-anchor":"middle","font-size":12.5,"font-weight":700,fill:"#475569",transform:`translate(${o.tx||14},${(y(ticks[0])+y(ticks[ticks.length-1]))/2}) rotate(-90)`})}}
+function xAxis(g,x,ticks,y0,y1,o){o=o||{};ticks.forEach(v=>{if(o.grid)mk("line",{x1:x(v),x2:x(v),y1:y0,y2:y1,stroke:C.grid},g);
+  T(g,x(v),y0+18,o.f?o.f(v):fmt(v),{"text-anchor":"middle","font-size":o.fs||12})});
+  if(o.title)T(g,(x(ticks[0])+x(ticks[ticks.length-1]))/2,y0+38,o.title,{"text-anchor":"middle","font-size":12.5,"font-weight":700,fill:"#475569"})}
+function svgPt(svg,e){const p=svg.createSVGPoint();p.x=e.clientX;p.y=e.clientY;return p.matrixTransform(svg.getScreenCTM().inverse())}
+function seg(id,cb){const s=$(id);s.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{s.querySelectorAll("button").forEach(x=>x.classList.toggle("on",x===b));cb(b.dataset)}))}
+function tg(id,cb){const b=$(id);b.addEventListener("click",()=>{b.classList.toggle("on");cb(b.classList.contains("on"))});return b}
+const on=id=>$(id).classList.contains("on");
+const mix=(hex,t,base)=>`color-mix(in srgb,${hex} ${Math.round(t*100)}%,${base||"#ffffff"})`;
+const MONTHS=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+function spark(host,vals,W,H,o){o=o||{};const s=svgIn(host,W,H);const mn=Math.min(...vals,o.zero?0:Infinity),mx=Math.max(...vals,o.zero?0:-Infinity);
+  const x=lin(0,vals.length-1,3,W-4),y=lin(mn,mx,H-3,3);
+  if(o.zero&&mn<0&&mx>0)mk("line",{x1:0,x2:W,y1:y(0),y2:y(0),stroke:"#94a3b8","stroke-dasharray":"2 2"},s);
+  mk("polyline",{points:vals.map((v,i)=>x(i)+","+y(v)).join(" "),fill:"none",stroke:o.c||C.b,"stroke-width":1.8,"stroke-linejoin":"round","stroke-linecap":"round"},s);
+  if(o.hl){const i=vals.indexOf(mx),j=vals.lastIndexOf(mn);mk("circle",{cx:x(i),cy:y(mx),r:2.6,fill:C.up},s);mk("circle",{cx:x(j),cy:y(mn),r:2.6,fill:C.dn},s)}
+  return s}
+
+/* ======================= CHAPTER 4 DATA ======================= */
+const FOOT_A="Chapter 4 · Descriptive Statistics (Part A)",FOOT_B="Chapter 4 · Descriptive Statistics (Part B)",MENU_A="Part A · Lecture 1",MENU_B="Part B · Lecture 2";
+const TV=[[1,"Ford","F-Series",726004,787422],[2,"Ram","Ram Pickup",569388,563676],[3,"Chevrolet","Silverado",529765,586675],[4,"Toyota","RAV4",407739,430387],[5,"Honda","CR-V",361271,333502],[6,"Toyota","Camry",313795,294348],[7,"Nissan","Rogue",285602,227935],[8,"Jeep","Grand Cherokee",264444,209786],[9,"Toyota","Highlander",264128,212280],[10,"Honda","Civic",263787,261225],[11,"Toyota","Tacoma",252520,238806],[12,"Toyota","Corolla",248993,237178],[13,"GMC","Sierra",248923,253016],[14,"Ford","Explorer",219871,226217],[15,"Jeep","Wrangler",204610,201311],[16,"Honda","Accord",202676,199458],[17,"Mazda","CX-5",168383,146420],[18,"Chevrolet","Equinox",165323,270994],[19,"Subaru","Forester",154723,177029],[20,"Hyundai","Tucson",150949,123657]];
+const AGEF=[7,1,6,7,10,15,16,36,56,78,115,148,142,58,3,2];
+const AGES=(()=>{const a=[];AGEF.forEach((n,b)=>{const lo=b*7;for(let k=0;k<n;k++)a.push(b===0?Math.floor((k+.5)*8/n):lo+1+Math.floor((k+.5)*7/n))});return a})();
+const HOMES=[138000,254000,186000,257500,108000,254000,138000,298000,199500,208000,142000,456250];
+const RET=[-22.1,28.7,10.9,4.9,15.8,5.5,-37.0,26.5,15.1,2.1];
+const FUNDB=[120,260,380,470,560,680,790,880,960,1060,1180,1250,1330,1420,1480,1560,1690,1820,1950,2160];
+const WATER=[[78,23],[79,22],[80,22],[80,24],[82,24],[83,26],[85,27],[86,25],[87,25],[87,27],[88,29],[88,30],[90,31],[92,31]];
+const SD_COUNTS=[["Coca-Cola",19],["Diet Coke",8],["Dr. Pepper",5],["Pepsi",13],["Sprite",5]];
+const mean=a=>a.reduce((s,v)=>s+v,0)/a.length;
+const median=a=>{const b=[...a].sort((x,y)=>x-y),n=b.length;return n%2?b[(n-1)/2]:(b[n/2-1]+b[n/2])/2};
+const varS=a=>{const m=mean(a);return a.reduce((s,v)=>s+(v-m)**2,0)/(a.length-1)};
+const pctExc=(a,p)=>{const b=[...a].sort((x,y)=>x-y),L=p*(b.length+1),i=Math.floor(L),f=L-i;if(i<1)return b[0];if(i>=b.length)return b[b.length-1];return b[i-1]+f*(b[i]-b[i-1])};
+const corr=(X,Y)=>{const mx=mean(X),my=mean(Y);let a=0,b=0,c=0;X.forEach((x,i)=>{a+=(x-mx)*(Y[i]-my);b+=(x-mx)**2;c+=(Y[i]-my)**2});return a/Math.sqrt(b*c)};
+const money=v=>"$"+Math.round(v).toLocaleString("en-US");
+function rng(seed){let s=seed>>>0;return()=>{s=(s*1664525+1013904223)>>>0;return s/4294967296}}
+function normals(n,seed){const r=rng(seed),o=[];for(let i=0;i<n;i++){const u=Math.max(1e-9,r()),v=r();o.push(Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v))}return o}
+const ncdf=z=>{const t=1/(1+.2316419*Math.abs(z)),d=.3989423*Math.exp(-z*z/2);let p=d*t*(.3193815+t*(-.3565638+t*(1.781478+t*(-1.821256+t*1.330274))));return z>0?1-p:p};
+
+/* title floaters */
+function floaters(id,cards){const host=$(id);if(!host)return;cards.forEach(([l,t,lbl,w,draw])=>{const d=document.createElement("div");d.className="fc";d.style.left=l+"px";d.style.top=t+"px";d.style.width=w+"px";d.innerHTML=`<b>${lbl}</b><div></div>`;host.appendChild(d);draw(svgIn(d.lastChild,w-20,100))})}
+const miniHist=s=>{AGEF.forEach((v,i)=>mk("rect",{x:4+i*12,y:96-v/148*90,width:11,height:v/148*90,rx:2,fill:C.b},s))};
+const miniBell=s=>{const pts=[];for(let i=0;i<=60;i++){const z=-3+i*.1;pts.push((6+i*3.2)+","+(94-80*Math.exp(-z*z/2)))}mk("path",{d:"M6,94 L"+pts.join(" L")+" L198,94Z",fill:C.t,"fill-opacity":.25,stroke:C.t,"stroke-width":2},s)};
+const miniBox=s=>{mk("line",{x1:10,x2:190,y1:50,y2:50,stroke:"#334155","stroke-width":2},s);mk("rect",{x:50,y:28,width:80,height:44,rx:5,fill:"#fce7f3",stroke:"#db2777","stroke-width":2},s);mk("line",{x1:84,x2:84,y1:28,y2:72,stroke:"#db2777","stroke-width":3},s);mk("circle",{cx:200,cy:50,r:5,fill:C.o},s)};
+const miniScatter=s=>{WATER.forEach(([x,y])=>mk("circle",{cx:(x-76)*12,cy:100-(y-20)*7.5,r:4.5,fill:C.p,"fill-opacity":.8},s))};
+floaters("titleViz4",[[0,0,"Histogram",220,miniHist],[210,90,"Bell curve",230,miniBell],[20,220,"Boxplot",240,miniBox],[220,330,"Scatter",220,miniScatter]]);
+floaters("partbViz4",[[0,0,"Boxplot",240,miniBox],[200,150,"Bell curve",230,miniBell],[20,300,"Scatter",220,miniScatter]]);
+
+/* 4 · classify */
+(function(){
+  const Q=[["Customer satisfaction rating: Poor / Fair / Good / Excellent","Categorical",["Quantitative","Categorical"],"Labels with an order, but you can't do arithmetic on them."],
+    ["Monthly sales (RM) of one 99 Speedmart outlet, Jan 2023 – Dec 2025","Time series",["Cross-sectional","Time series"],"One entity measured over many periods."],
+    ["Student matric numbers, e.g. 312725","Categorical",["Quantitative","Categorical"],"Numbers used as labels. The average matric number means nothing!"],
+    ["Price of 20 car models, all recorded in 2021","Cross-sectional",["Cross-sectional","Time series"],"Many entities at the same point in time."],
+    ["Number of items in each shopping basket","Quantitative",["Quantitative","Categorical"],"Counts can be added and averaged."],
+    ["500 students surveyed out of all 30,000 UUM students","Sample",["Population","Sample"],"A subset of the population of interest."],
+    ["Giving half the stores a 10% discount to measure its effect on sales","Experimental",["Experimental","Observational"],"The researcher controls (manipulates) the discount."],
+    ["Recording which payment method shoppers choose, without intervening","Observational",["Experimental","Observational"],"Nothing is controlled, only observed."]];
+  let score=0;const host=$("classify");
+  Q.forEach(([q,a,opts,why])=>{const d=document.createElement("div");d.className="chc";d.innerHTML=`<div class="q">${q}</div><div class="opts">${opts.map(t=>`<button>${t}</button>`).join("")}</div><div class="why"></div>`;
+    d.querySelectorAll("button").forEach(b=>b.onclick=()=>{const ok=b.textContent===a;if(ok)score++;d.classList.add(ok?"ok":"no");d.querySelectorAll("button").forEach(x=>{x.disabled=true;if(x.textContent===a)x.classList.add("r")});if(!ok)b.classList.add("w");
+      d.querySelector(".why").innerHTML=(ok?"✅ ":"❌ <b>"+a+"</b>. ")+why;$("clScore").textContent=score+" / 8"});host.appendChild(d)});
+})();
+
+/* 5 · variables & observations */
+(function(){
+  const H=["Rank","Manufacturer","Model","Sales 2021","Sales 2020"];let sel=null;
+  function draw(){let h=`<table class="obs"><thead><tr>${H.map((c,j)=>`<th data-c="${j}" class="${sel&&sel[0]==="c"&&sel[1]===j?"hl":""}">${c}</th>`).join("")}</tr></thead><tbody>`;
+    TV.slice(0,8).forEach((r,i)=>{h+=`<tr data-r="${i}" class="${sel&&sel[0]==="r"&&sel[1]===i?"hl":""}">${r.map((v,j)=>`<td class="${j>2?"n":""} ${sel&&sel[0]==="c"&&sel[1]===j?"hlc":""}">${j>2?fmt(v):v}</td>`).join("")}</tr>`});
+    $("obsTable").innerHTML=h+"</tbody></table>";
+    $("obsTable").querySelectorAll("th").forEach(th=>th.onclick=()=>{sel=["c",+th.dataset.c];draw();const j=sel[1],col=TV.map(r=>r[j]);
+      $("obsOut").innerHTML=`<b>Variable: ${H[j]}</b>. ${j>2?`It varies from ${fmt(Math.min(...col))} to ${fmt(Math.max(...col))} across the 20 models. That spread is the <b>variation</b> we want to describe.`:j===1?"A <b>categorical</b> variable: labels such as Toyota or Honda.":j===0?"Rank is an <b>ordered label</b>: it tells position, not an amount.":"A <b>categorical</b> variable: the model name."}`});
+    $("obsTable").querySelectorAll("tbody tr").forEach(tr=>tr.onclick=()=>{sel=["r",+tr.dataset.r];draw();const r=TV[sel[1]];$("obsOut").innerHTML=`<b>Observation ${r[0]}</b>: ${r[1]} ${r[2]}, ${fmt(r[3])} sold in 2021 and ${fmt(r[4])} in 2020. One row = one entity's values for every variable.`})}
+  draw();
+})();
+
+/* 6 · sampling */
+(function(){
+  const mu=mean(AGES);$("smMu").textContent=mu.toFixed(1);let n=10,hist=[];
+  function draw(sample){const W=660,H=330,L=40,R=640,s=svgIn($("smChart"),W,H),x=lin(0,112,L,R);
+    [0,14,28,42,56,70,84,98,112].forEach(v=>T(s,x(v),H-8,v,{"text-anchor":"middle"}));T(s,R,22,"Age at death (years) →",{"text-anchor":"end","font-weight":700,fill:"#475569"});
+    // population histogram (faint)
+    const yb=lin(0,148,200,40);AGEF.forEach((v,i)=>mk("rect",{x:x(i*7)+1,y:yb(v),width:x(7)-x(0)-2,height:200-yb(v),fill:"#e2e8f0"},s));
+    T(s,L,30,"Population (700 people)",{fill:"#94a3b8","font-weight":700});
+    mk("line",{x1:x(mu),x2:x(mu),y1:30,y2:290,stroke:"#0f172a","stroke-width":2,"stroke-dasharray":"5 4"},s);T(s,x(mu)+6,44,"μ = "+mu.toFixed(1),{fill:"#0f172a","font-weight":800});
+    if(sample){sample.forEach((v,i)=>mk("circle",{cx:x(v),cy:212+(i%5)*7,r:3.4,fill:C.b,"fill-opacity":.8},s));const m=mean(sample);
+      mk("line",{x1:x(m),x2:x(m),y1:200,y2:290,stroke:C.o,"stroke-width":3},s);T(s,x(m)+6,262,"x̄ = "+m.toFixed(1),{fill:C.o,"font-weight":800})}
+    hist.forEach(([m,nn],i)=>mk("circle",{cx:x(m),cy:282,r:4,fill:nn===10?C.p:nn===30?C.t:C.o,"fill-opacity":.6},s));
+    if(hist.length)T(s,L,282,"means:",{fill:"#64748b","font-size":11,"text-anchor":"start"})}
+  seg("smN",d=>{n=+d.n});
+  $("smDraw").onclick=()=>{const idx=new Set();while(idx.size<n)idx.add(Math.floor(Math.random()*AGES.length));const smp=[...idx].map(i=>AGES[i]),m=mean(smp);hist.push([m,n]);draw(smp);
+    const sameN=hist.filter(h=>h[1]===n).map(h=>h[0]);
+    $("smOut").innerHTML=`Sample of <b>${n}</b>: x̄ = <b>${m.toFixed(1)}</b> vs μ = ${mu.toFixed(1)} (off by ${Math.abs(m-mu).toFixed(1)}). ${sameN.length>1?`Your ${sameN.length} samples of size ${n} ranged from ${Math.min(...sameN).toFixed(1)} to ${Math.max(...sameN).toFixed(1)}.`:"Draw again!"}${n<100?" Now try a bigger n: the means cluster tighter.":""}`};
+  $("smReset").onclick=()=>{hist=[];draw()};draw();
+})();
+
+/* 7 · sort / filter / CF */
+(function(){
+  const sel=$("tvMake");sel.innerHTML=`<option value="">(All)</option>`+[...new Set(TV.map(r=>r[1]))].sort().map(m=>`<option>${m}</option>`).join("");
+  let sk=3,dir=-1;const H=["Rank","Manufacturer","Model","Sales 2021","Sales 2020","% change"];const pc=r=>(r[3]-r[4])/r[4];
+  function draw(){const neg=on("tvNeg"),bars=on("tvBars"),mk_=sel.value;let rows=TV.filter(r=>!mk_||r[1]===mk_);
+    const val=(r,k)=>k===5?pc(r):r[k];rows=[...rows].sort((a,b)=>{const A=val(a,sk),B=val(b,sk);return(typeof A==="string"?A.localeCompare(B):A-B)*dir});
+    const mx=Math.max(...TV.map(r=>r[3]));
+    let h=`<table class="xlt"><thead><tr><th class="rh"></th>${H.map((c,k)=>`<th data-k="${k}" class="${k===sk?"sorted":""}">${c}${k===sk?(dir<0?" ▼":" ▲"):""}${k===1&&mk_?" ⏷":""}</th>`).join("")}</tr></thead><tbody>`;
+    rows.forEach((r,i)=>{const p=pc(r);h+=`<tr><th class="rh">${i+2}</th><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td class="n" style="${bars?`background:linear-gradient(90deg,#93c5fd ${r[3]/mx*100}%,transparent ${r[3]/mx*100}%)`:""}">${fmt(r[3])}</td><td class="n">${fmt(r[4])}</td><td class="n ${neg&&p<0?"neg":""}">${(p*100).toFixed(1)}%</td></tr>`});
+    $("tvTable").innerHTML=h+"</tbody></table>";
+    $("tvTable").querySelectorAll("thead th[data-k]").forEach(th=>th.onclick=()=>{const k=+th.dataset.k;if(k===sk)dir=-dir;else{sk=k;dir=k<3?1:-1}draw()});
+    const negs=rows.filter(r=>pc(r)<0);
+    $("tvOut").innerHTML=(mk_?`Filter: <b>${mk_}</b> only, ${rows.length} model${rows.length>1?"s":""}. `:"")+`Sorted by <b>${H[sk]}</b> ${dir<0?"largest → smallest":"smallest → largest"}.`+(neg?` <b>${negs.length}</b> model${negs.length===1?"":"s"} sold less than in 2020: ${negs.map(r=>r[2]).join(", ")||"none"}.`:"")}
+  sel.onchange=draw;tg("tvNeg",draw);tg("tvBars",draw);draw();
+})();
+
+/* 8 · soft drinks */
+(function(){
+  const order=[];SD_COUNTS.forEach(([n,c],i)=>{for(let k=0;k<c;k++)order.push(i)});const r=rng(7);for(let i=order.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[order[i],order[j]]=[order[j],order[i]]}
+  const chips=$("sdChips");order.forEach(i=>{const d=document.createElement("span");d.textContent=SD_COUNTS[i][0];d.style.setProperty("--c",CAT[i]);chips.appendChild(d)});
+  let cnt=[0,0,0,0,0],mode="f",timer=null;
+  function draw(){const tot=cnt.reduce((a,b)=>a+b,0);const f=v=>mode==="f"?v:mode==="r"?(tot?(v/50).toFixed(2):"0.00"):(v/50*100).toFixed(0)+"%";
+    $("sdTable").innerHTML=`<table class="dt hi"><thead><tr><th class="lbl">Soft drink</th><th class="n">${mode==="f"?"Frequency":mode==="r"?"Relative frequency":"Percent frequency"}</th></tr></thead><tbody>${SD_COUNTS.map(([n],i)=>`<tr><td class="lbl"><i class="sw" style="background:${CAT[i]}"></i>${n}</td><td class="n"><b>${f(cnt[i])}</b></td></tr>`).join("")}<tr><td class="lbl"><b>Total</b></td><td class="n"><b>${mode==="f"?tot:mode==="r"?(tot/50).toFixed(2):(tot/50*100).toFixed(0)+"%"}</b></td></tr></tbody></table>`;
+    const W=520,H=170,s=svgIn($("sdChart"),W,H),x=lin(0,20,110,500);SD_COUNTS.forEach(([n],i)=>{const y=6+i*32;T(s,104,y+17,n,{"text-anchor":"end",fill:"#334155","font-weight":600});
+      if(cnt[i])mk("path",{d:rbar(110,y,x(cnt[i])-110,22,"r"),fill:CAT[i]},s);T(s,x(cnt[i])+6,y+16,f(cnt[i]),{fill:"#0f172a","font-weight":800})})}
+  $("sdCount").onclick=()=>{clearInterval(timer);cnt=[0,0,0,0,0];chips.querySelectorAll("span").forEach(s=>s.classList.remove("done","now"));let k=0;
+    timer=setInterval(()=>{const sp=chips.children[k];chips.querySelectorAll(".now").forEach(s=>s.classList.remove("now"));sp.classList.add("now","done");cnt[order[k]]++;draw();k++;if(k>=50){clearInterval(timer);sp.classList.remove("now")}},60)};
+  seg("sdMode",d=>{mode=d.m;draw()});draw();
+})();
+
+/* 9 · histogram */
+(function(){
+  let w=7,y="f";
+  function bins(){const nb=Math.ceil(112/w),f=new Array(nb).fill(0);AGES.forEach(a=>{let b=a===0?0:Math.ceil(a/w)-1;f[Math.min(nb-1,b)]++});return f}
+  function draw(){const f=bins(),W=660,H=380,L=56,R=645,Tp=14,B=330,s=svgIn($("hgChart"),W,H);const vals=f.map(v=>y==="f"?v:v/7);const mx=Math.max(...vals),yt=niceTicks(0,mx*1.08,5),ys=lin(0,yt[yt.length-1],B,Tp),x=lin(0,f.length*w,L,R);
+    yAxis(s,ys,yt,L,R,{title:y==="f"?"Frequency":"Percent of people (%)",f:v=>y==="f"?fmt(v):v+"%"});
+    f.forEach((v,i)=>{const val=vals[i];const p=mk("path",{d:rbar(x(i*w),ys(val),x(w)-x(0)-.6,B-ys(val),"t",2),fill:C.b},s);hov(p,()=>`<b>(${i*w}, ${i*w+w}] years</b><br>${v} people · ${(v/7).toFixed(1)}%`)});
+    if(on("hgPoly"))mk("polyline",{points:vals.map((v,i)=>x(i*w+w/2)+","+ys(v)).join(" "),fill:"none",stroke:C.o,"stroke-width":2.5,"stroke-linejoin":"round"},s),vals.forEach((v,i)=>mk("circle",{cx:x(i*w+w/2),cy:ys(v),r:3.5,fill:C.o},s));
+    const step=w<7?16:w===7?14:28;for(let a=0;a<=f.length*w;a+=step)T(s,x(a),B+18,a,{"text-anchor":"middle"});T(s,(L+R)/2,B+38,"Age at death (years)",{"text-anchor":"middle","font-weight":700,fill:"#475569"});
+    $("hgOut").innerHTML=(w===7?"<b>16 bins of 7 years</b>, as Excel chooses. The shape is clear: <b>skewed left</b>, peaking at 77–84.":w===4?"<b>Narrow bins</b> (28 bins): more detail, but jagged and noisy.":w===14?"<b>Wider bins</b>: smoother, but some detail is lost.":"<b>Very wide bins</b> (4 bins): the shape almost disappears. Choose bins with care!")+(on("hgPoly")?" The <b>frequency polygon</b> joins the bin midpoints, which is handy for comparing two groups (e.g., by sex) on one chart.":"")}
+  seg("hgW",d=>{w=+d.w;draw()});seg("hgY",d=>{y=d.y;draw()});tg("hgPoly",draw);draw();
+  $("hgChart").insertAdjacentHTML("afterend",'<p class="note">The 700 ages are rebuilt from the textbook\'s 7-year frequency table, so other bin widths are close approximations.</p>');
+})();
+
+/* 10 · cumulative */
+(function(){
+  const cum=[];AGEF.reduce((a,v,i)=>(cum[i]=a+v,a+v),0);
+  $("cuTable").innerHTML=`<table class="dt hi" id="cuT"><thead><tr><th class="lbl">Age ≤</th><th class="n">Cum. freq</th><th class="n">Cum. rel.</th><th class="n">Cum. %</th></tr></thead><tbody>${cum.map((c,i)=>`<tr data-i="${i}"><td class="lbl">≤ ${(i+1)*7}</td><td class="n">${c}</td><td class="n">${(c/700).toFixed(3)}</td><td class="n">${(c/7).toFixed(1)}</td></tr>`).join("")}</tbody></table>`;
+  function draw(){const k=+$("cuSl").value,W=660,H=330,L=56,R=645,Tp=12,B=286,s=svgIn($("cuChart"),W,H),x=lin(0,112,L,R),y=lin(0,100,B,Tp);
+    yAxis(s,y,[0,25,50,75,100],L,R,{f:v=>v+"%",title:"Cumulative %"});[0,14,28,42,56,70,84,98,112].forEach(v=>T(s,x(v),B+18,v,{"text-anchor":"middle"}));T(s,(L+R)/2,B+38,"Age at death (years)",{"text-anchor":"middle","font-weight":700,fill:"#475569"});
+    mk("polyline",{points:[[0,0],...cum.map((c,i)=>[(i+1)*7,c/7])].map(([a,p])=>x(a)+","+y(p)).join(" "),fill:"none",stroke:"#4f46e5","stroke-width":2.6,"stroke-linejoin":"round"},s);
+    const a=(k+1)*7,p=cum[k]/7;mk("line",{x1:x(a),x2:x(a),y1:B,y2:y(p),stroke:C.o,"stroke-dasharray":"4 3","stroke-width":1.6},s);mk("line",{x1:L,x2:x(a),y1:y(p),y2:y(p),stroke:C.o,"stroke-dasharray":"4 3","stroke-width":1.6},s);
+    mk("circle",{cx:x(a),cy:y(p),r:6,fill:C.o,stroke:"#fff","stroke-width":2},s);
+    cum.forEach((c,i)=>{const h=mk("circle",{cx:x((i+1)*7),cy:y(c/7),r:9,fill:"transparent"},s);hov(h,()=>`<b>Age ≤ ${(i+1)*7}</b><br>${c} people · ${(c/7).toFixed(1)}%`)});
+    $("cuLab").textContent=a+" yr";$("cuOut").innerHTML=`<b>${cum[k]}</b> of 700 people (<b>${p.toFixed(1)}%</b>) died at age <b>${a} or younger</b>. So ${(100-p).toFixed(1)}% lived beyond ${a}.`+(k===10?" That's about half: the median age is close to 77.":"");
+    document.querySelectorAll("#cuT tbody tr").forEach(tr=>tr.classList.toggle("hlrow",+tr.dataset.i===k))}
+  $("cuSl").oninput=draw;draw();
+})();
+
+/* 11 · skewness */
+(function(){
+  const P={"-3":[7,1.3],"-2":[6,2],"-1":[6,3.2],"0":[5,5],"1":[3.2,6],"2":[2,6],"3":[1.3,7]};
+  function draw(){const k=$("skSl").value,[a,b]=P[k],n=20,W=660,H=340,L=30,R=640,Tp=14,B=300;const pdf=[];for(let i=0;i<n;i++){const t=(i+.5)/n;pdf.push(Math.pow(t,a-1)*Math.pow(1-t,b-1))}
+    const tot=pdf.reduce((x,y)=>x+y,0),pr=pdf.map(v=>v/tot),mx=Math.max(...pr),s=svgIn($("skChart"),W,H),x=lin(0,1,L,R),y=lin(0,mx*1.15,B,Tp);
+    pr.forEach((v,i)=>mk("path",{d:rbar(x(i/n)+.5,y(v),x(1/n)-x(0)-1,B-y(v),"t",2),fill:"#cbd5e1"},s));mk("line",{x1:L,x2:R,y1:B,y2:B,stroke:"#94a3b8"},s);
+    const m=pr.reduce((s_,v,i)=>s_+v*(i+.5)/n,0);let c=0,md=0;for(let i=0;i<n;i++){if(c+pr[i]>=.5){md=(i+(.5-c)/pr[i])/n;break}c+=pr[i]}
+    const lft=m<md;[[m,C.b,"Mean",lft],[md,C.o,"Median",!lft]].forEach(([v,col,lab,isL])=>{mk("line",{x1:x(v),x2:x(v),y1:Tp+4,y2:B,stroke:col,"stroke-width":3},s);T(s,x(v)+(isL?-6:6),Tp+18,lab,{"text-anchor":isL?"end":"start",fill:col,"font-weight":800})});
+    const kk=+k;$("skOut").innerHTML=kk===0?"<b>Symmetric</b>: mean and median sit together in the middle.":kk>0?`<b>Skewed right</b>${kk===3?" (highly)":""}: the long tail is on the right and pulls the <b>mean above the median</b>.`:`<b>Skewed left</b>${kk===-3?" (highly)":""}: the long tail is on the left and pulls the <b>mean below the median</b>.`}
+  $("skSl").oninput=draw;draw();
+})();
+/* ======================= PART B ======================= */
+/* 15 · mean vs median */
+(function(){
+  function draw(){const big=+$("mmSl").value,d=HOMES.map(v=>v===456250?big:v),m=mean(d),md=median(d),W=660,H=230,L=30,R=640,s=svgIn($("mmChart"),W,H),x=lin(0,2100000,L,R);
+    [0,500000,1000000,1500000,2000000].forEach(v=>{mk("line",{x1:x(v),x2:x(v),y1:30,y2:180,stroke:C.grid},s);T(s,x(v),200,v===0?"$0":"$"+v/1e6+"M",{"text-anchor":"middle"})});
+    const sorted=[...d].sort((a,b)=>a-b);const stack={};sorted.forEach(v=>{const k=Math.round(v/25000);stack[k]=(stack[k]||0)+1;const c=mk("circle",{cx:x(v),cy:168-(stack[k]-1)*16,r:7,fill:v===big?C.p:"#334155",stroke:"#fff","stroke-width":2},s);hov(c,()=>money(v))});
+    [[m,C.b,"Mean",28],[md,C.o,"Median",46]].forEach(([v,c,l,yy])=>{mk("line",{x1:x(v),x2:x(v),y1:yy+6,y2:180,stroke:c,"stroke-width":3},s);T(s,x(v),yy,l+" "+money(v),{"text-anchor":v>1600000?"end":"middle",fill:c,"font-weight":800,"font-size":12.5})});
+    $("mmLab").textContent=money(big);
+    $("mmKpi").innerHTML=`<div class="kpi">Mean<b>${money(m)}</b></div><div class="kpi">Median<b>${money(md)}</b></div><div class="kpi">Gap<b>${money(m-md)}</b></div>`;
+    $("mmOut").innerHTML=big===456250?"Textbook data: mean <b>$219,937.50</b>, median <b>$203,750</b>. Now drag the slider to make the top home a mansion.":`One home changed: the mean moved to <b>${money(m)}</b>, but the median <b>stayed at ${money(md)}</b>. For skewed data (prices, incomes), report the <b>median</b>.`}
+  $("mmSl").oninput=draw;draw();
+})();
+
+/* 16 · mode & geometric mean */
+(function(){
+  const cnt={};HOMES.forEach(v=>cnt[v]=(cnt[v]||0)+1);
+  $("moChips").innerHTML=[...HOMES].sort((a,b)=>a-b).map(v=>`<span class="${cnt[v]>1?"mode":""}">${money(v)}</span>`).join("");
+  const gf=RET.map(r=>1+r/100),g=Math.pow(gf.reduce((a,b)=>a*b,1),1/gf.length),am=mean(RET);let mode="g";
+  function draw(){const W=520,H=230,L=46,R=505,Tp=10,B=196,s=svgIn($("gmChart"),W,H),x=lin(0,10,L,R),y=lin(60,180,B,Tp);yAxis(s,y,[60,100,140,180],L,R,{f:v=>"$"+v});
+    for(let t=0;t<=10;t+=2)T(s,x(t),B+18,"Yr "+t,{"text-anchor":"middle","font-size":11});
+    const act=[100];gf.forEach(f=>act.push(act[act.length-1]*f));const rate=mode==="g"?g:1+am/100,con=[...Array(11)].map((_,i)=>100*rate**i);
+    mk("polyline",{points:act.map((v,i)=>x(i)+","+y(v)).join(" "),fill:"none",stroke:"#334155","stroke-width":2.4},s);
+    mk("polyline",{points:con.map((v,i)=>x(i)+","+y(v)).join(" "),fill:"none",stroke:mode==="g"?C.t:C.o,"stroke-width":2.4,"stroke-dasharray":"6 4"},s);
+    T(s,x(10)-4,y(act[10])+24,"Actual $"+act[10].toFixed(2),{"text-anchor":"end",fill:"#334155","font-weight":700});
+    T(s,x(10)-4,y(con[10])-8,(mode==="g"?"Geometric":"Arithmetic")+" $"+con[10].toFixed(2),{"text-anchor":"end",fill:mode==="g"?C.t:C.o,"font-weight":800});
+    act.forEach((v,i)=>{const c=mk("circle",{cx:x(i),cy:y(v),r:7,fill:"transparent"},s);hov(c,()=>`<b>Year ${i}</b><br>Actual $${v.toFixed(2)}${i?`<br>Return ${RET[i-1]}%`:""}`)});
+    $("gmOut").innerHTML=mode==="g"?`$100 grew to <b>$${act[10].toFixed(2)}</b>. The geometric mean growth factor is <b>${g.toFixed(4)}</b>, or <b>${((g-1)*100).toFixed(2)}%</b> a year, which lands exactly on the actual value. <code>=GEOMEAN(C2:C11)</code>`:`The arithmetic mean return is <b>${am.toFixed(2)}%</b>. Compounding it would give $${con[10].toFixed(2)}, which <b>overstates</b> growth because losses (−37%) hurt more than equal gains help.`}
+  seg("gmMode",d=>{mode=d.m;draw()});draw();
+})();
+
+/* 17 · funds */
+(function(){
+  const A=new Array(20).fill(1100),B=FUNDB;
+  const st=d=>{const m=mean(d),v=varS(d),sd=Math.sqrt(v);return{m,r:Math.max(...d)-Math.min(...d),v,sd,cv:m?sd/m*100:0}};const a=st(A),b=st(B);
+  $("varTab").innerHTML=`<tr><th>Measure</th><th>Fund A</th><th>Fund B</th></tr><tr><td>Mean</td><td>${money(a.m)}</td><td>${money(b.m)}</td></tr><tr><td>Range</td><td>${money(a.r)}</td><td>${money(b.r)}</td></tr><tr><td>Variance</td><td>0</td><td>${fmt(Math.round(b.v))}</td></tr><tr><td>Std dev</td><td>$0</td><td>${money(b.sd)}</td></tr><tr><td>CV</td><td>0%</td><td>${b.cv.toFixed(1)}%</td></tr>`;
+  function draw(f){const d=f==="A"?A:B,W=640,H=320,L=50,R=630,Tp=12,B_=270,s=svgIn($("fdChart"),W,H),bins=[[0,500],[501,1000],[1001,1500],[1501,2000],[2001,2500]],y=lin(0,20,B_,Tp),bw=(R-L)/5;
+    yAxis(s,y,[0,5,10,15,20],L,R,{title:"Years"});bins.forEach(([lo,hi],i)=>{const c=d.filter(v=>v>=lo&&v<=hi).length;T(s,L+i*bw+bw/2,B_+18,`$${fmt(lo)}–${fmt(hi)}`,{"text-anchor":"middle","font-size":11.5});
+      if(c){const p=mk("path",{d:rbar(L+i*bw+1,y(c),bw-2,B_-y(c),"t"),fill:f==="A"?C.b:C.o},s);T(s,L+i*bw+bw/2,y(c)-6,c,{"text-anchor":"middle","font-weight":800,fill:"#0f172a"});hov(p,()=>`<b>${c} years</b> paid $${fmt(lo)}–${fmt(hi)}`)}});
+    T(s,(L+R)/2,B_+40,`Fund ${f} annual payout`,{"text-anchor":"middle","font-weight":700,fill:"#475569"})}
+  seg("fdSel",d=>draw(d.f));draw("A");
+  $("fdChart").insertAdjacentHTML("afterend",'<p class="note">Fund B payouts are illustrative values shaped like the textbook histogram.</p>');
+})();
+
+/* 18 · variance builder */
+(function(){
+  const d=HOMES,n=d.length,m=mean(d),dev=d.map(v=>v-m),sq=dev.map(v=>v*v),ss=sq.reduce((a,b)=>a+b,0),v=ss/(n-1),sd=Math.sqrt(v);let step=0;
+  const STEPS=["1. Plot the data and the mean x̄ = $219,937.50.","2. Deviation from the mean (xᵢ − x̄) for each home. They always sum to zero.","3. Square each deviation so negatives don't cancel positives.","4. Add the squares and divide by n − 1 = 11. That gives the variance s².","5. Take the square root to get back to dollars. That is the standard deviation s.","6. Coefficient of variation: s / x̄ × 100%, a unit-free measure of spread."];
+  function draw(){const W=660,H=380,L=72,R=640,Tp=14,B=330,s=svgIn($("vbChart"),W,H),x=lin(-.5,11.5,L,R),y=lin(0,500000,B,Tp);
+    yAxis(s,y,[0,100000,200000,300000,400000,500000],L,R,{f:v=>"$"+v/1000+"k"});
+    mk("line",{x1:L,x2:R,y1:y(m),y2:y(m),stroke:C.b,"stroke-width":2,"stroke-dasharray":"6 4"},s);T(s,R,y(m)-6,"x̄",{"text-anchor":"end",fill:C.b,"font-weight":800,"font-size":15});
+    d.forEach((val,i)=>{if(step>=1)mk("line",{x1:x(i),x2:x(i),y1:y(m),y2:y(val),stroke:dev[i]>0?C.up:C.dn,"stroke-width":3},s);
+      const c=mk("circle",{cx:x(i),cy:y(val),r:6.5,fill:"#334155",stroke:"#fff","stroke-width":2},s);T(s,x(i),B+18,i+1,{"text-anchor":"middle","font-size":11});
+      if(step===1)T(s,x(i),dev[i]>0?y(val)-10:y(val)+18,(dev[i]>0?"+":"−")+Math.abs(dev[i]/1000).toFixed(0)+"k",{"text-anchor":"middle","font-size":10.5,"font-weight":700,fill:dev[i]>0?"#166534":"#9f1239"});
+      if(step>=2)T(s,x(i),dev[i]>0?y(val)-10:y(val)+18,(sq[i]/1e9).toFixed(1),{"text-anchor":"middle","font-size":10.5,"font-weight":800,fill:"#7c2d12"});
+      hov(c,()=>`<b>Home ${i+1}</b><br>${money(val)}<br>deviation ${dev[i]>0?"+":"−"}${money(Math.abs(dev[i]))}<br>squared ${fmt(Math.round(sq[i]))}`)});
+    T(s,L+4,B+36,"Home",{"font-size":11});if(step>=2)T(s,L+4,Tp+10,"labels = squared deviation (billions)",{"font-size":11,fill:"#7c2d12","font-weight":700});
+    $("vbStep").innerHTML=STEPS[step];
+    const rows=[["Σ(xᵢ − x̄)",step>=1?"0":"?"],["Σ(xᵢ − x̄)²",step>=3?fmt(Math.round(ss)):"?"],["Variance s²",step>=3?fmt(Math.round(v)):"?"],["Std dev s",step>=4?"$"+sd.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2}):"?"],["CV",step>=5?(sd/m*100).toFixed(2)+"%":"?"]];
+    $("vbRes").innerHTML=`<table class="mini">${rows.map(r=>`<tr><td>${r[0]}</td><td style="text-align:right;font-family:var(--mono);font-weight:700">${r[1]}</td></tr>`).join("")}</table>`;
+    $("vbNext").disabled=step>=5}
+  $("vbNext").onclick=()=>{step++;draw()};$("vbReset").onclick=()=>{step=0;draw()};draw();
+})();
+
+/* 19 · percentiles */
+(function(){
+  const b=[...HOMES].sort((x,y)=>x-y),n=b.length;
+  function draw(){const p=+$("pcSl").value/100,L_=p*(n+1),v=pctExc(b,p),W=660,H=250,Lx=40,R=640,s=svgIn($("pcChart"),W,H),x=lin(.5,12.5,Lx,R);
+    b.forEach((val,i)=>{const px=x(i+1);mk("rect",{x:px-22,y:40,width:44,height:46,rx:8,fill:"#f5f3ff",stroke:"#c4b5fd"},s);T(s,px,60,"$"+(val/1000).toFixed(0)+"k",{"text-anchor":"middle","font-weight":800,fill:"#3b0764","font-size":12});T(s,px,78,i+1,{"text-anchor":"middle","font-size":11})});
+    T(s,Lx-8,64,"Price",{"text-anchor":"end","font-size":11});T(s,Lx-8,80,"Pos.",{"text-anchor":"end","font-size":11});
+    if(on("pcQ"))[[.25,"Q1"],[.5,"Q2"],[.75,"Q3"]].forEach(([q,l])=>{const xx=x(q*(n+1));mk("line",{x1:xx,x2:xx,y1:92,y2:170,stroke:C.t,"stroke-width":2.5},s);T(s,xx,186,l+" "+money(pctExc(b,q)),{"text-anchor":"middle",fill:C.t,"font-weight":800,"font-size":12})});
+    const xx=x(L_);mk("path",{d:`M${xx},34 l-8,-14 h16z`,fill:"#7c3aed"},s);mk("line",{x1:xx,x2:xx,y1:34,y2:225,stroke:"#7c3aed","stroke-width":2,"stroke-dasharray":"4 3"},s);
+    T(s,Math.min(R-60,Math.max(Lx+60,xx)),242,`P${Math.round(p*100)} = ${money(v)}`,{"text-anchor":"middle",fill:"#7c3aed","font-weight":800,"font-size":14});
+    $("pcLab").textContent="p = "+Math.round(p*100);const i=Math.floor(L_),f=L_-i;
+    $("pcOut").innerHTML=`L = (${Math.round(p*100)}/100)(12 + 1) = <b>${L_.toFixed(2)}</b>. That is ${(f*100).toFixed(0)}% of the way from position ${i} (${money(b[i-1])}) to ${i+1} (${money(b[i])}), so P${Math.round(p*100)} = <b>${money(v)}</b>.`+(Math.round(p*100)===85?" Matches Excel's <code>=PERCENTILE.EXC(B2:B13,0.85)</code> = $305,912.50.":"")+(on("pcQ")?` IQR = ${money(pctExc(b,.75))} − ${money(pctExc(b,.25))} = <b>${money(pctExc(b,.75)-pctExc(b,.25))}</b>.`:"")}
+  $("pcSl").oninput=draw;tg("pcQ",draw);draw();
+})();
+
+/* 21 · z & empirical rule */
+(function(){
+  const mu=69.5,sd=3;let k=2;
+  function draw(){const h=+$("erH").value,z=(h-mu)/sd,W=660,H=300,L=30,R=640,Tp=14,B=250,s=svgIn($("erChart"),W,H),x=lin(57.5,81.5,L,R),pdf=t=>Math.exp(-(((t-mu)/sd)**2)/2),y=lin(0,1.1,B,Tp);
+    const pts=[];for(let t=57.5;t<=81.5;t+=.1)pts.push([t,pdf(t)]);
+    const sh=pts.filter(([t])=>t>=mu-k*sd&&t<=mu+k*sd);mk("path",{d:`M${x(sh[0][0])},${B} `+sh.map(([t,v])=>`L${x(t)},${y(v)}`).join(" ")+` L${x(sh[sh.length-1][0])},${B}Z`,fill:C.t,"fill-opacity":.25},s);
+    mk("path",{d:"M"+pts.map(([t,v])=>x(t)+","+y(v)).join(" L"),fill:"none",stroke:C.t,"stroke-width":2.6},s);mk("line",{x1:L,x2:R,y1:B,y2:B,stroke:"#94a3b8"},s);
+    for(let j=-3;j<=3;j++){const t=mu+j*sd;mk("line",{x1:x(t),x2:x(t),y1:B,y2:B+5,stroke:"#475569"},s);T(s,x(t),B+18,t.toFixed(1),{"text-anchor":"middle","font-size":11.5});T(s,x(t),B+33,j===0?"x̄":(j>0?"+":"−")+Math.abs(j)+"s",{"text-anchor":"middle","font-size":11,fill:"#0e7490","font-weight":700})}
+    T(s,x(mu),y(.45),{1:"≈ 68%",2:"≈ 95%",3:"≈ 99.7%"}[k],{"text-anchor":"middle","font-size":22,"font-weight":800,fill:"#0e7490"});
+    mk("line",{x1:x(h),x2:x(h),y1:Tp,y2:B,stroke:C.o,"stroke-width":2.5},s);mk("circle",{cx:x(h),cy:y(pdf(h)),r:6,fill:C.o,stroke:"#fff","stroke-width":2},s);
+    T(s,Math.min(R-50,Math.max(L+50,x(h))),Tp+6,`${h}" → z = ${z>=0?"+":""}${z.toFixed(2)}`,{"text-anchor":"middle",fill:C.o,"font-weight":800,"font-size":13.5});
+    $("erHL").textContent=h+'"';const lo=mu-k*sd,hi=mu+k*sd;
+    $("erOut").innerHTML=`About <b>${{1:68,2:95,3:"almost 100"}[k]}%</b> of men are between <b>${lo.toFixed(1)}</b> and <b>${hi.toFixed(1)}</b> inches. A ${h}" man has z = <b>${z.toFixed(2)}</b>: he is ${Math.abs(z).toFixed(2)} SDs ${z>=0?"above":"below"} the mean, taller than about <b>${(ncdf(z)*100).toFixed(0)}%</b> of men.`+(Math.abs(z)>3?" |z| > 3, so this is a <b>possible outlier</b>.":"")}
+  seg("erK",d=>{k=+d.k;draw()});$("erH").oninput=draw;draw();
+})();
+
+/* 22 · boxplots */
+(function(){
+  let view="one";
+  function box(s,x,yc,h,q1,md,q3,lo,hi,outs,col,lab){mk("line",{x1:x(lo),x2:x(q1),y1:yc,y2:yc,stroke:"#334155","stroke-width":2},s);mk("line",{x1:x(q3),x2:x(hi),y1:yc,y2:yc,stroke:"#334155","stroke-width":2},s);
+    [lo,hi].forEach(v=>mk("line",{x1:x(v),x2:x(v),y1:yc-h/4,y2:yc+h/4,stroke:"#334155","stroke-width":2},s));
+    const r=mk("rect",{x:x(q1),y:yc-h/2,width:x(q3)-x(q1),height:h,rx:5,fill:mix(col,.15),stroke:col,"stroke-width":2},s);mk("line",{x1:x(md),x2:x(md),y1:yc-h/2,y2:yc+h/2,stroke:col,"stroke-width":3.5},s);
+    outs.forEach(v=>{const c=mk("circle",{cx:x(v),cy:yc,r:7,fill:C.o,stroke:"#fff","stroke-width":2},s);hov(c,()=>`<b>Outlier</b><br>${money(v)}`)});
+    if(lab)T(s,x.L-10,yc+4,lab,{"text-anchor":"end","font-weight":700,fill:"#334155","font-size":13});hov(r,()=>`<b>${lab||"Home sales"}</b><br>Q1 ${money(q1)}<br>Median ${money(md)}<br>Q3 ${money(q3)}`)}
+  function draw(){const W=660,H=340,s=svgIn($("bxChart"),W,H);
+    if(view==="one"){const L=30,R=640,x=lin(0,500000,L,R);x.L=L;const q1=pctExc(HOMES,.25),md=median(HOMES),q3=pctExc(HOMES,.75),iqr=q3-q1,lf=q1-1.5*iqr,uf=q3+1.5*iqr,ins=HOMES.filter(v=>v>=lf&&v<=uf),outs=HOMES.filter(v=>v<lf||v>uf);
+      [0,100000,200000,300000,400000,500000].forEach(v=>{mk("line",{x1:x(v),x2:x(v),y1:20,y2:280,stroke:C.grid},s);T(s,x(v),300,"$"+v/1000+"k",{"text-anchor":"middle"})});
+      [[lf,"lower fence"],[uf,"upper fence"]].forEach(([v,l])=>{if(v>0){mk("line",{x1:x(v),x2:x(v),y1:40,y2:270,stroke:C.dn,"stroke-dasharray":"5 4","stroke-width":1.8},s);T(s,x(v),34,l+" "+money(v),{"text-anchor":"middle",fill:C.dn,"font-weight":700,"font-size":11.5})}});
+      box(s,x,170,70,q1,md,q3,Math.min(...ins),Math.max(...ins),outs,"#db2777");
+      HOMES.forEach(v=>mk("circle",{cx:x(v),cy:240,r:4,fill:"#64748b","fill-opacity":.7},s));T(s,L,256,"raw data",{"font-size":11});
+      const z=(456250-mean(HOMES))/Math.sqrt(varS(HOMES));
+      $("bxOut").innerHTML=`Q1 = ${money(q1)}, median = ${money(md)}, Q3 = ${money(q3)}, IQR = ${money(iqr)}. Upper fence = Q3 + 1.5 × IQR = <b>${money(uf)}</b>, so <b>$456,250 is an outlier</b>. Its z-score is only ${z.toFixed(2)}, below 3: the two rules can disagree for small, skewed data.`}
+    else{const L=100,R=640,x=lin(80000,450000,L,R);x.L=L;[100000,200000,300000,400000].forEach(v=>{mk("line",{x1:x(v),x2:x(v),y1:10,y2:300,stroke:C.grid},s);T(s,x(v),320,"$"+v/1000+"k",{"text-anchor":"middle"})});
+      const CM=[["Fairview",185000,200000,235000,170000,300000,[]],["Shadyside",310000,330000,360000,290000,410000,[]],["Groton",150000,160000,170000,120000,180000,[190000]],["Irving",130000,160000,250000,110000,430000,[]],["Hamilton",100000,105000,108000,90000,110000,[]]];
+      CM.forEach(([n,q1,md,q3,lo,hi,o],i)=>box(s,x,34+i*58,34,q1,md,q3,lo,hi,o,CAT[i],n));
+      $("bxOut").innerHTML="<b>Shadyside</b> is most expensive and <b>Hamilton</b> cheapest. Groton and Irving have similar medians, but <b>Irving varies far more</b>. Groton's prices are so tight that $190k counts as an outlier."}}
+  seg("bxView",d=>{view=d.v;draw()});draw();
+  $("bxChart").insertAdjacentHTML("afterend",'<p class="note" id="bxNote">Community boxplots are approximate readings of the textbook figure.</p>');
+})();
+
+/* 23 · covariance */
+(function(){
+  const X=WATER.map(p=>p[0]),Y=WATER.map(p=>p[1]),mx=mean(X),my=mean(Y),n=X.length,sxy=X.reduce((s,x,i)=>s+(x-mx)*(Y[i]-my),0)/(n-1),r=corr(X,Y);
+  function draw(){const W=660,H=380,L=56,R=640,Tp=14,B=326,s=svgIn($("cvChart"),W,H),x=lin(76,94,L,R),y=lin(18,34,B,Tp);
+    if(on("cvQ")){[[mx,94,my,34,"I  (+)(+) = +",C.up],[76,mx,y.inv(Tp),my,"II  (−)(+) = −",C.dn],[76,mx,my,18,"III  (−)(−) = +",C.up],[mx,94,my,18,"IV  (+)(−) = −",C.dn]].forEach(([a,b,c,d,l,col])=>{mk("rect",{x:x(a),y:y(Math.max(c,d)),width:x(b)-x(a),height:Math.abs(y(c)-y(d)),fill:col,"fill-opacity":.07},s);T(s,(x(a)+x(b))/2,y(Math.max(c,d))+18,l,{"text-anchor":"middle",fill:col,"font-weight":800,"font-size":12})});
+      mk("line",{x1:x(mx),x2:x(mx),y1:Tp,y2:B,stroke:"#475569","stroke-dasharray":"5 4"},s);mk("line",{x1:L,x2:R,y1:y(my),y2:y(my),stroke:"#475569","stroke-dasharray":"5 4"},s);
+      T(s,x(mx)+4,B-6,"x̄ = "+mx.toFixed(1),{fill:"#334155","font-weight":700});T(s,R-4,y(my)-6,"ȳ = "+my.toFixed(1),{"text-anchor":"end",fill:"#334155","font-weight":700})}
+    yAxis(s,y,[18,22,26,30,34],L,R,{grid:false,title:"Sales (cases)"});xAxis(s,x,[76,80,84,88,92],B,Tp,{title:"High temperature (°F)"});mk("line",{x1:L,x2:R,y1:B,y2:B,stroke:"#94a3b8"},s);
+    WATER.forEach(([a,b])=>{const pr=(a-mx)*(b-my),c=mk("circle",{cx:x(a),cy:y(b),r:8,fill:on("cvP")?(pr>=0?C.up:C.dn):C.p,stroke:"#fff","stroke-width":2},s);hov(c,()=>`<b>${a}°F</b>, ${b} cases<br>(x − x̄)(y − ȳ) = ${pr.toFixed(1)}`)});
+    $("cvOut").innerHTML=`Most points fall in quadrants <b>I and III</b>, so the products are mostly positive. s<sub>xy</sub> = <b>${sxy.toFixed(2)}</b>: a <b>positive</b> relationship. Hotter days sell more water. But covariance depends on units (°F × cases), so use <b>r = ${r.toFixed(2)}</b> to judge strength.`}
+  tg("cvQ",draw);tg("cvP",draw);draw();
+})();
+
+/* 24 · correlation */
+(function(){
+  const Z1=normals(70,11),Z2=normals(70,23);let mode="sl";
+  function draw(){const W=660,H=380,L=40,R=640,Tp=14,B=340,s=svgIn($("crChart"),W,H);let X,Y;const rv=+$("crSl").value/100;
+    if(mode==="sl"){X=Z1;const a=Z1,bz=Z2,ma=mean(a),mb=mean(bz);const r0=corr(a,bz);// orthogonalise bz against a
+      const k=r0*Math.sqrt(varS(bz)/varS(a)),e=bz.map((v,i)=>v-mb-k*(a[i]-ma)),se=Math.sqrt(varS(e)),sa=Math.sqrt(varS(a));Y=a.map((v,i)=>rv*(v-ma)/sa+Math.sqrt(Math.max(0,1-rv*rv))*e[i]/se)}
+    else{X=Z1.map(v=>v*1.1);Y=X.map((v,i)=>v*v*.9+Z2[i]*.35-1)}
+    const r=corr(X,Y),mnx=Math.min(...X),mxx=Math.max(...X),mny=Math.min(...Y),mxy=Math.max(...Y),x=lin(mnx-.2,mxx+.2,L,R),y=lin(mny-.2,mxy+.2,B,Tp);
+    mk("rect",{x:L,y:Tp,width:R-L,height:B-Tp,fill:"none",stroke:"#e2e8f0"},s);
+    X.forEach((v,i)=>mk("circle",{cx:x(v),cy:y(Y[i]),r:5.5,fill:"#4f46e5","fill-opacity":.65,stroke:"#fff","stroke-width":1.2},s));
+    T(s,L+10,Tp+24,"r = "+r.toFixed(2),{"font-size":20,"font-weight":800,fill:"#0f172a"});
+    $("crLab").textContent=mode==="sl"?"r = "+rv.toFixed(2):"";$("crSl").disabled=mode!=="sl";
+    const ar=Math.abs(r),st=ar>.7?"strong":ar>.4?"moderate":ar>.2?"weak":"no clear";
+    $("crOut").innerHTML=mode==="u"?`A clear <b>U-shaped</b> pattern, yet r = ${r.toFixed(2)}! Correlation measures only <b>linear</b> association. The textbook example: a monthly utility bill is high in cold <i>and</i> hot months, with r ≈ 0.01.`:`<b>${st[0].toUpperCase()+st.slice(1)} ${ar>.2?(r>0?"positive":"negative"):""}</b> linear relationship. ${r>0?"As x rises, y tends to rise.":r<0?"As x rises, y tends to fall.":""}`}
+  $("crSl").oninput=draw;seg("crMode",d=>{mode=d.m;draw()});draw();
+})();
+const QUIZ={
+  qa:[
+    {q:"Customer ID numbers such as 10234 and 10235 are…",o:["quantitative data","categorical data","time-series data","a random variable"],a:1,w:"They are labels. Adding or averaging ID numbers means nothing, so they are categorical even though they look like numbers."},
+    {q:"Why does a histogram have <b>no gaps</b> between its columns?",o:["To save space","Because the variable is continuous (quantitative)","Because Excel requires it","Because the data are categorical"],a:1,w:"The bins touch because the values run continuously from one bin into the next. Bar charts of categories do have gaps."},
+    {q:"The cumulative table shows 49.6% for “age ≤ 77”. This means…",o:["49.6% of people died at exactly 77","About half the people died at 77 or younger","77 is the mean age","49.6 people died before 77"],a:1,w:"Cumulative percent = share of values less than or equal to the upper limit. So the median age is close to 77."}
+  ],
+  exitA:[
+    {q:"Monthly sales of one store over the last 3 years are…",o:["cross-sectional data","time-series data","categorical data","experimental data"],a:1,w:"One entity measured over many time periods = time series."},
+    {q:"500 students are surveyed out of all 30,000 UUM students. The 500 are a…",o:["population","sample","variable","census"],a:1,w:"A sample is a subset of the population of interest."},
+    {q:"Which Excel function counts how many values fall into each bin?",o:["COUNTA","FREQUENCY","SUMIF","MODE.MULT"],a:1,w:"<code>=FREQUENCY(data, bin_upper_limits)</code> returns the count for every bin at once."},
+    {q:"A histogram with a long tail on the <b>right</b> is…",o:["skewed left, mean < median","symmetric","skewed right, mean > median","bimodal"],a:2,w:"The tail names the skew. Extreme high values pull the mean above the median (e.g., house prices)."},
+    {q:"19 of 50 purchases were Coca-Cola. The <b>relative frequency</b> is…",o:["19","0.38","38","0.19"],a:1,w:"Relative frequency = 19 ÷ 50 = 0.38 (or 38% as a percent frequency)."}
+  ],
+  qb:[
+    {q:"The most expensive home rises from $456,250 to $2 million. Which measure barely moves?",o:["Mean","Median","Range","Standard deviation"],a:1,w:"The median depends only on the middle values, so it is resistant to outliers. The mean, range and SD all jump."},
+    {q:"Fund A and Fund B have the same mean payout, but Fund B has a much larger standard deviation. So…",o:["Fund B always pays more","Fund B is more variable (riskier)","Fund A is riskier","They have the same risk"],a:1,w:"Standard deviation measures spread around the mean. Larger SD = more variability = more risk."},
+    {q:"Q1 = $139,000 and Q3 = $256,625. The IQR is…",o:["$117,625","$395,625","$197,812.50","$256,625"],a:0,w:"IQR = Q3 − Q1 = 256,625 − 139,000 = $117,625. It is the spread of the middle 50%."}
+  ],
+  exitB:[
+    {q:"To find the average <b>annual growth rate</b> of an investment from yearly returns, use the…",o:["arithmetic mean","median","geometric mean","mode"],a:2,w:"Growth compounds, so use the geometric mean of the growth factors: <code>=GEOMEAN()</code>."},
+    {q:"A value has a z-score of −2. It is…",o:["2 units below the mean","2 standard deviations below the mean","in the bottom 2%","an outlier for sure"],a:1,w:"z = (x − x̄)/s counts standard deviations. −2 means 2 SDs below the mean."},
+    {q:"Heights are bell-shaped with mean 69.5 in and SD 3 in. About 95% of men are between…",o:["66.5 and 72.5","63.5 and 75.5","60.5 and 78.5","69.5 and 75.5"],a:1,w:"95% lie within ±2 SD: 69.5 ± 6 = 63.5 to 75.5."},
+    {q:"On a boxplot, a point beyond Q3 + 1.5 × IQR is…",o:["the median","a whisker","an outlier","Q4"],a:2,w:"Values beyond the fences (Q1 − 1.5·IQR, Q3 + 1.5·IQR) are flagged as outliers."},
+    {q:"r = −0.9 between price and units sold means…",o:["a weak relationship","a strong negative linear relationship","price causes sales to fall","no relationship"],a:1,w:"r near −1 = strong negative linear association. It doesn't prove causation."},
+    {q:"Utility bills vs temperature give r ≈ 0.01, but the scatter is clearly U-shaped. Conclusion?",o:["Temperature has no effect on bills","There is no linear relationship, but there is a strong curved one","The data are wrong","r should be 1"],a:1,w:"Correlation only measures linear association. Always look at the scatter chart!"}
+  ]
+};
+function buildQuiz(el){
+  const qs=QUIZ[el.dataset.quiz];let i=0,score=0;const res=[];
+  function render(){
+    if(i>=qs.length){const pct=Math.round(score/qs.length*100);
+      el.innerHTML=`<div class="qcard qdone"><div class="big">${score} / ${qs.length}</div><p class="lead">${pct===100?"Perfect. You have the chart sense!":pct>=60?"Good work. Review the ones you missed.":"Worth another look: revisit the slides, then try again."}</p><div class="qnav" style="justify-content:center"><button class="btn ghost" type="button">Try again</button></div></div>`;
+      el.querySelector("button").onclick=()=>{i=0;score=0;res.length=0;render()};return}
+    const q=qs[i];const L="ABCD";
+    el.innerHTML=`<div class="qhead"><div class="qdots">${qs.map((_,k)=>`<i class="${res[k]===true?"ok":res[k]===false?"no":k===i?"cur":""}"></i>`).join("")}</div><div class="qscore">Question ${i+1} of ${qs.length} · Score ${score}</div></div>
+      <div class="qcard"><div class="qq">${q.q}</div><div class="qopts">${q.o.map((o,k)=>`<button class="qopt" type="button" data-k="${k}"><span class="L">${L[k]}</span><span>${o}</span></button>`).join("")}</div>
+      <div class="qwhy"></div><div class="qnav"><button class="btn" type="button" disabled>${i===qs.length-1?"See score":"Next question"} →</button></div></div>`;
+    const why=el.querySelector(".qwhy"),nx=el.querySelector(".qnav .btn");
+    el.querySelectorAll(".qopt").forEach(b=>b.onclick=()=>{const k=+b.dataset.k,ok=k===q.a;if(ok)score++;res[i]=ok;
+      el.querySelectorAll(".qopt").forEach(x=>{x.disabled=true;if(+x.dataset.k===q.a)x.classList.add("right")});if(!ok)b.classList.add("wrong");
+      why.innerHTML=(ok?"✅ <b>Correct.</b> ":"❌ <b>Not quite.</b> ")+q.w;why.classList.add("show");
+      el.querySelector(".qscore").textContent=`Question ${i+1} of ${qs.length} · Score ${score}`;el.querySelectorAll(".qdots i")[i].className=ok?"ok":"no";nx.disabled=false;nx.focus()});
+    nx.onclick=()=>{i++;render()};
+  }
+  render();
+}
+
+/* ======================= DECK ======================= */
+const slides=[...document.querySelectorAll(".slide")];
+const deck=$("deck");
+slides.forEach(s=>s.querySelectorAll(".quiz").forEach(buildQuiz));
+document.querySelectorAll("[data-go]").forEach(b=>b.addEventListener("click",()=>go(+b.dataset.go-1)));
+const menuList=$("menuList");
+const accOf=s=>getComputedStyle(s).getPropertyValue("--acc").trim()||"#2563eb";
+const PARTB=slides.findIndex(s=>s.classList.contains("partb"));
+slides.forEach((s,i)=>{
+  if(i===0){const h=document.createElement("h4");h.textContent=MENU_A;menuList.appendChild(h)}
+  if(i===PARTB){const h=document.createElement("h4");h.textContent=MENU_B;h.style.marginTop="14px";menuList.appendChild(h)}
+  if(!s.classList.contains("title-slide")){const f=document.createElement("div");f.className="foot";f.innerHTML=`<span>BPMNK2033 · ${i<PARTB?FOOT_A:FOOT_B}</span><span>${i+1}</span>`;s.appendChild(f)}
+  const a=document.createElement("a");a.href="#"+(i+1);a.innerHTML=`<span class="n" style="background:${accOf(s)}">${i+1}</span>${esc(s.dataset.title||"Slide "+(i+1))}`;
+  a.onclick=e=>{e.preventDefault();go(i);toggleMenu(false)};menuList.appendChild(a)});
+let cur=-1;
+function go(n){
+  n=Math.max(0,Math.min(slides.length-1,n));if(n===cur)return;
+  if(document.body.classList.contains("mobile")){cur=n;slides[n].scrollIntoView({behavior:"smooth"});return}
+  slides.forEach((s,i)=>{s.classList.toggle("active",i===n);s.classList.toggle("prev",i<n)});
+  cur=n;$("count").textContent=`${n+1} / ${slides.length}`;
+  $("progress").style.width=((n+1)/slides.length*100)+"%";
+  menuList.querySelectorAll("a").forEach((a,i)=>a.classList.toggle("cur",i===n));
+  if(location.hash!=="#"+(n+1))history.replaceState(null,"","#"+(n+1));
+  hideTip();
+  if(!timerStarted&&n>0&&n!==PARTB)startTimer();
+}
+function fit(){
+  const mobile=window.innerWidth<760;document.body.classList.toggle("mobile",mobile);
+  if(mobile){deck.style.transform="";return}
+  const sc=Math.min(window.innerWidth/1320,(window.innerHeight-70)/736);deck.style.transform=`scale(${sc})`;
+}
+window.addEventListener("resize",fit);
+document.addEventListener("keydown",e=>{
+  if(e.target.matches("input,select,textarea"))return;
+  if(document.body.classList.contains("mobile"))return;
+  const k=e.key;
+  if(["ArrowRight","PageDown"," "].includes(k)){e.preventDefault();go(cur+1)}
+  else if(["ArrowLeft","PageUp"].includes(k)){e.preventDefault();go(cur-1)}
+  else if(k==="Home")go(0);else if(k==="End")go(slides.length-1);
+  else if(k==="m"||k==="M")toggleMenu();else if(k==="f"||k==="F")toggleFs();else if(k==="t"||k==="T")toggleTimer();
+  else if(k==="Escape")toggleMenu(false);
+});
+$("prevBtn").onclick=()=>go(cur-1);
+$("nextBtn").onclick=()=>go(cur+1);
+$("menuBtn").onclick=()=>toggleMenu();
+$("scrim").onclick=()=>toggleMenu(false);
+$("fsBtn").onclick=toggleFs;
+function toggleMenu(v){const m=$("menu");const o=v===undefined?!m.classList.contains("open"):v;m.classList.toggle("open",o);$("scrim").classList.toggle("show",o)}
+function toggleFs(){if(!document.fullscreenElement)document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen().catch(()=>{});else document.exitFullscreen()}
+let tx=null;document.addEventListener("touchstart",e=>{if(e.target.closest(".panel,.quiz,select,.chart,.choose,.tdes,.dash,.heatwrap"))return;tx=e.touches[0].clientX},{passive:true});
+document.addEventListener("touchend",e=>{if(tx===null||document.body.classList.contains("mobile"))return;const dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>60)go(cur+(dx<0?1:-1));tx=null});
+const LIMIT=70*60;let tStart=0,tAcc=0,tRun=false,timerStarted=false;const tEl=$("timer");
+function startTimer(){timerStarted=true;if(!tRun){tRun=true;tStart=Date.now()}}
+function toggleTimer(){timerStarted=true;if(tRun){tAcc+=Date.now()-tStart;tRun=false}else{tRun=true;tStart=Date.now()}paint()}
+function paint(){const s=Math.floor((tAcc+(tRun?Date.now()-tStart:0))/1000);const mm=String(Math.floor(s/60)).padStart(2,"0"),ss=String(s%60).padStart(2,"0");
+  tEl.textContent=(tRun?"⏸ ":"▶ ")+mm+":"+ss;tEl.classList.toggle("over",s>LIMIT)}
+setInterval(paint,1000);
+tEl.onclick=toggleTimer;tEl.ondblclick=()=>{tAcc=0;tRun=false;timerStarted=false;paint()};
+fit();
+const h0=parseInt(location.hash.slice(1),10);go(isNaN(h0)?0:h0-1);
+window.addEventListener("hashchange",()=>{const n=parseInt(location.hash.slice(1),10);if(!isNaN(n))go(n-1)});
+
+</script>
+</body>
+</html>

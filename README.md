@@ -9,6 +9,8 @@ bida/
 │   └── index.html        ← Chapter 2: Basic Excel Formulas & Functions
 ├── chapter3/
 │   └── index.html        ← Chapter 3: Data Visualisation & Exploration (2 lectures)
+├── chapter4/
+│   └── index.html        ← Chapter 4: Descriptive Statistics (2 lectures)
 ├── chapter4-5/
 │   └── index.html        ← redirect to chapter3/ (old link)
 └── README.md
@@ -55,3 +57,7 @@ Near the top of the `<script>` block in `chapter2/index.html`, find `const DATA 
 ## Chapter 3 (two lectures in one module)
 
 `chapter3/index.html` has 32 slides. **Part A (lecture 1)** is slides 1–18 and **Part B (lecture 2)** is slides 19–32. For the second lecture, open `…/chapter3/#19`. The timer starts from 00:00 when you move past slide 19; double-click it to reset at any time. The old `chapter4-5/` link redirects here.
+
+## Chapter 4 (two lectures in one module)
+
+`chapter4/index.html` has 26 slides. **Part A (lecture 1)** is slides 1–13 and **Part B (lecture 2)** is slides 14–26. For the second lecture, open `…/chapter4/#14`.

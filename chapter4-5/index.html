@@ -1,0 +1,1723 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapters 4 &amp; 5 · Data Visualization | BPMNK2033</title>
+<meta name="description" content="BPMNK2033 Business Intelligence & Data Analytics — Chapters 4 & 5: Data Visualization and Exploration. Interactive slides with live charts, PivotTable builder and quizzes.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#e9eef6; --paper:#ffffff; --ink:#0f172a; --muted:#475569; --soft:#64748b; --line:#e2e8f0; --line2:#cbd5e1;
+  --blue:#2563eb; --teal:#0d9488; --violet:#7c3aed; --amber:#d97706; --orange:#ea580c; --green:#16a34a;
+  --rose:#e11d48; --pink:#db2777; --cyan:#0891b2; --indigo:#4f46e5; --xl:#107c41;
+  --acc:var(--blue);
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --sans:'Plus Jakarta Sans',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+body{overflow:hidden;background:radial-gradient(1200px 600px at 10% 0%,#dbeafe 0,transparent 60%),radial-gradient(900px 600px at 100% 100%,#fce7f3 0,transparent 55%),var(--bg)}
+button{font-family:inherit}
+/* ---------- stage ---------- */
+#viewport{position:fixed;inset:0 0 58px 0;display:flex;align-items:center;justify-content:center}
+#deck{width:1280px;height:720px;position:relative;transform-origin:center center;flex:none}
+.slide{position:absolute;inset:0;background:var(--paper);border-radius:22px;box-shadow:0 30px 80px -30px rgba(15,23,42,.35),0 2px 6px rgba(15,23,42,.06);
+  padding:44px 56px 64px;overflow:hidden;opacity:0;visibility:hidden;transform:translateX(40px) scale(.985);transition:opacity .45s ease,transform .45s cubic-bezier(.2,.7,.2,1),visibility 0s .45s}
+.slide.active{opacity:1;visibility:visible;transform:none;transition:opacity .45s ease,transform .45s cubic-bezier(.2,.7,.2,1)}
+.slide.prev{transform:translateX(-40px) scale(.985)}
+.slide::before{content:"";position:absolute;left:0;top:0;right:0;height:6px;background:linear-gradient(90deg,var(--acc),color-mix(in srgb,var(--acc) 40%,#fff))}
+.slide::after{content:"";position:absolute;right:-120px;top:-120px;width:340px;height:340px;border-radius:50%;background:color-mix(in srgb,var(--acc) 9%,transparent);pointer-events:none}
+[data-acc=blue]{--acc:var(--blue)}[data-acc=teal]{--acc:var(--teal)}[data-acc=violet]{--acc:var(--violet)}[data-acc=amber]{--acc:var(--amber)}
+[data-acc=orange]{--acc:var(--orange)}[data-acc=green]{--acc:var(--green)}[data-acc=rose]{--acc:var(--rose)}[data-acc=pink]{--acc:var(--pink)}
+[data-acc=cyan]{--acc:var(--cyan)}[data-acc=indigo]{--acc:var(--indigo)}[data-acc=xl]{--acc:var(--xl)}
+.kicker{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--acc);margin-bottom:6px}
+.kicker::before{content:"";width:18px;height:3px;border-radius:2px;background:var(--acc)}
+h1,h2,h3{margin:0;letter-spacing:-.02em}
+h2{font-size:38px;font-weight:800;line-height:1.1;margin-bottom:18px}
+h2 .fn{font-family:var(--mono);color:var(--acc);font-weight:700}
+h3{font-size:18px;font-weight:700;margin-bottom:8px}
+p{margin:0 0 12px;line-height:1.55;font-size:17px;color:var(--muted)}
+.lead{font-size:19px;color:#334155}
+code,.code{font-family:var(--mono);font-size:.92em}
+/* show >=, <=, <> exactly as typed (JetBrains Mono would draw them as ≥ ≤ ≠) */
+*,*::before,*::after{font-variant-ligatures:none;font-feature-settings:"liga" 0,"calt" 0}
+.cols{display:grid;grid-template-columns:1fr 1.25fr;gap:32px;align-items:start}
+.cols.even{grid-template-columns:1fr 1fr}
+.cols.wide-r{grid-template-columns:.86fr 1.5fr}
+.syntax{font-family:var(--mono);font-size:17px;background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:12px;margin:4px 0 14px;line-height:1.5;overflow-x:auto}
+.syntax .f{color:#7dd3fc;font-weight:700}.syntax .a{color:#fcd34d}.syntax .o{color:#94a3b8}.syntax .s{color:#86efac}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px;box-shadow:0 1px 2px rgba(15,23,42,.04)}
+.tint{background:color-mix(in srgb,var(--acc) 7%,#fff);border-color:color-mix(in srgb,var(--acc) 25%,#fff)}
+.callout{border-left:4px solid var(--acc);background:color-mix(in srgb,var(--acc) 7%,#fff);padding:10px 14px;border-radius:0 12px 12px 0;font-size:15px;color:#334155;line-height:1.5;margin:10px 0}
+.callout b{color:var(--ink)}
+.callout.warn{--acc:var(--rose)}
+ul.tidy{margin:0;padding:0;list-style:none}
+ul.tidy li{position:relative;padding:6px 0 6px 26px;font-size:16.5px;line-height:1.45;color:#334155}
+ul.tidy li::before{content:"";position:absolute;left:4px;top:13px;width:10px;height:10px;border-radius:3px;background:var(--acc);transform:rotate(45deg)}
+.pill{display:inline-block;font-family:var(--mono);font-size:13px;font-weight:600;padding:3px 9px;border-radius:999px;background:color-mix(in srgb,var(--acc) 12%,#fff);color:color-mix(in srgb,var(--acc) 80%,#000);border:1px solid color-mix(in srgb,var(--acc) 30%,#fff)}
+.foot{position:absolute;left:56px;right:56px;bottom:18px;display:flex;justify-content:space-between;font-size:12px;color:var(--soft);pointer-events:none}
+table.mini{border-collapse:collapse;width:100%;font-size:15px}
+table.mini th,table.mini td{padding:7px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+table.mini th{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--soft);font-weight:700}
+table.mini td code{color:var(--acc);font-weight:600}
+/* ---------- chrome ---------- */
+#progress{position:fixed;left:0;top:0;height:4px;background:linear-gradient(90deg,var(--blue),var(--violet),var(--pink),var(--orange));width:0;transition:width .4s ease;z-index:30}
+#hud{position:fixed;right:16px;bottom:14px;display:flex;gap:8px;align-items:center;z-index:30}
+#hud button,#hud .count{height:38px;min-width:38px;border-radius:12px;border:1px solid var(--line2);background:rgba(255,255,255,.92);backdrop-filter:blur(6px);color:var(--ink);font-size:15px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:0 10px;box-shadow:0 4px 14px -6px rgba(15,23,42,.25)}
+#hud button:hover{border-color:var(--blue);color:var(--blue)}
+#hud .count{cursor:default;font-variant-numeric:tabular-nums;font-size:13px}
+#timer{font-variant-numeric:tabular-nums;font-size:13px!important}
+#timer.over{color:var(--rose)!important;border-color:var(--rose)!important}
+#menu{position:fixed;left:0;top:0;bottom:0;width:340px;background:#fff;box-shadow:20px 0 60px -20px rgba(15,23,42,.35);z-index:40;transform:translateX(-105%);transition:transform .3s ease;overflow-y:auto;padding:20px 14px}
+#menu.open{transform:none}
+#menu h4{margin:4px 10px 12px;font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--soft)}
+#menu a{display:flex;gap:10px;align-items:center;padding:8px 10px;border-radius:10px;color:var(--ink);text-decoration:none;font-size:14.5px;font-weight:500}
+#menu a:hover{background:#f1f5f9}
+#menu a.cur{background:#eff6ff;color:var(--blue);font-weight:700}
+#menu a .n{width:26px;height:26px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex:none}
+#scrim{position:fixed;inset:0;background:rgba(15,23,42,.25);z-index:35;display:none}
+#scrim.show{display:block}
+#help{position:fixed;left:16px;bottom:14px;font-size:12px;color:var(--soft);z-index:30;background:rgba(255,255,255,.8);padding:6px 10px;border-radius:10px;border:1px solid var(--line)}
+kbd{font-family:var(--mono);font-size:11px;border:1px solid var(--line2);border-bottom-width:2px;border-radius:5px;padding:0 5px;background:#fff;color:var(--ink)}
+/* ---------- title ---------- */
+.title-slide{background:linear-gradient(135deg,#0b3d2e 0%,#107c41 45%,#16a34a 100%)!important;color:#fff}
+.title-slide::before{display:none}
+.title-slide::after{background:rgba(255,255,255,.07);width:520px;height:520px;right:-160px;top:-160px}
+.title-slide .kicker{color:#bbf7d0}.title-slide .kicker::before{background:#bbf7d0}
+.title-slide h1{font-size:64px;line-height:1.02;font-weight:800;margin:14px 0 18px;max-width:700px}
+.title-slide h1 span{color:#bbf7d0}
+.title-slide p{color:#dcfce7;font-size:20px;max-width:600px}
+.title-meta{position:absolute;left:56px;bottom:56px;display:flex;gap:28px;font-size:14px;color:#dcfce7}
+.title-meta b{display:block;color:#fff;font-size:16px}
+.floaters{position:absolute;right:40px;top:120px;width:400px;height:480px}
+.floater{position:absolute;font-family:var(--mono);font-size:17px;font-weight:600;background:rgba(255,255,255,.96);color:#0f172a;padding:10px 14px;border-radius:12px;box-shadow:0 18px 40px -16px rgba(0,0,0,.45);animation:bob 6s ease-in-out infinite;white-space:nowrap}
+.floater i{font-style:normal;color:var(--xl)}
+.floater.b{animation-delay:-1.5s}.floater.c{animation-delay:-3s}.floater.d{animation-delay:-4.5s}.floater.e{animation-delay:-2.2s}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+/* ---------- agenda ---------- */
+.agenda{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;margin-top:22px}
+.ag{border-radius:16px;padding:16px 14px;color:#fff;min-height:250px;display:flex;flex-direction:column;position:relative;overflow:hidden;transition:transform .2s}
+.ag:hover{transform:translateY(-4px)}
+.ag .t{font-family:var(--mono);font-size:13px;opacity:.9}
+.ag .h{font-size:18px;font-weight:800;margin:8px 0 6px;line-height:1.2}
+.ag .d{font-size:13.5px;opacity:.95;line-height:1.45}
+.ag .m{margin-top:auto;font-size:30px;font-weight:800;opacity:.9}
+.ag .m small{font-size:13px;font-weight:600}
+.bar70{display:flex;height:14px;border-radius:8px;overflow:hidden;margin-top:18px}
+/* ---------- outcomes ---------- */
+.oc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:8px}
+.oc{border-radius:16px;padding:18px;border:1px solid var(--line);background:#fff;position:relative}
+.oc .num{width:34px;height:34px;border-radius:10px;color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;margin-bottom:10px}
+.oc h3{font-size:17px}
+.oc p{font-size:14.5px;margin:0}
+.oc .fns{margin-top:10px;display:flex;flex-wrap:wrap;gap:6px}
+/* ---------- anatomy ---------- */
+.anat{font-family:var(--mono);font-size:44px;font-weight:700;display:flex;flex-wrap:wrap;gap:2px;padding:26px 24px;background:#0f172a;border-radius:18px;color:#e2e8f0;margin:6px 0 16px}
+.anat span{padding:4px 6px;border-radius:8px;cursor:pointer;transition:background .15s,transform .15s;position:relative}
+.anat span:hover,.anat span.on{background:rgba(255,255,255,.12);transform:translateY(-2px)}
+.anat .p-eq{color:#fda4af}.anat .p-fn{color:#7dd3fc}.anat .p-br{color:#cbd5e1}.anat .p-rg{color:#fcd34d}.anat .p-cm{color:#94a3b8}.anat .p-tx{color:#86efac}.anat .p-lt{color:#c4b5fd}
+.anat.small{font-size:30px;padding:20px}
+.anat-explain{min-height:90px;display:flex;gap:14px;align-items:flex-start}
+.anat-explain .big{font-family:var(--mono);font-size:22px;font-weight:700;color:var(--acc);min-width:120px}
+/* ---------- sheet widget ---------- */
+.sheet-w{border:1px solid var(--line2);border-radius:14px;overflow:hidden;background:#fff;box-shadow:0 10px 30px -18px rgba(15,23,42,.35)}
+.sheet-w .fbar{display:flex;align-items:center;gap:0;border-bottom:1px solid var(--line2);background:#f8fafc}
+.sheet-w .fbar .nm{font-family:var(--mono);font-size:12.5px;color:var(--soft);width:56px;text-align:center;border-right:1px solid var(--line2);padding:10px 0;font-weight:600}
+.sheet-w .fbar .fx{font-family:Georgia,serif;font-style:italic;color:var(--xl);font-weight:700;padding:0 10px;font-size:16px}
+.sheet-w .fbar input{flex:1;border:0;outline:0;background:#fff;font-family:var(--mono);font-size:15px;padding:10px 12px;color:var(--ink);min-width:0;border-left:1px solid var(--line)}
+.sheet-w .fbar input:focus{box-shadow:inset 0 -2px 0 var(--xl)}
+.sheet-w .fbar button{border:0;background:var(--xl);color:#fff;font-weight:700;font-size:13px;padding:0 14px;align-self:stretch;cursor:pointer}
+.sheet-w .fbar button:hover{filter:brightness(1.1)}
+.sheet-w .presets{display:flex;flex-wrap:wrap;gap:6px;padding:8px 10px;border-bottom:1px solid var(--line);background:#fff}
+.sheet-w .presets button{font-family:var(--mono);font-size:12px;border:1px solid var(--line2);background:#f8fafc;border-radius:8px;padding:4px 8px;cursor:pointer;color:#334155;transition:all .15s}
+.sheet-w .presets button.mistake{border:1px dashed #fda4af;background:#fff1f2;color:#9f1239}
+.sheet-w .presets button.mistake::before{content:"✗ mistake · ";font-family:var(--sans);font-weight:700;font-size:11px}
+.sheet-w .presets button.mistake.on{border:1.5px solid var(--rose);background:#ffe4e6;color:#9f1239}
+.sheet-w .presets button:not(.mistake):hover,.sheet-w .presets button.on:not(.mistake){border-color:var(--acc);color:var(--acc);background:color-mix(in srgb,var(--acc) 8%,#fff)}
+.sheet-w .out{display:flex;align-items:center;gap:12px;padding:9px 12px;border-bottom:1px solid var(--line);min-height:44px;background:linear-gradient(90deg,color-mix(in srgb,var(--acc) 6%,#fff),#fff)}
+.sheet-w .out .lbl{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--soft)}
+.sheet-w .out .val{font-family:var(--mono);font-size:20px;font-weight:700;color:var(--ink)}
+.sheet-w .out .val.err{color:var(--rose)}
+.sheet-w .out .msg{font-size:13px;color:var(--muted);line-height:1.35;flex:1}
+.sheet-w .out .msg.err{color:#9f1239}
+.sheet-w .out .fixbtn{flex:none;align-self:center;border:0;border-radius:999px;background:#15803d;color:#fff;font:700 13px var(--sans);padding:8px 14px;cursor:pointer;white-space:nowrap}
+.sheet-w .out .fixbtn:hover{background:#166534}
+.sheet-w .hint{font-size:12.5px;color:#92400e;background:#fffbeb;border-bottom:1px solid #fde68a;padding:6px 12px;display:none}
+.sheet-w .hint.show{display:block}
+.sheet-w .opts{display:flex;gap:14px;align-items:center;padding:6px 12px;font-size:13px;color:var(--muted);border-bottom:1px solid var(--line)}
+.sheet-w .opts label{display:flex;gap:6px;align-items:center;cursor:pointer}
+.gridwrap{overflow:auto;max-height:396px}
+.slide[data-title="Formula playground"] .gridwrap{max-height:360px}
+table.grid{border-collapse:separate;border-spacing:0;font-size:12.5px;width:100%;font-variant-numeric:tabular-nums}
+table.grid th,table.grid td{border-right:1px solid #e5e7eb;border-bottom:1px solid #e5e7eb;padding:0 8px;height:17px;line-height:17px;white-space:nowrap;transition:background .2s,box-shadow .2s}
+table.grid thead th{position:sticky;top:0;background:#f1f5f9;color:#475569;font-weight:600;font-size:11.5px;text-align:center;z-index:2;height:22px}
+table.grid tbody th{background:#f1f5f9;color:#64748b;font-weight:600;font-size:11px;text-align:center;width:34px;position:sticky;left:0;z-index:1}
+table.grid td.num{text-align:right}
+table.grid td.hdr{font-weight:700;color:#0f172a;background:#f8fafc}
+table.grid td.used{background:color-mix(in srgb,var(--acc) 14%,#fff);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--acc) 40%,#fff)}
+table.grid td.hit{background:#fde68a!important;box-shadow:inset 0 0 0 2px #d97706!important;font-weight:700}
+table.grid td.scan{background:#bfdbfe!important}
+table.grid td.fillc{font-weight:700;text-align:center}
+table.grid td.good{color:#15803d;background:#f0fdf4}
+table.grid td.bad{color:#be123c;background:#fff1f2}
+table.grid td.neu{color:#1e3a8a;background:#eff6ff}
+table.grid td.f2{box-shadow:inset 0 0 0 2px var(--xl)!important}
+table.grid th.colsel{background:color-mix(in srgb,var(--acc) 22%,#f1f5f9);color:var(--ink)}
+.sheet-w.nogrid .gridwrap{display:none}
+/* ---------- quiz ---------- */
+.quiz{max-width:880px}
+.qmini .qhead{margin-bottom:6px}
+.qmini .qcard{padding:12px 14px;border-radius:14px}
+.qmini .qcard .qq{font-size:16px;margin-bottom:10px}
+.qmini .qopts{gap:7px}
+.qmini .qopt{padding:6px 9px;font-size:14px;border-radius:10px}
+.qmini .qopt code{font-size:12.5px}
+.qmini .qopt .L{width:22px;height:22px;font-size:12px}
+.qmini .qwhy{margin-top:8px;font-size:13.5px;padding:7px 10px;line-height:1.4}
+.qmini .qnav{margin-top:8px}
+.qmini .btn{padding:6px 14px;font-size:14px}
+.qhead{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.qdots{display:flex;gap:6px}
+.qdots i{width:28px;height:8px;border-radius:4px;background:var(--line)}
+.qdots i.cur{background:var(--acc)}.qdots i.ok{background:var(--green)}.qdots i.no{background:var(--rose)}
+.qscore{margin-left:auto;font-weight:700;color:var(--muted);font-size:14px}
+.qcard{border:1px solid var(--line);border-radius:18px;padding:22px 24px;background:#fff;box-shadow:0 14px 34px -22px rgba(15,23,42,.35)}
+.qcard .qq{font-size:22px;font-weight:700;line-height:1.35;margin-bottom:16px}
+.qcard .qq code{background:#f1f5f9;padding:1px 6px;border-radius:6px;color:#0f172a}
+.qopts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.qopt{text-align:left;border:2px solid var(--line);background:#fff;border-radius:14px;padding:12px 14px;font-size:16px;cursor:pointer;display:flex;gap:10px;align-items:flex-start;transition:all .15s;color:var(--ink);line-height:1.35}
+.qopt:hover:not(:disabled){border-color:var(--acc);background:color-mix(in srgb,var(--acc) 5%,#fff)}
+.qopt .L{flex:none;width:26px;height:26px;border-radius:8px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:var(--muted)}
+.qopt code{font-size:14.5px}
+.qopt.right{border-color:var(--green);background:#f0fdf4}.qopt.right .L{background:var(--green);color:#fff}
+.qopt.wrong{border-color:var(--rose);background:#fff1f2}.qopt.wrong .L{background:var(--rose);color:#fff}
+.qopt:disabled{cursor:default}
+.qwhy{margin-top:14px;font-size:15px;color:#334155;padding:10px 14px;border-radius:12px;background:#f8fafc;display:none;line-height:1.5}
+.qwhy.show{display:block}
+.qnav{display:flex;justify-content:flex-end;margin-top:14px;gap:10px}
+.btn{border:0;border-radius:12px;padding:10px 18px;font-weight:700;font-size:15px;cursor:pointer;background:var(--acc);color:#fff;box-shadow:0 8px 20px -10px var(--acc)}
+.btn.ghost{background:#fff;color:var(--acc);border:2px solid var(--acc);box-shadow:none}
+.btn:disabled{opacity:.4;cursor:default}
+.qdone{text-align:center;padding:26px}
+.qdone .big{font-size:64px;font-weight:800;color:var(--acc)}
+/* ---------- misc components ---------- */
+.ops{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.op{border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:#fff}
+.op b{font-family:var(--mono);font-size:22px;color:var(--acc)}
+.op span{display:block;font-size:13px;color:var(--muted)}
+.tt{border-collapse:collapse;font-size:15px;margin-top:6px}
+.tt th,.tt td{padding:6px 12px;border:1px solid var(--line);text-align:center}
+.tt th{background:#f8fafc;font-size:12.5px;color:var(--soft)}
+.T{color:var(--green);font-weight:800}.F{color:var(--rose);font-weight:800}
+.errgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.errc{border-radius:14px;padding:14px;border:1px solid var(--line);background:#fff;cursor:pointer;transition:transform .15s,box-shadow .15s}
+.errc:hover{transform:translateY(-3px);box-shadow:0 14px 30px -18px rgba(15,23,42,.4)}
+.errc .code{font-family:var(--mono);font-weight:800;font-size:20px;color:var(--rose)}
+.errc p{font-size:13.5px;margin:6px 0 0;line-height:1.45}
+.errc .try{font-family:var(--mono);font-size:12px;color:var(--soft);margin-top:8px;display:block}
+.recap{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.rc{border-radius:14px;padding:14px;color:#fff}
+.rc b{font-family:var(--mono);font-size:17px;display:block;margin-bottom:4px}
+.rc span{font-size:13.5px;opacity:.95;line-height:1.4;display:block}
+.build{display:flex;flex-direction:column;gap:10px}
+.build label{font-size:13px;font-weight:700;color:var(--soft);text-transform:uppercase;letter-spacing:.06em}
+.build select{font-family:var(--sans);font-size:15px;padding:9px 10px;border-radius:10px;border:1px solid var(--line2);background:#fff;width:100%}
+.vparts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:6px 0 10px}
+.vparts div{border-radius:10px;padding:8px 10px;font-size:13.5px;line-height:1.35;color:#334155;background:#f8fafc;border:1px solid var(--line)}
+.vparts b{font-family:var(--mono);display:block;font-size:13px}
+.dict td:first-child{font-family:var(--mono);font-weight:700;color:var(--acc);width:40px}
+.src{font-size:12px;color:var(--soft);margin-top:10px;line-height:1.4}
+.vh{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}
+.vh .card{font-size:14px;color:#334155;line-height:1.45}
+.arrowdemo{display:flex;gap:4px;margin:8px 0}
+.arrowdemo i{width:26px;height:18px;border-radius:4px;background:#e2e8f0}
+.arrowdemo i.k{background:var(--acc)}.arrowdemo i.r{background:#fcd34d}
+/* ---------- mobile: stacked scroll ---------- */
+body.mobile{overflow:auto}
+body.mobile #viewport{position:static;inset:auto;display:block;padding:12px 12px 90px}
+body.mobile #deck{width:auto;height:auto;transform:none!important}
+body.mobile .slide{position:relative;inset:auto;opacity:1;visibility:visible;transform:none;margin-bottom:16px;padding:28px 16px 40px;border-radius:18px}
+body.mobile .cols,body.mobile .cols.even,body.mobile .cols.wide-r,body.mobile .vh{grid-template-columns:minmax(0,1fr)!important;gap:18px}
+body.mobile .cols>*,body.mobile .vh>*,body.mobile .errgrid>*,body.mobile .oc-grid>*,body.mobile .qopts>*{min-width:0}
+body.mobile .slide{max-width:100%}
+body.mobile .sheet-w{max-width:100%}
+body.mobile .gridwrap{max-height:60vh;-webkit-overflow-scrolling:touch}
+body.mobile .gridwrap::before{content:"← swipe the table sideways to see all columns →";display:block;position:sticky;left:0;font-size:11px;color:#64748b;padding:4px 8px;background:#f8fafc;border-bottom:1px solid #e2e8f0}
+body.mobile .sheet-w .fbar input{font-size:16px}
+body.mobile table.grid{font-size:11px}
+body.mobile table.grid th,body.mobile table.grid td{padding:0 5px}
+body.mobile table.grid tbody th{width:24px}
+body.mobile .sheet-w .presets button{max-width:100%;white-space:normal;overflow-wrap:anywhere;text-align:left}
+body.mobile .sheet-w .out{flex-wrap:wrap}
+body.mobile .syntax{font-size:14px;white-space:pre-wrap;word-break:break-word}
+body.mobile .qcard{padding:16px}
+body.mobile .qcard .qq{font-size:18px}
+body.mobile .qopt span{min-width:0;overflow-wrap:anywhere}
+body.mobile .qopt code{white-space:normal;overflow-wrap:anywhere}
+body.mobile table.mini{font-size:14px}
+body.mobile table.mini td,body.mobile table.mini th{padding:6px}
+body.mobile .anat{font-size:22px;padding:14px}
+body.mobile .anat.small{font-size:16px}
+body.mobile p,body.mobile .callout,body.mobile li{overflow-wrap:anywhere}
+body.mobile .agenda{grid-template-columns:1fr 1fr}
+body.mobile .ag{min-height:0}
+body.mobile .oc-grid,body.mobile .errgrid,body.mobile .recap{grid-template-columns:1fr}
+body.mobile .qopts{grid-template-columns:1fr}
+body.mobile h2{font-size:28px}
+body.mobile .title-slide h1{font-size:40px}
+body.mobile .floaters{display:none}
+body.mobile .title-meta{position:static;margin-top:24px;flex-wrap:wrap}
+body.mobile .anat{font-size:24px}
+body.mobile .foot{position:static;margin-top:16px}
+body.mobile #help,body.mobile #hud .count,body.mobile #prevBtn,body.mobile #nextBtn,body.mobile #timer,body.mobile #fsBtn{display:none}
+body.mobile .ops{grid-template-columns:1fr 1fr}
+@media print{body{overflow:visible}#hud,#help,#progress,#menu{display:none}#viewport{position:static;display:block}#deck{transform:none!important;width:auto;height:auto}.slide{position:relative;opacity:1;visibility:visible;transform:none;page-break-after:always;box-shadow:none;border:1px solid #ddd;width:1280px;height:720px;margin:0 auto 20px}}
+
+/* ================= Chapter 4 & 5 additions ================= */
+.title-slide.viz{background:linear-gradient(135deg,#1e1b4b 0%,#4338ca 42%,#7c3aed 72%,#db2777 100%)!important}
+.title-slide.viz .kicker{color:#e0e7ff}.title-slide.viz .kicker::before{background:#e0e7ff}
+.title-slide.viz h1 span{color:#fbcfe8}
+.title-slide.viz p{color:#e0e7ff}
+.title-slide.viz .title-meta{color:#e0e7ff}
+.title-slide.partb{background:linear-gradient(135deg,#083344 0%,#0e7490 45%,#0d9488 75%,#4f46e5 100%)!important}
+.title-slide.partb .kicker{color:#ccfbf1}.title-slide.partb .kicker::before{background:#ccfbf1}
+.title-slide.partb h1 span{color:#a5f3fc}
+.title-slide.partb p{color:#ccfbf1}
+.vizfloat{position:absolute;right:48px;top:96px;width:430px;height:500px}
+.vizfloat .fc{position:absolute;background:rgba(255,255,255,.96);border-radius:16px;padding:12px;box-shadow:0 22px 50px -20px rgba(0,0,0,.55);animation:bob 6s ease-in-out infinite}
+.vizfloat .fc:nth-child(2){animation-delay:-1.6s}.vizfloat .fc:nth-child(3){animation-delay:-3.1s}.vizfloat .fc:nth-child(4){animation-delay:-4.4s}
+.vizfloat .fc b{display:block;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#64748b;margin-bottom:4px}
+/* controls */
+.ctl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 10px}
+.ctl .lab{font-size:12px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--soft);margin-right:2px}
+.seg{display:inline-flex;border:1px solid var(--line2);border-radius:12px;overflow:hidden;background:#f8fafc;flex:none}
+.seg button{border:0;background:none;padding:7px 12px;font-weight:700;font-size:13.5px;color:var(--muted);cursor:pointer;border-right:1px solid var(--line)}
+.seg button:last-child{border-right:0}
+.seg button.on{background:var(--acc);color:#fff}
+.seg button:not(.on):hover{color:var(--acc);background:#fff}
+.tg{border:1px solid var(--line2);border-radius:999px;padding:6px 12px;font-size:13px;font-weight:700;background:#fff;cursor:pointer;color:var(--muted);transition:all .15s}
+.tg.on{background:color-mix(in srgb,var(--acc) 12%,#fff);border-color:var(--acc);color:color-mix(in srgb,var(--acc) 80%,#000)}
+.tg:hover{border-color:var(--acc)}
+.sbtn{border:0;border-radius:10px;padding:7px 14px;font-weight:700;font-size:13.5px;cursor:pointer;background:var(--acc);color:#fff;box-shadow:0 6px 16px -8px var(--acc)}
+.sbtn.ghost{background:#fff;color:var(--acc);border:1.5px solid var(--acc);box-shadow:none}
+.sbtn:disabled{opacity:.45;cursor:default}
+.chk{display:inline-flex;gap:6px;align-items:center;font-size:13.5px;color:#334155;cursor:pointer;font-weight:600}
+.chk input{accent-color:var(--acc);width:16px;height:16px}
+.panel{background:#fff;border:1px solid var(--line);border-radius:16px;padding:12px 14px;box-shadow:0 10px 30px -22px rgba(15,23,42,.35)}
+.chart svg{display:block;width:100%;height:auto;overflow:visible}
+.chart text{font-family:var(--sans)}
+.out{font-size:14.5px;color:#334155;line-height:1.45;background:color-mix(in srgb,var(--acc) 6%,#fff);border:1px solid color-mix(in srgb,var(--acc) 22%,#fff);border-radius:12px;padding:9px 12px;min-height:42px}
+.out b{color:var(--ink)}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:13px;color:#334155;font-weight:600;margin:4px 0 6px}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.legend span.lg{cursor:pointer;padding:3px 8px;border-radius:999px;border:1px solid var(--line)}
+.legend span.lg.off{opacity:.35}
+.steps{margin:0;padding:0 0 0 0;list-style:none;counter-reset:st}
+.steps li{counter-increment:st;position:relative;padding:5px 0 5px 32px;font-size:14px;line-height:1.4;color:#334155}
+.steps li::before{content:counter(st);position:absolute;left:0;top:5px;width:22px;height:22px;border-radius:7px;background:var(--xl);color:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center}
+.steps li b{color:var(--ink)}
+.xlsteps{border:1px solid #bbf7d0;background:#f0fdf4;border-radius:14px;padding:10px 14px}
+.xlsteps h3{font-size:14px;color:#166534;margin-bottom:4px;display:flex;align-items:center;gap:6px}
+.xlsteps h3::before{content:"X";display:inline-flex;width:20px;height:20px;border-radius:5px;background:#107c41;color:#fff;font-size:12px;align-items:center;justify-content:center;font-weight:800}
+.mini-def{display:grid;gap:8px}
+.mini-def>div{border-left:4px solid var(--acc);background:#f8fafc;border-radius:0 10px 10px 0;padding:8px 12px;font-size:14.5px;line-height:1.45;color:#334155}
+.mini-def>div b{color:var(--ink)}
+#tip{position:fixed;z-index:60;pointer-events:none;background:#0f172a;color:#f8fafc;font-size:13px;line-height:1.4;padding:8px 10px;border-radius:10px;box-shadow:0 12px 30px -10px rgba(0,0,0,.5);display:none;max-width:280px}
+#tip b{color:#fff}#tip .k{color:#94a3b8}
+/* outcomes */
+.lo-wrap{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.lo-col h3{display:flex;align-items:center;gap:10px;font-size:17px}
+.lo-col h3 .tag{font-size:12px;font-weight:800;color:#fff;border-radius:8px;padding:3px 8px}
+.lo{display:flex;gap:12px;align-items:flex-start;padding:9px 12px;border:1px solid var(--line);border-radius:12px;margin-bottom:8px;background:#fff;transition:transform .15s}
+.lo:hover{transform:translateX(4px)}
+.lo code{flex:none;font-weight:800;font-size:12.5px;padding:3px 7px;border-radius:7px;color:#fff}
+.lo span{font-size:14.5px;line-height:1.4;color:#334155}
+/* roadmap */
+.road{display:grid;gap:18px;margin-top:6px}
+.road .rw{border:1px solid var(--line);border-radius:18px;padding:14px 16px;background:#fff}
+.road .rw h3{display:flex;align-items:center;gap:10px}
+.road .rw h3 small{font-weight:600;color:var(--soft);font-size:13px}
+.blocks{display:flex;gap:6px;margin-top:8px}
+.blk{border-radius:12px;padding:10px 10px;color:#fff;cursor:pointer;min-width:0;transition:transform .15s,filter .15s;display:flex;flex-direction:column;gap:2px}
+.blk:hover{transform:translateY(-3px);filter:brightness(1.07)}
+.blk .t{font-family:var(--mono);font-size:11.5px;opacity:.9}
+.blk .h{font-size:14px;font-weight:800;line-height:1.2}
+.blk .d{font-size:12px;opacity:.95;line-height:1.3}
+/* sevens */
+.sevens{display:grid;grid-template-columns:repeat(10,1fr);gap:2px 6px;font-family:var(--mono);font-size:19px;font-weight:600;background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px 16px;user-select:none}
+.sevens span{text-align:center;line-height:1.25;color:#334155;transition:all .2s}
+.sevens.color span.s{color:#ea580c;font-weight:800}
+.sevens.size span.s{font-size:28px;font-weight:800;color:#0f172a;line-height:.9}
+.sevens.reveal span.s{background:#fde68a;border-radius:6px;box-shadow:0 0 0 2px #d97706}
+.sevens.hide{filter:blur(7px)}
+.stopw{font-family:var(--mono);font-size:42px;font-weight:800;color:var(--acc);font-variant-numeric:tabular-nums}
+.restab{width:100%;border-collapse:collapse;font-size:14.5px}
+.restab td{padding:6px 8px;border-bottom:1px solid var(--line)}
+.restab td:last-child{text-align:right;font-family:var(--mono);font-weight:700}
+/* spot it */
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.shake{animation:shake .25s 2}
+/* tables */
+table.dt{border-collapse:collapse;font-size:14px;width:100%;font-variant-numeric:tabular-nums}
+table.dt th,table.dt td{padding:6px 9px}
+table.dt td.n,table.dt th.n{text-align:right}
+table.dt .lbl{text-align:left}
+table.dt.hi thead th{font-size:12px;color:var(--soft);font-weight:700;border-bottom:1.5px solid #334155}
+table.dt.hi tbody tr:last-child td{border-bottom:1px solid var(--line)}
+table.dt.lo{border:3px double #111}
+table.dt.lo th,table.dt.lo td{border:2px solid #111;background:#fef9c3;font-weight:700;font-family:Georgia,serif}
+table.dt.lo thead th{background:#1d4ed8;color:#fff}
+table.dt.lo tbody tr:nth-child(even) td{background:#bbf7d0}
+.tdes{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.tdes .opt{border:2px solid var(--line);border-radius:14px;padding:10px;cursor:pointer;background:#fff;transition:all .15s;position:relative}
+.tdes .opt:hover{border-color:var(--acc)}
+.tdes .opt.pick{border-color:var(--rose);background:#fff1f2}
+.tdes .opt.best{border-color:var(--green);background:#f0fdf4}
+.tdes .opt .L{display:block;font-weight:800;color:var(--soft);font-size:12.5px;margin-bottom:4px}
+.tdes table{border-collapse:collapse;font-size:11px;width:100%;font-variant-numeric:tabular-nums}
+.tdes td,.tdes th{padding:3px 4px;white-space:nowrap;text-align:right}
+.tdes td:first-child,.tdes th:first-child{text-align:left}
+.dA td,.dA th{border:2px solid #0f172a}.dA table{border:3px solid #0f172a}
+.dB td,.dB th{border:1px solid #94a3b8}.dB thead th{background:#e2e8f0}.dB table{border:2px solid #475569}
+.dC td,.dC th{border-left:2px solid #334155;border-right:2px solid #334155}.dC thead th{border-bottom:2px solid #334155}
+.dD thead tr:first-child th.m{border-bottom:1px solid #94a3b8}.dD thead tr:last-child th{border-bottom:1.5px solid #334155}.dD td.tot,.dD th.tot{border-left:1px solid #94a3b8}.dD tr.pr td{border-top:1px solid #94a3b8}
+.xt{border-collapse:separate;border-spacing:3px;width:100%;font-variant-numeric:tabular-nums}
+.xt th{font-size:12.5px;color:var(--soft);font-weight:800;padding:6px 8px;text-align:right}
+.xt th.rl{text-align:left}
+.xt td{padding:9px 10px;text-align:right;font-family:var(--mono);font-size:16px;font-weight:700;border-radius:8px;cursor:pointer;transition:outline .1s}
+.xt td.rl{text-align:left;font-family:var(--sans);font-size:14.5px;color:var(--ink);cursor:default;background:#f8fafc}
+.xt td.tot{background:#f1f5f9;color:#334155}
+.xt td.sel{outline:3px solid #d97706}
+.xt td.na{color:#94a3b8}
+/* pivot builder */
+.pv{display:grid;grid-template-columns:1fr 250px;gap:14px}
+.pvpane{border:1px solid var(--line2);border-radius:12px;background:#fff;padding:10px 12px;font-size:13px}
+.pvpane h4{margin:0 0 6px;font-size:12px;text-transform:uppercase;letter-spacing:.07em;color:#166534}
+.pvpane .fld{display:flex;align-items:center;gap:6px;padding:3px 0;color:#334155;font-weight:600}
+.pvpane .fld i{width:14px;height:14px;border:1.5px solid #94a3b8;border-radius:3px;display:inline-flex;align-items:center;justify-content:center;font-style:normal;font-size:10px;color:#fff}
+.pvpane .fld i.on{background:#107c41;border-color:#107c41}
+.pvpane label{display:block;font-size:11px;font-weight:800;color:var(--soft);text-transform:uppercase;letter-spacing:.06em;margin:8px 0 3px}
+.pvpane select{width:100%;font:600 13px var(--sans);padding:6px 8px;border-radius:8px;border:1px solid var(--line2);background:#f8fafc}
+.pvt{border-collapse:collapse;font-size:14px;width:100%;font-variant-numeric:tabular-nums}
+.pvt th,.pvt td{padding:6px 9px;border-bottom:1px solid #e2e8f0;text-align:right;white-space:nowrap}
+.pvt th{background:#e8f5ee;color:#14532d;font-size:12.5px}
+.pvt td:first-child,.pvt th:first-child{text-align:left}
+.pvt tr.gt td{font-weight:800;border-top:1.5px solid #14532d}
+.pvt td.gt{font-weight:800}
+/* chooser */
+.choose{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.chc{border:1px solid var(--line);border-radius:14px;padding:11px 12px;background:#fff;display:flex;flex-direction:column;gap:8px}
+.chc.ok{border-color:var(--green);background:#f0fdf4}.chc.no{border-color:var(--rose);background:#fff1f2}
+.chc .q{font-size:16px;font-weight:700;line-height:1.35;color:var(--ink)}
+.chc .opts{display:flex;flex-wrap:wrap;gap:5px}
+.chc .opts button{border:1px solid var(--line2);background:#f8fafc;border-radius:8px;padding:6px 10px;font:600 13.5px var(--sans);cursor:pointer;color:#334155}
+.chc .opts button:hover:not(:disabled){border-color:var(--acc);color:var(--acc)}
+.chc .opts button.r{background:var(--green);color:#fff;border-color:var(--green)}
+.chc .opts button.w{background:var(--rose);color:#fff;border-color:var(--rose)}
+.chc .why{font-size:12.5px;color:#334155;line-height:1.4;display:none}
+.chc.ok .why,.chc.no .why{display:block}
+/* lens */
+.lens{font-size:12px}
+.lens .hd{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:4px}
+.lens .hd button{border:1px solid var(--line2);background:#f8fafc;border-radius:8px;padding:5px 6px;font:700 12px var(--sans);color:#334155;cursor:pointer;text-align:left}
+.lens .hd button.on{background:var(--acc);color:#fff;border-color:var(--acc)}
+.lens .rows{position:relative}
+.lens .r{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;height:6.6px;align-items:stretch;transition:transform .5s ease;position:absolute;left:0;right:0}
+.lens .r .nm{font-size:0;overflow:hidden}
+.lens .r .b{background:#f1f5f9;position:relative}
+.lens .r .b i{position:absolute;left:0;top:.6px;bottom:.6px;background:var(--acc);border-radius:0 2px 2px 0}
+.lens .r:hover .b i,.lens .r.hl .b i{background:#d97706}
+.lens .r:hover .nm,.lens .r.hl .nm{font-size:0}
+/* heat */
+.heat{border-collapse:separate;border-spacing:2px;font-variant-numeric:tabular-nums;width:100%}
+.heat th{font-size:11px;color:var(--soft);font-weight:800;padding:2px 3px}
+.heat td{font-family:var(--mono);font-size:11.5px;font-weight:600;text-align:center;padding:2px 2px;border-radius:4px;transition:background .3s,color .3s}
+.heat td.cty{font-family:var(--sans);text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;padding-right:6px;cursor:pointer}
+.heat tr.hl td.cty{color:var(--acc)}
+.heat tr.hl td{outline:1.5px solid #0f172a}
+.heat td.sp{padding:0 4px;width:92px}
+/* tiles */
+.tiles{display:grid;grid-template-columns:repeat(11,1fr);gap:4px}
+.tiles div{aspect-ratio:1.25;border-radius:7px;display:flex;align-items:center;justify-content:center;font:800 12.5px var(--sans);cursor:default;transition:opacity .2s,transform .15s}
+.tiles div.st:hover{transform:scale(1.12)}
+.tiles div.dim{opacity:.15}
+.tiles div.e{background:transparent}
+.ramp{display:flex;gap:4px;align-items:center;flex-wrap:wrap}
+.ramp span{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;color:#334155;padding:4px 8px;border-radius:999px;border:1px solid var(--line);cursor:pointer;background:#fff}
+.ramp span i{width:14px;height:14px;border-radius:4px;display:inline-block}
+.ramp span.on{border-color:#0f172a;box-shadow:0 0 0 1px #0f172a}
+/* dashboard */
+.dash{border:1px solid #cbd5e1;border-radius:16px;background:#f8fafc;padding:10px}
+.dash .top{display:flex;align-items:center;gap:12px;margin-bottom:8px;flex-wrap:wrap}
+.dash .top b{font-size:15px}
+.dash .grid5{display:grid;grid-template-columns:1.15fr 1fr 1fr;grid-template-rows:auto auto;gap:8px}
+.dash .p{background:#fff;border:1px solid var(--line);border-radius:12px;padding:6px 8px}
+.dash .p h5{margin:0 0 2px;font-size:11.5px;color:#334155;letter-spacing:.02em}
+.prin{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:10px}
+.prin div{border-radius:12px;padding:8px 10px;color:#fff;font-size:12.5px;line-height:1.35;font-weight:600}
+.prin div b{display:block;font-size:13.5px}
+.note{font-size:11.5px;color:var(--soft);line-height:1.35;margin-top:6px}
+.kpis{display:flex;gap:8px}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:10px;padding:4px 10px;font-size:11px;color:var(--soft);font-weight:700}
+.kpi b{display:block;font-size:17px;color:var(--ink);font-family:var(--mono)}
+/* mobile extras */
+body.mobile .lo-wrap,body.mobile .pv,body.mobile .tdes,body.mobile .choose,body.mobile .prin{grid-template-columns:minmax(0,1fr)!important}
+body.mobile .blocks{flex-wrap:wrap}
+body.mobile .blk{flex:1 1 45%!important}
+body.mobile .vizfloat{display:none}
+body.mobile .dash .grid5{grid-template-columns:minmax(0,1fr)!important}
+body.mobile .dash .grid5>*{grid-column:auto!important;grid-row:auto!important}
+body.mobile .sevens{font-size:15px;padding:8px}
+body.mobile .sevens.size span.s{font-size:21px}
+body.mobile .heatwrap,body.mobile .lenswrap{overflow-x:auto}
+body.mobile .heat{min-width:640px}
+body.mobile .lens{min-width:520px}
+body.mobile .tiles div{font-size:9px;border-radius:4px}
+body.mobile .xt td{font-size:13px;padding:6px}
+body.mobile .pvt{font-size:12px}
+body.mobile .pvwrap{overflow-x:auto}
+
+#spMatrix svg{max-height:400px}
+.dash .chart svg{max-height:126px}
+.prin div{padding:6px 10px}
+#pieBar.hidden{filter:blur(7px);opacity:.55}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<filter id="deut" color-interpolation-filters="linearRGB"><feColorMatrix type="matrix" values="0.367 0.861 -0.228 0 0  0.280 0.673 0.047 0 0  -0.012 0.043 0.969 0 0  0 0 0 1 0"/></filter>
+<marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" fill="#7c3aed"/></marker>
+</defs></svg>
+<div id="progress"></div>
+<div id="viewport"><div id="deck">
+
+<!-- 1 TITLE -->
+<section class="slide title-slide viz" data-title="Data Visualization & Exploration" data-acc="violet">
+  <div class="kicker">BPMNK2033 · Chapters 4 &amp; 5</div>
+  <h1>Data <span>Visualization</span> &amp; Exploration</h1>
+  <p>Turn numbers into pictures people understand at a glance: design principles, tables and PivotTables, charts, maps and dashboards. Every chart in this module is live, so click, sort and toggle them.</p>
+  <div class="vizfloat" id="titleViz"></div>
+  <div class="title-meta">
+    <div><b>Business Intelligence &amp; Data Analytics</b>School of Business Management, UUM</div>
+    <div><b>Dr. Khairol Anuar Ishak</b>Session A261 · Sep Sem 2026/2027</div>
+    <div><b>Navigate</b><kbd>→</kbd> <kbd>Space</kbd> next · <kbd>M</kbd> menu · <kbd>F</kbd> full screen</div>
+  </div>
+</section>
+
+<!-- 2 ROADMAP -->
+<section class="slide" data-title="Roadmap: two lectures" data-acc="indigo">
+  <div class="kicker">Roadmap</div>
+  <h2>Two lectures, one story: from principles to dashboards</h2>
+  <p class="lead" style="margin-bottom:6px">Based on Camm et al., <i>Business Analytics</i> 5e, Chapter 3. Click any block to jump there.</p>
+  <div class="road">
+    <div class="rw"><h3><span class="pill" style="--acc:var(--indigo)">Part A</span> Chapter 4: Seeing data clearly <small>· 70 min · slides 4–18</small></h3>
+      <div class="blocks">
+        <div class="blk" data-go="4" style="flex:5;background:linear-gradient(160deg,#2563eb,#3b82f6)"><span class="t">00–05</span><span class="h">Warm-up</span><span class="d">Count the 7s</span></div>
+        <div class="blk" data-go="5" style="flex:12;background:linear-gradient(160deg,#0d9488,#14b8a6)"><span class="t">05–17</span><span class="h">Design principles</span><span class="d">Preattentive attributes · data-ink ratio</span></div>
+        <div class="blk" data-go="7" style="flex:18;background:linear-gradient(160deg,#7c3aed,#8b5cf6)"><span class="t">17–35</span><span class="h">Tables &amp; PivotTables</span><span class="d">When to use a table · crosstabs · build a PivotTable</span></div>
+        <div class="blk" data-go="11" style="flex:4;background:linear-gradient(160deg,#d97706,#f59e0b)"><span class="t">35–39</span><span class="h">Check</span></div>
+        <div class="blk" data-go="12" style="flex:23;background:linear-gradient(160deg,#0891b2,#06b6d4)"><span class="t">39–62</span><span class="h">Core charts</span><span class="d">Scatter · line · sparkline · bar · pie · stacked vs clustered</span></div>
+        <div class="blk" data-go="17" style="flex:8;background:linear-gradient(160deg,#db2777,#ec4899)"><span class="t">62–70</span><span class="h">Chart chooser + exit</span></div>
+      </div></div>
+    <div class="rw"><h3><span class="pill" style="--acc:var(--teal)">Part B</span> Chapter 5: Exploring richer data <small>· 70 min · slides 19–32</small></h3>
+      <div class="blocks">
+        <div class="blk" data-go="19" style="flex:4;background:linear-gradient(160deg,#0e7490,#0891b2)"><span class="t">00–04</span><span class="h">Recap</span></div>
+        <div class="blk" data-go="20" style="flex:18;background:linear-gradient(160deg,#4f46e5,#6366f1)"><span class="t">04–22</span><span class="h">Many variables</span><span class="d">Bubble · scatter matrix · table lens · PivotChart</span></div>
+        <div class="blk" data-go="24" style="flex:22;background:linear-gradient(160deg,#e11d48,#f43f5e)"><span class="t">22–44</span><span class="h">Specialised charts</span><span class="d">Heat map · treemap · waterfall · stock · parallel coordinates</span></div>
+        <div class="blk" data-go="29" style="flex:9;background:linear-gradient(160deg,#2563eb,#3b82f6)"><span class="t">44–53</span><span class="h">Maps</span><span class="d">Choropleth · cartogram</span></div>
+        <div class="blk" data-go="30" style="flex:10;background:linear-gradient(160deg,#7c3aed,#a855f7)"><span class="t">53–63</span><span class="h">Dashboards</span><span class="d">KPIs · Grogan Oil</span></div>
+        <div class="blk" data-go="31" style="flex:7;background:linear-gradient(160deg,#16a34a,#22c55e)"><span class="t">63–70</span><span class="h">Exit ticket</span></div>
+      </div></div>
+  </div>
+</section>
+
+<!-- 3 OUTCOMES -->
+<section class="slide" data-title="Learning outcomes" data-acc="violet">
+  <div class="kicker">Learning outcomes</div>
+  <h2>By the end, you will be able to…</h2>
+  <div class="lo-wrap">
+    <div class="lo-col"><h3><span class="tag" style="background:#4f46e5">Part A · Ch 4</span> Principles, tables &amp; core charts</h3>
+      <div class="lo"><code style="background:#2563eb">LO 3-1</code><span>Apply <b>preattentive attributes</b> and the <b>data-ink ratio</b> to improve tables and charts.</span></div>
+      <div class="lo"><code style="background:#7c3aed">LO 3-2</code><span>Create and use <b>PivotTables</b> and PivotCharts to explore data.</span></div>
+      <div class="lo"><code style="background:#0891b2">LO 3-3</code><span>Create and interpret <b>scatter charts</b> for the relationship between two variables.</span></div>
+      <div class="lo"><code style="background:#0d9488">LO 3-4/5</code><span>Create <b>line, bar and column charts</b>, and fit <b>trendlines</b>.</span></div>
+      <div class="lo"><code style="background:#ea580c">LO 3-6</code><span>Use <b>sorted, clustered and stacked</b> bar and column charts.</span></div>
+    </div>
+    <div class="lo-col"><h3><span class="tag" style="background:#0d9488">Part B · Ch 5</span> Specialised visuals, maps &amp; dashboards</h3>
+      <div class="lo"><code style="background:#4f46e5">LO 3-7</code><span>Use <b>bubble charts, scatter-chart matrixes and table lenses</b> for many variables.</span></div>
+      <div class="lo"><code style="background:#e11d48">LO 3-8</code><span>Interpret <b>heat maps, sparklines, treemaps, waterfall, stock</b> and <b>parallel-coordinates</b> charts.</span></div>
+      <div class="lo"><code style="background:#2563eb">LO 3-9</code><span>Read <b>choropleth maps</b> and <b>cartograms</b> for geospatial data.</span></div>
+      <div class="lo"><code style="background:#a855f7">LO 3-10</code><span>Apply the principles of effective <b>data dashboards</b>.</span></div>
+      <div class="callout" style="--acc:var(--teal)"><b>Quiz link:</b> Part A is in <b>Quiz 1</b> (Week 6, Ch 1–4). Part B is in <b>Quiz 2</b> (Week 12, Ch 5–8).</div>
+    </div>
+  </div>
+</section>
+
+<!-- 4 COUNT THE 7s -->
+<section class="slide" data-title="Warm-up: count the 7s" data-acc="blue">
+  <div class="kicker">Part A · Warm-up</div>
+  <h2>How many 7s can you find? Race the clock</h2>
+  <div class="cols wide-r" style="grid-template-columns:.8fr 1.3fr">
+    <div>
+      <p>Three rounds, same numbers. Click a round, count the 7s, then press <b>Done</b>. Compare your times.</p>
+      <div class="ctl"><div class="seg" id="s7mode"><button data-m="plain">1 · Plain</button><button data-m="color">2 · Colour</button><button data-m="size">3 · Size</button></div></div>
+      <div style="display:flex;align-items:center;gap:14px;margin:6px 0 10px"><div class="stopw" id="s7clock">0.0 s</div><button class="sbtn" id="s7done" disabled>Done ✋</button><button class="sbtn ghost" id="s7rev">Reveal</button></div>
+      <table class="restab" id="s7res"><tr><td>Round 1 · plain</td><td>–</td></tr><tr><td>Round 2 · colour</td><td>–</td></tr><tr><td>Round 3 · size</td><td>–</td></tr></table>
+      <div class="out" id="s7out" style="margin-top:10px">Hide your answer until the reveal!</div>
+    </div>
+    <div><div class="sevens hide" id="s7grid"></div></div>
+  </div>
+</section>
+
+<!-- 5 PREATTENTIVE -->
+<section class="slide" data-title="Preattentive attributes" data-acc="teal">
+  <div class="kicker">3.1 · Overview of data visualization</div>
+  <h2>Preattentive attributes: seen before you think</h2>
+  <div class="cols" style="grid-template-columns:.85fr 1.3fr">
+    <div class="mini-def">
+      <div><b>Cognitive load</b> is the effort needed to process a visual accurately. Lower load means easier to read.</div>
+      <div><b>Preattentive attributes</b> are features your brain picks up in under ~250 ms: <b>colour, size, shape, length</b>.</div>
+      <div><b>Colour</b> is very effective, but too much distracts, and colour blindness can hide it.</div>
+      <div><b>Size</b>: people struggle to compare 2-D areas. <b>Length</b>: best for quantities, because a longer bar means a bigger value.</div>
+    </div>
+    <div class="panel">
+      <div class="ctl"><span class="lab">Find the odd one</span><div class="seg" id="paMode"><button data-m="color" class="on">Colour</button><button data-m="size">Size</button><button data-m="shape">Shape</button><button data-m="length">Length</button><button data-m="conj">Colour + shape</button></div></div>
+      <div class="chart" id="paChart"></div>
+      <div class="ctl" style="margin:8px 0 0;justify-content:space-between"><span class="out" id="paOut" style="flex:1;min-height:0">Click the item that is different.</span>
+        <label class="chk"><input type="checkbox" id="paCB"> Red/green + colour-blind view</label><button class="sbtn ghost" id="paNew">New round</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- 6 DATA-INK -->
+<section class="slide" data-title="Data-ink ratio & decluttering" data-acc="orange">
+  <div class="kicker">3.1 · Data-ink ratio</div>
+  <h2>Every drop of ink should earn its place</h2>
+  <div class="cols" style="grid-template-columns:.75fr 1.4fr">
+    <div class="mini-def">
+      <div><b>Data-ink ratio</b> = ink used for data ÷ total ink in the table or chart.</div>
+      <div><b>Data-ink</b> carries meaning. <b>Non-data-ink</b> (heavy borders, grids, shading, 3-D) adds nothing.</div>
+      <div><b>Decluttering</b> raises the ratio. <b>White space</b> works the same way.</div>
+      <div><b>Tip:</b> Excel's defaults add clutter. Clean them up before you present.</div>
+      <div style="border-left-color:#0f172a"><b>Ink meter</b><div id="inkMeter" style="margin-top:6px"></div></div>
+    </div>
+    <div class="panel">
+      <div class="ctl"><div class="seg" id="inkView"><button data-v="chart" class="on">Chart</button><button data-v="table">Table</button></div>
+        <button class="sbtn ghost" id="inkAdd">Add clutter</button><button class="sbtn" id="inkClean">Declutter ✨</button></div>
+      <div class="ctl" id="inkChips"></div>
+      <div class="chart" id="inkChart"></div>
+      <div id="inkTable" style="display:none;max-height:370px;overflow:auto"></div>
+      <div class="note">Scarf sales (units) for 20 days. Source: Camm et al., Fig. 3.4–3.6.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 7 TABLES VS CHARTS -->
+<section class="slide" data-title="When to use a table" data-acc="blue">
+  <div class="kicker">3.2 · Tables</div>
+  <h2>Table, chart, or both?</h2>
+  <div class="cols" style="grid-template-columns:.75fr 1.4fr">
+    <div>
+      <p class="lead">Use a <b>table</b> when readers need to:</p>
+      <ul class="tidy"><li>refer to <b>specific numbers</b></li><li>make <b>precise comparisons</b> between values</li><li>see values with <b>different units or very different magnitudes</b></li></ul>
+      <div class="callout"><b>Try it:</b> switch to <b>Chart</b>, then tick <b>Add head count</b>. Where did the employees go?</div>
+      <div class="out" id="gosOut" style="margin-top:8px">Gossamer Industries: monthly costs and revenues, Jan–Jun.</div>
+    </div>
+    <div class="panel">
+      <div class="ctl"><div class="seg" id="gosView"><button data-v="table" class="on">Table</button><button data-v="chart">Chart</button><button data-v="both">Chart + table</button></div>
+        <label class="chk"><input type="checkbox" id="gosHC"> Add head count</label></div>
+      <div class="chart" id="gosChart"></div>
+      <div id="gosTable" style="margin-top:8px"></div>
+    </div>
+  </div>
+</section>
+
+<!-- 8 TABLE DESIGN -->
+<section class="slide" data-title="Table design principles" data-acc="green">
+  <div class="kicker">3.2 · Table design</div>
+  <h2>Which table is easiest to read? Vote, then reveal</h2>
+  <div class="cols" style="grid-template-columns:1.25fr .9fr;gap:20px">
+    <div class="tdes" id="tdes"></div>
+    <div>
+      <div class="out" id="tdOut">Click the design you would put in a report.</div>
+      <h3 style="margin-top:14px">Design rules</h3>
+      <ul class="tidy" style="--acc:var(--green)">
+        <li>Use lines only to <b>separate labels from data</b> and <b>totals from the rest</b>.</li>
+        <li><b>Left-align</b> text labels, <b>right-align</b> numbers so the digits line up.</li>
+        <li>Centre column group labels, such as <i>Month</i>.</li>
+        <li>Show negatives clearly, e.g. <code>(3,980)</code>.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 9 CROSSTAB -->
+<section class="slide" data-title="Crosstabulation" data-acc="violet">
+  <div class="kicker">3.2 · Crosstabulation</div>
+  <h2>Crosstabs: two variables, one table</h2>
+  <div class="cols" style="grid-template-columns:.7fr 1.45fr">
+    <div>
+      <p>A <b>crosstabulation</b> summarises <b>two variables</b> at once. <span class="pill">DATAfile: restaurant</span></p>
+      <table class="mini"><tr><th>Variable</th><th>Type</th></tr>
+        <tr><td>Quality rating</td><td>Categorical: good, very good, excellent</td></tr>
+        <tr><td>Meal price ($)</td><td>Quantitative, grouped into $10 bins</td></tr>
+        <tr><td>Wait time (min)</td><td>Quantitative</td></tr></table>
+      <p style="margin-top:10px;font-size:14px">300 Los Angeles restaurants (Zagat sample). The <b>margins</b> (Total row and column) give each variable's own distribution.</p>
+    </div>
+    <div class="panel">
+      <div class="ctl"><span class="lab">Show</span><div class="seg" id="xtMode"><button data-m="n" class="on">Count</button><button data-m="row">Row %</button><button data-m="pct">% of total</button><button data-m="wait">Avg wait (min)</button></div></div>
+      <div id="xtTable"></div>
+      <div class="out" id="xtOut" style="margin-top:10px">Click any cell to read it in plain English.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 10 PIVOT BUILDER -->
+<section class="slide" data-title="Build a PivotTable" data-acc="xl">
+  <div class="kicker">3.2 · PivotTables in Excel</div>
+  <h2>A crosstab in Excel is a <span class="fn">PivotTable</span></h2>
+  <div class="cols" style="grid-template-columns:1.5fr .8fr">
+    <div class="pv">
+      <div class="pvwrap"><div id="pvOut"></div><div class="out" id="pvMsg" style="margin-top:10px"></div><p class="note">The 300 rows here are rebuilt from the textbook's summary tables, so a few averages may differ by 0.1 from Fig. 3.15.</p></div>
+      <div class="pvpane">
+        <h4>PivotTable Fields</h4>
+        <div id="pvFields"></div>
+        <label>Rows</label><select id="pvRows"><option value="q">Quality Rating</option><option value="p">Meal Price ($)</option><option value="">(empty)</option></select>
+        <label>Columns</label><select id="pvCols"><option value="p">Meal Price ($)</option><option value="q">Quality Rating</option><option value="">(empty)</option></select>
+        <label>Values</label><select id="pvVal"><option value="cnt">Count of Restaurant</option><option value="avg">Average of Wait Time</option><option value="sum">Sum of Wait Time</option></select>
+        <label>Show values as</label><select id="pvAs"><option value="no">No calculation</option><option value="gt">% of Grand Total</option><option value="row">% of Row Total</option></select>
+        <label style="display:flex;gap:6px;align-items:center;text-transform:none;letter-spacing:0;font-size:12.5px;color:#334155;margin-top:10px"><input type="checkbox" id="pvGroup" checked> Group price 10–49 by 10</label>
+        <label style="display:flex;gap:6px;align-items:center;text-transform:none;letter-spacing:0;font-size:12.5px;color:#334155;margin-top:4px"><input type="checkbox" id="pvMove"> Move “Excellent” to end</label>
+      </div>
+    </div>
+    <div class="xlsteps">
+      <h3>Excel steps</h3>
+      <ol class="steps">
+        <li><b>Insert ▸ PivotTable</b>, range <code>A1:D301</code>, New Worksheet.</li>
+        <li>Drag <b>Quality Rating → Rows</b>, <b>Meal Price → Columns</b>, <b>Restaurant → Values</b>.</li>
+        <li>Values ▸ <b>Value Field Settings ▸ Count</b>. Excel starts with Sum.</li>
+        <li>Right-click a price ▸ <b>Group</b>: 10 to 49, by 10.</li>
+        <li>Right-click <b>Excellent ▸ Move ▸ to End</b>.</li>
+        <li>For %: <b>Show Values As ▸ % of Grand Total</b>.</li>
+        <li>For wait time: Values = <b>Wait Time</b>, summarise by <b>Average</b>, 1 decimal.</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- 11 QUICK CHECK -->
+<section class="slide" data-title="Quick check: principles & tables" data-acc="amber">
+  <div class="kicker">Quick check · 3 questions</div>
+  <h2>Quick check: principles, tables &amp; PivotTables</h2>
+  <div class="quiz" data-quiz="qa"></div>
+</section>
+
+<!-- 12 SCATTER -->
+<section class="slide" data-title="Scatter charts & trendlines" data-acc="cyan">
+  <div class="kicker">3.3 · Charts</div>
+  <h2>Scatter charts: is there a relationship?</h2>
+  <div class="cols" style="grid-template-columns:.8fr 1.35fr">
+    <div>
+      <p>A <b>scatter chart</b> plots two <b>quantitative</b> variables. Here: a San Francisco electronics store, <b>TV commercials</b> vs <b>sales</b> over 10 weeks. <span class="pill">DATAfile: electronics</span></p>
+      <div class="out" id="scOut">Hover a point to see its week.</div>
+      <div class="xlsteps" style="margin-top:10px"><h3>Excel steps</h3><ol class="steps">
+        <li>Select <code>B1:C11</code> ▸ <b>Insert ▸ Scatter</b>.</li>
+        <li><b>Chart Elements (+)</b>: Axis Titles ✓, Gridlines ✗, <b>Trendline ✓</b>.</li>
+        <li>Not sure which chart? <b>Insert ▸ Recommended Charts</b>.</li></ol></div>
+    </div>
+    <div class="panel">
+      <div class="ctl"><button class="tg on" id="scTrend">Trendline</button><button class="tg" id="scEq">Show equation &amp; r</button><button class="tg" id="scGrid">Gridlines</button></div>
+      <div class="chart" id="scChart"></div>
+    </div>
+  </div>
+</section>
+
+<!-- 13 LINE + SPARKLINES -->
+<section class="slide" data-title="Line charts & sparklines" data-acc="indigo">
+  <div class="kicker">3.3 · Charts</div>
+  <h2>Line charts show change over time</h2>
+  <div class="cols" style="grid-template-columns:1.4fr .8fr">
+    <div class="panel">
+      <div class="ctl"><div class="seg" id="lnMode"><button data-m="tot" class="on">Total sales</button><button data-m="reg">North vs South</button></div><span class="note" style="margin:0">Kirkland Industries air compressors, sales ($100s)</span></div>
+      <div class="legend" id="lnLeg"></div>
+      <div class="chart" id="lnChart"></div>
+    </div>
+    <div>
+      <p>Use a <b>line chart</b> for <b>time series</b>. In a <b>multiple line chart</b>, colour tells the series apart. <span class="pill">kirkland · kirklandregional</span></p>
+      <h3 style="margin-top:8px">Sparklines: a chart in a cell</h3>
+      <p style="font-size:15px">A minimalist line that sits inside one Excel cell. It shows the trend and takes almost no space.</p>
+      <div id="spTable"></div>
+      <div class="xlsteps" style="margin-top:10px"><h3>Excel steps</h3><ol class="steps">
+        <li><b>Insert ▸ Sparklines ▸ Line</b></li><li>Data Range <code>B3:B14</code>, Location <code>B15</code></li><li>Copy <code>B15</code> to <code>C15</code></li></ol></div>
+    </div>
+  </div>
+</section>
+
+<!-- 14 BAR -->
+<section class="slide" data-title="Bar charts: sort them!" data-acc="blue">
+  <div class="kicker">3.3 · Charts</div>
+  <h2>Bar charts: sort to tell the story</h2>
+  <div class="cols" style="grid-template-columns:1.35fr .85fr">
+    <div class="panel">
+      <div class="ctl"><button class="tg" id="barSort">Sort by value</button><button class="tg" id="barLab">Data labels</button><button class="tg" id="barGrid">Gridlines</button></div>
+      <div class="chart" id="barChart"></div>
+    </div>
+    <div>
+      <p><b>Bar charts</b> use <b>horizontal bars</b>, so their <b>length</b> shows the value. Accounts managed by 8 managers. <span class="pill">DATAfile: accountsmanaged</span></p>
+      <div class="out" id="barOut">Unsorted (alphabetical): who manages the most? It takes a moment to find out.</div>
+      <div class="xlsteps" style="margin-top:10px"><h3>Excel steps</h3><ol class="steps">
+        <li>Select <code>A2:B9</code> ▸ <b>Insert ▸ Bar ▸ Clustered Bar</b>.</li>
+        <li><b>Data ▸ Sort</b> by Accounts Managed, <b>Smallest to Largest</b>. Excel draws the first row at the bottom, so the largest bar lands on top.</li>
+        <li><b>Chart Elements</b>: Data Labels ✓, Gridlines ✗.</li></ol></div>
+    </div>
+  </div>
+</section>
+
+<!-- 15 PIE -->
+<section class="slide" data-title="Pie charts & 3-D: handle with care" data-acc="rose">
+  <div class="kicker">3.3 · A note on pie &amp; 3-D charts</div>
+  <h2>Pie challenge: who manages more, Francois or Lopez?</h2>
+  <div class="cols even">
+    <div class="panel"><div class="chart" id="pieChart"></div>
+      <div class="ctl" style="justify-content:center;margin-top:8px"><button class="sbtn ghost" data-ans="Francois">Francois</button><button class="sbtn ghost" data-ans="Lopez">Lopez</button><button class="sbtn ghost" data-ans="Same">About the same</button></div></div>
+    <div>
+      <div class="out" id="pieOut">Decide from the pie alone. No peeking at the numbers!</div>
+      <div class="chart hidden" id="pieBar" style="margin-top:10px;transition:filter .5s,opacity .5s"></div>
+      <div class="callout warn" style="margin-top:10px"><b>Why pies struggle:</b> they use <b>size</b> (angle and area), which is hard to compare, and <b>colour</b> coding that colour-blind readers can miss. <b>3-D charts</b> distort size even more. Prefer a <b>sorted bar chart</b>.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 16 STACKED VS CLUSTERED -->
+<section class="slide" data-title="Stacked vs clustered columns" data-acc="orange">
+  <div class="kicker">3.3 · Column charts</div>
+  <h2>Stacked or clustered? It depends on the question</h2>
+  <div class="cols" style="grid-template-columns:1.45fr .75fr">
+    <div class="panel">
+      <div class="ctl"><div class="seg" id="scMode"><button data-m="stack" class="on">Stacked</button><button data-m="clus">Clustered</button></div><div class="seg" id="scOri"><button data-o="col" class="on">Column</button><button data-o="bar">Bar</button></div></div>
+      <div class="legend"><span><i style="background:#2563eb"></i>North</span><span><i style="background:#ea580c"></i>South</span></div>
+      <div class="chart" id="stkChart"></div>
+    </div>
+    <div>
+      <div class="card tint" style="--acc:var(--orange)"><h3>Stacked</h3><p style="margin:0;font-size:15px">Answers <b>“What is the total each month, and what share is each region?”</b> Only the bottom segment sits on a common baseline.</p></div>
+      <div class="card tint" style="--acc:var(--blue);margin-top:10px"><h3>Clustered</h3><p style="margin:0;font-size:15px">Answers <b>“How do North and South compare each month?”</b> Often better, but cluttered with many series.</p></div>
+      <div class="out" id="stkOut" style="margin-top:10px">Try it: in which month does <b>South overtake North</b>? Which view shows it faster?</div>
+      <p class="note">Horizontal versions are <b>stacked-bar</b> and <b>clustered-bar</b> charts. Excel: <b>Insert ▸ Column or Bar Chart</b>.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 17 CHOOSER -->
+<section class="slide" data-title="Chart chooser game" data-acc="pink">
+  <div class="kicker">Apply it</div>
+  <h2>Chart chooser: pick the best visual <span class="pill" id="chScore" style="font-size:16px;vertical-align:middle">0 / 6</span></h2>
+  <div class="choose" id="chooser"></div>
+</section>
+
+<!-- 18 EXIT A -->
+<section class="slide" data-title="Exit ticket: Part A" data-acc="violet">
+  <div class="kicker">Exit ticket · Part A · 5 questions</div>
+  <h2>Exit ticket: Chapter 4</h2>
+  <div class="quiz" data-quiz="exitA"></div>
+</section>
+
+<!-- 19 PART B DIVIDER -->
+<section class="slide title-slide partb" data-title="Part B: Chapter 5 starts" data-acc="teal">
+  <div class="kicker">BPMNK2033 · Part B · Chapter 5</div>
+  <h1>Exploring <span>richer</span> data</h1>
+  <p>More variables, hierarchies, geography and live KPIs. Last time you learned how to see data clearly. Today you learn how to explore it.</p>
+  <div class="vizfloat" id="partbViz"></div>
+  <div class="title-meta">
+    <div><b>Recap from Part A</b>Preattentive attributes · data-ink · PivotTables · scatter / line / bar / column</div>
+    <div><b>Tip for the lecturer</b>Double-click the timer to reset it to 00:00</div>
+  </div>
+</section>
+
+<!-- 20 BUBBLE -->
+<section class="slide" data-title="Bubble charts" data-acc="cyan">
+  <div class="kicker">3.3 · Charts for many variables</div>
+  <h2>Bubble charts: three variables on a 2-D chart</h2>
+  <div class="cols" style="grid-template-columns:1.45fr .75fr">
+    <div class="panel">
+      <div class="ctl"><button class="tg on" id="bbSize">Bubble size = passengers</button><button class="tg" id="bbBest">Highlight: wait &lt; 6 min &amp; parking ≤ $10</button></div>
+      <div class="chart" id="bbChart"></div>
+    </div>
+    <div>
+      <p>Each US airport has:</p>
+      <ul class="tidy" style="--acc:var(--cyan)"><li><b>x</b>: average TSA wait (min)</li><li><b>y</b>: cheapest on-site parking ($/day)</li><li><b>bubble size</b>: annual boarding passengers (millions)</li></ul>
+      <div class="out" id="bbOut" style="margin-top:8px">Hover a bubble.</div>
+      <div class="xlsteps" style="margin-top:10px"><h3>Excel steps</h3><ol class="steps"><li>Select <code>B2:D16</code> ▸ <b>Insert ▸ Scatter or Bubble ▸ Bubble</b>.</li><li>Data Labels ▸ <b>Value From Cells</b> <code>A2:A16</code> to show the airport codes.</li></ol></div>
+    </div>
+  </div>
+</section>
+
+<!-- 21 SPLOM -->
+<section class="slide" data-title="Scatter-chart matrix" data-acc="violet">
+  <div class="kicker">3.3 · Charts for many variables</div>
+  <h2>Scatter-chart matrix: every pair at once</h2>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <div class="panel"><div class="chart" id="spMatrix"></div><p class="note">55 New York City sub-boroughs. <span class="pill">DATAfile: nyc</span> Click any small chart to zoom in.</p></div>
+    <div class="panel"><div class="chart" id="spZoom"></div><div class="out" id="spOut" style="margin-top:6px"></div></div>
+  </div>
+</section>
+
+<!-- 22 TABLE LENS -->
+<section class="slide" data-title="Table lens" data-acc="teal">
+  <div class="kicker">3.3 · Charts for many variables</div>
+  <h2>Table lens: a table drawn as bars</h2>
+  <div class="cols" style="grid-template-columns:1.35fr .8fr">
+    <div class="panel lenswrap"><div class="lens" id="lens"></div></div>
+    <div>
+      <p>Each <b>row</b> is one of 55 NYC sub-boroughs. Each <b>column</b> is a variable, shown as a data bar. <b>Sort by one column</b> and look at the shapes of the others.</p>
+      <div class="out" id="lensOut">Click a column header to sort it, largest first. Hover a row to see its values.</div>
+      <div class="xlsteps" style="margin-top:10px"><h3>Excel steps</h3><ol class="steps"><li>Select <code>B2:B56</code> ▸ <b>Home ▸ Conditional Formatting ▸ Data Bars</b>. Repeat for C, D, E.</li><li><b>Data ▸ Sort</b> by Median Monthly Rent, <b>Largest to Smallest</b>.</li></ol></div>
+    </div>
+  </div>
+</section>
+
+<!-- 23 PIVOTCHART -->
+<section class="slide" data-title="PivotCharts" data-acc="xl">
+  <div class="kicker">3.3 · PivotCharts</div>
+  <h2><span class="fn">PivotChart</span>: the PivotTable, drawn</h2>
+  <div class="cols" style="grid-template-columns:1.4fr .8fr">
+    <div class="panel">
+      <div class="ctl"><span class="lab">Axis</span><div class="seg" id="pcSwap"><button data-s="q" class="on">Quality on axis</button><button data-s="p">Price on axis</button></div></div>
+      <div class="legend" id="pcLeg"></div>
+      <div class="chart" id="pcChart"></div>
+    </div>
+    <div>
+      <p>Average <b>wait time (min)</b> by quality rating and meal price, for the same 300 restaurants.</p>
+      <div class="out" id="pcOut">Hover a column. What happens to waiting time as quality goes up?</div>
+      <div class="xlsteps" style="margin-top:10px"><h3>Excel steps</h3><ol class="steps"><li><b>Insert ▸ PivotChart</b>, range <code>A1:D301</code>.</li><li>Quality → <b>Axis</b>, Meal Price → <b>Legend</b>, Wait Time → <b>Values</b>.</li><li>Values ▸ <b>Average</b>, group price 10–49 by 10.</li></ol></div>
+    </div>
+  </div>
+</section>
+
+<!-- 24 HEAT MAP -->
+<section class="slide" data-title="Heat maps + sparklines" data-acc="rose">
+  <div class="kicker">3.4 · Specialized data visualizations</div>
+  <h2>Heat maps: colour shows the size of a number</h2>
+  <div class="ctl"><button class="tg on" id="htOn">Heat-map colours</button><button class="tg on" id="htSp">Sparklines</button><span class="lab" style="margin-left:10px">Sort</span><div class="seg" id="htSort"><button data-s="orig" class="on">Original</button><button data-s="dec">December ↓</button><button data-s="chg">Jan→Dec change ↓</button></div>
+    <span class="legend" style="margin:0 0 0 auto"><span><i style="background:#be123c"></i>decline</span><span><i style="background:#f1f5f9;border:1px solid #cbd5e1"></i>0%</span><span><i style="background:#1d4ed8"></i>growth</span></span></div>
+  <div class="heatwrap"><table class="heat" id="heat"></table></div>
+  <p class="note">Same-store sales growth (%) vs the same month last year, 16 locations. <span class="pill">DATAfile: samestore_sales</span> Excel: select <code>B2:M17</code> ▸ <b>Conditional Formatting ▸ Color Scales ▸ Blue–White–Red</b>. Add sparklines in column N.</p>
+</section>
+
+<!-- 25 TREEMAP -->
+<section class="slide" data-title="Hierarchies: tree & treemap" data-acc="amber">
+  <div class="kicker">3.4 · Hierarchical data</div>
+  <h2>Treemaps: size, colour and arrangement</h2>
+  <div class="cols" style="grid-template-columns:1.5fr .7fr">
+    <div class="panel">
+      <div class="ctl"><div class="seg" id="tmView"><button data-v="tree">Tree diagram</button><button data-v="map" class="on">Treemap</button></div><span class="note" style="margin:0">Top 10 most valuable brands ($ billions)</span></div>
+      <div class="legend" id="tmLeg"></div>
+      <div class="chart" id="tmChart"></div>
+    </div>
+    <div>
+      <p><b>Hierarchical data</b> are categories broken down into <b>sub-categories</b> (industry ▸ brand). <span class="pill">DATAfile: brandvalues</span></p>
+      <p style="font-size:15px">A <b>treemap</b> shows each brand as a rectangle: <b>size</b> = value, <b>colour</b> = industry, <b>arrangement</b> = grouped by industry.</p>
+      <div class="out" id="tmOut">Which industry dominates? Hover a rectangle.</div>
+      <div class="xlsteps" style="margin-top:10px"><h3>Excel steps</h3><ol class="steps"><li>Sort <code>A1:C11</code> by Industry.</li><li><b>Insert ▸ Hierarchy Chart ▸ Treemap</b>.</li><li>Format Data Labels ▸ tick <b>Value</b>.</li></ol></div>
+    </div>
+  </div>
+</section>
+
+<!-- 26 WATERFALL -->
+<section class="slide" data-title="Waterfall charts" data-acc="green">
+  <div class="kicker">3.4 · Specialized data visualizations</div>
+  <h2>Waterfall charts: how did we get to the total?</h2>
+  <div class="cols" style="grid-template-columns:1.4fr .8fr">
+    <div class="panel">
+      <div class="ctl"><button class="sbtn" id="wfPlay">▶ Play month by month</button><button class="sbtn ghost" id="wfAll">Show all</button>
+        <span class="legend" style="margin:0 0 0 auto"><span><i style="background:#16a34a"></i>▲ increase</span><span><i style="background:#e11d48"></i>▼ decrease</span><span><i style="background:#2563eb"></i>total</span></span></div>
+      <div class="chart" id="wfChart"></div>
+    </div>
+    <div>
+      <p>A <b>waterfall chart</b> shows the <b>cumulative effect</b> of positive and negative changes. Each column starts where the previous one ended. <span class="pill">gossamer_profit</span></p>
+      <div class="out" id="wfOut">Gossamer gross profit ($), months 1–6.</div>
+      <div class="xlsteps" style="margin-top:10px"><h3>Excel steps</h3><ol class="steps"><li>Select <code>A2:H2</code>, then hold <b>Ctrl</b> and select <code>A5:H5</code>.</li><li><b>Insert ▸ Waterfall</b>.</li><li>Double-click the Total column ▸ <b>Set as total</b>.</li></ol></div>
+    </div>
+  </div>
+</section>
+
+<!-- 27 STOCK -->
+<section class="slide" data-title="Stock charts" data-acc="indigo">
+  <div class="kicker">3.4 · Specialized data visualizations</div>
+  <h2>Stock charts: high, low and close</h2>
+  <div class="cols" style="grid-template-columns:1.35fr .85fr">
+    <div class="panel"><div class="ctl"><button class="tg on" id="skClose">Closing-price markers</button><button class="tg" id="skLab">Close labels</button></div><div class="chart" id="skChart"></div></div>
+    <div>
+      <p>A <b>stock chart</b> shows share prices over time. Each vertical line runs from the day's <b>low</b> to its <b>high</b>, and a marker shows the <b>close</b>. <span class="pill">DATAfile: verizon</span></p>
+      <table class="mini"><tr><th>Excel has 4 types</th></tr><tr><td><b>High-Low-Close</b> (shown)</td></tr><tr><td>Open-High-Low-Close</td></tr><tr><td>Volume-High-Low-Close</td></tr><tr><td>Volume-Open-High-Low-Close</td></tr></table>
+      <div class="out" id="skOut" style="margin-top:10px">Hover a day. Which day had the widest trading range?</div>
+    </div>
+  </div>
+</section>
+
+<!-- 28 PARALLEL -->
+<section class="slide" data-title="Parallel-coordinates plot" data-acc="pink">
+  <div class="kicker">3.4 · Specialized data visualizations</div>
+  <h2>Parallel coordinates: one line per observation</h2>
+  <div class="cols" style="grid-template-columns:1.35fr .85fr">
+    <div class="panel"><div class="ctl"><button class="tg" id="pcMore">Add illustrative players</button></div>
+      <div class="legend"><span><i style="background:#2563eb"></i>First base (1B)</span><span><i style="background:#ea580c"></i>Second base (2B)</span></div>
+      <div class="chart" id="parChart"></div></div>
+    <div>
+      <ul class="tidy" style="--acc:var(--pink)"><li>Used for data with <b>more than two variables</b>.</li><li>Each <b>vertical axis</b> is a variable: home runs (HR), stolen bases (SB), batting average (AVG).</li><li>Each <b>line</b> is one player. Its <b>height</b> on each axis is that player's value.</li></ul>
+      <div class="out" id="parOut" style="margin-top:8px">The textbook example: a 1B with 39 HR, 1 SB, .338 AVG and a 2B with 0 HR, 30 SB, .222 AVG. Look at the line slopes.</div>
+      <p class="note">Extra players are made up for illustration, to show how groups form patterns. They are not textbook data.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 29 MAPS -->
+<section class="slide" data-title="Choropleth maps & cartograms" data-acc="blue">
+  <div class="kicker">3.5 · Visualizing geospatial data</div>
+  <h2>Maps: choropleths and cartograms</h2>
+  <div class="cols" style="grid-template-columns:.8fr 1.35fr">
+    <div class="mini-def">
+      <div><b>Choropleth map</b>: shades, colours or symbols on geographic areas show a value, e.g. a weather map of daily highs, or median income by state. Excel: <b>Insert ▸ Maps ▸ Filled Map</b>.</div>
+      <div><b>Cartogram</b>: map regions are resized by a variable, e.g. population. <b>Weakness:</b> the distortion can make the geography unreadable.</div>
+      <div><b>Equal-area cartogram</b>: every state gets the same tile, so small states don't vanish, but positions stay roughly true. Not available in Excel.</div>
+      <div style="border-left-color:#d97706"><b>Think:</b> Selangor vs Perlis on a normal map. Which one would your eye notice first, and is that fair?</div>
+    </div>
+    <div class="panel">
+      <div class="ctl"><span class="lab">Median household income</span><div class="ramp" id="tileRamp"></div></div>
+      <div class="tiles" id="tiles"></div>
+      <p class="note">Equal-area cartogram of US states, coloured by income band (textbook Fig. 3.43). Click a band to filter it. Maine's band is inferred from the state ranking in Fig. 3.41.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 30 DASHBOARD -->
+<section class="slide" data-title="Data dashboards" data-acc="violet">
+  <div class="kicker">3.6 · Data dashboards</div>
+  <h2>Dashboards: the KPIs for decisions on one screen</h2>
+  <div class="prin">
+    <div style="background:#4f46e5"><b>One screen</b>All the KPIs for one area of operations.</div>
+    <div style="background:#0891b2"><b>No scrolling</b>Split into several dashboards of related KPIs instead.</div>
+    <div style="background:#0d9488"><b>Decision-ready</b>Each KPI has a clear meaning and links to a decision.</div>
+    <div style="background:#ea580c"><b>Good design</b>Same visualization principles: data-ink, sorting, labels.</div>
+    <div style="background:#db2777"><b>Purposeful colour</b>Use colour to call attention or to separate categories.</div>
+  </div>
+  <div class="dash">
+    <div class="top"><b>Grogan Oil · IT call center (Austin) · Shift 1</b><div class="legend" id="dbLeg" style="margin:0"></div><div class="kpis" id="dbKpi" style="margin-left:auto"></div></div>
+    <div class="grid5">
+      <div class="p"><h5>Call volume by hour</h5><div class="chart" id="db1"></div></div>
+      <div class="p"><h5>Time breakdown this shift (%)</h5><div class="chart" id="db2"></div></div>
+      <div class="p"><h5>Unresolved cases beyond 15 min</h5><div class="chart" id="db3"></div></div>
+      <div class="p"><h5>Call volume by office</h5><div class="chart" id="db4"></div></div>
+      <div class="p" style="grid-column:span 2"><h5>Time to resolve a case (minutes) · histogram</h5><div class="chart" id="db5"></div></div>
+    </div>
+  </div>
+  <p class="note">Click a problem type in the legend to highlight it across every panel. Values are approximate readings of textbook Fig. 3.45.</p>
+</section>
+
+<!-- 31 EXIT B -->
+<section class="slide" data-title="Exit ticket: Part B" data-acc="green">
+  <div class="kicker">Exit ticket · Part B · 6 questions</div>
+  <h2>Exit ticket: Chapter 5</h2>
+  <div class="quiz" data-quiz="exitB"></div>
+</section>
+
+<!-- 32 WRAP-UP -->
+<section class="slide" data-title="Wrap-up: which chart when?" data-acc="indigo">
+  <div class="kicker">Wrap-up</div>
+  <h2>Which visual, when?</h2>
+  <div class="recap">
+    <div class="rc" style="background:#2563eb"><b>Table</b><span>Exact values, mixed units or magnitudes.</span></div>
+    <div class="rc" style="background:#0891b2"><b>Scatter / bubble</b><span>Relationship between 2 (or 3) variables.</span></div>
+    <div class="rc" style="background:#4f46e5"><b>Line / sparkline</b><span>Change over time.</span></div>
+    <div class="rc" style="background:#ea580c"><b>Sorted bar</b><span>Compare categories. Better than a pie.</span></div>
+    <div class="rc" style="background:#d97706"><b>Stacked / clustered</b><span>Totals with parts / side-by-side comparison.</span></div>
+    <div class="rc" style="background:#e11d48"><b>Heat map</b><span>Spot patterns across a big grid.</span></div>
+    <div class="rc" style="background:#16a34a"><b>Treemap / waterfall</b><span>Hierarchies / build-up to a total.</span></div>
+    <div class="rc" style="background:#7c3aed"><b>Map / dashboard</b><span>Geography / KPIs at a glance.</span></div>
+  </div>
+  <div class="cols even" style="margin-top:18px">
+    <div class="card tint"><h3>📝 Practise in Excel</h3><p style="margin:0">Rebuild three visuals with the textbook DATAfiles: a <b>PivotTable</b> (restaurant), a <b>sorted bar chart</b> (accountsmanaged) and a <b>heat map with sparklines</b> (samestore_sales). Declutter each one.</p></div>
+    <div class="card"><h3>🎯 Before every chart, ask</h3><p style="margin:0">What decision does it support? · Which preattentive attribute does the work? · What can I delete? · Will a colour-blind reader get it?</p></div>
+  </div>
+</section>
+
+</div></div>
+
+<nav id="menu" aria-label="Slides"><h4>Chapters 4 &amp; 5 · Slides</h4><div id="menuList"></div></nav>
+<div id="scrim"></div>
+<div id="tip"></div>
+<div id="help"><kbd>←</kbd><kbd>→</kbd> navigate · <kbd>M</kbd> menu · <kbd>F</kbd> full screen · <kbd>T</kbd> timer</div>
+<div id="hud">
+  <button id="menuBtn" title="Slide menu (M)" aria-label="Menu">☰</button>
+  <button id="timer" title="Lecture timer — click to start/pause, double-click to reset (T)">▶ 00:00</button>
+  <button id="fsBtn" title="Full screen (F)" aria-label="Full screen">⛶</button>
+  <button id="prevBtn" aria-label="Previous">‹</button>
+  <span class="count" id="count">1 / 32</span>
+  <button id="nextBtn" aria-label="Next">›</button>
+</div>
+<script>
+/* ======================= helpers ======================= */
+const NS="http://www.w3.org/2000/svg";
+const $=id=>document.getElementById(id);
+function mk(tag,a,p){const e=document.createElementNS(NS,tag);if(a)for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e}
+function T(p,x,y,s,a){const t=mk("text",Object.assign({x,y,"font-size":12,fill:"#64748b"},a||{}),p);t.textContent=s;return t}
+function svgIn(host,W,H){host.innerHTML="";return mk("svg",{viewBox:`0 0 ${W} ${H}`,preserveAspectRatio:"xMidYMid meet"},host)}
+function lin(d0,d1,r0,r1){const f=v=>r0+(v-d0)/(d1-d0)*(r1-r0);f.inv=p=>d0+(p-r0)/(r1-r0)*(d1-d0);return f}
+const fmt=n=>Number(n).toLocaleString("en-US");
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const C={b:"#2563eb",o:"#ea580c",t:"#0d9488",p:"#a855f7",y:"#ca8a04",ink:"#0f172a",mut:"#64748b",grid:"#e2e8f0",ax:"#94a3b8",up:"#16a34a",dn:"#e11d48"};
+const CAT=[C.b,C.o,C.t,C.p,C.y];
+const tip=$("tip");
+function showTip(e,h){tip.innerHTML=h;tip.style.display="block";const w=tip.offsetWidth,hh=tip.offsetHeight;
+  tip.style.left=Math.max(4,Math.min(window.innerWidth-w-8,e.clientX+14))+"px";tip.style.top=(e.clientY-hh-12<4?e.clientY+16:e.clientY-hh-12)+"px"}
+function hideTip(){tip.style.display="none"}
+function hov(node,fn,onIn,onOut){node.style.cursor="pointer";
+  node.addEventListener("mousemove",e=>{showTip(e,fn());onIn&&onIn()});
+  node.addEventListener("mouseleave",()=>{hideTip();onOut&&onOut()});
+  node.addEventListener("click",e=>{showTip(e,fn());onIn&&onIn()})}
+/* bar path with only the data end rounded: end = t|b|l|r|n */
+function rbar(x,y,w,h,end,r){r=r===undefined?4:r;if(w<0){x+=w;w=-w}if(h<0){y+=h;h=-h}r=Math.max(0,Math.min(r,w/2,h/2));const X=x+w,Y=y+h;
+  if(end==="t")return`M${x},${Y}V${y+r}Q${x},${y} ${x+r},${y}H${X-r}Q${X},${y} ${X},${y+r}V${Y}Z`;
+  if(end==="b")return`M${x},${y}H${X}V${Y-r}Q${X},${Y} ${X-r},${Y}H${x+r}Q${x},${Y} ${x},${Y-r}Z`;
+  if(end==="r")return`M${x},${y}H${X-r}Q${X},${y} ${X},${y+r}V${Y-r}Q${X},${Y} ${X-r},${Y}H${x}Z`;
+  if(end==="l")return`M${X},${y}V${Y}H${x+r}Q${x},${Y} ${x},${Y-r}V${y+r}Q${x},${y} ${x+r},${y}Z`;
+  return`M${x},${y}H${X}V${Y}H${x}Z`}
+function niceTicks(min,max,n){n=n||5;const span=max-min,s0=span/n,mag=10**Math.floor(Math.log10(s0)),f=s0/mag;const st=(f<1.5?1:f<3?2:f<7?5:10)*mag;const o=[];for(let v=Math.ceil(min/st-1e-9)*st;v<=max+1e-9;v+=st)o.push(+v.toFixed(10));return o}
+function yAxis(g,y,ticks,x0,x1,o){o=o||{};ticks.forEach(v=>{if(o.grid!==false)mk("line",{x1:x0,x2:x1,y1:y(v),y2:y(v),stroke:v===0?"#94a3b8":C.grid,"stroke-width":1},g);
+  T(g,x0-8,y(v)+4,o.f?o.f(v):fmt(v),{"text-anchor":"end","font-size":o.fs||12})});
+  if(o.title){const t=T(g,0,0,o.title,{"text-anchor":"middle","font-size":12.5,"font-weight":700,fill:"#475569",transform:`translate(${o.tx||14},${(y(ticks[0])+y(ticks[ticks.length-1]))/2}) rotate(-90)`})}}
+function xAxis(g,x,ticks,y0,y1,o){o=o||{};ticks.forEach(v=>{if(o.grid)mk("line",{x1:x(v),x2:x(v),y1:y0,y2:y1,stroke:C.grid},g);
+  T(g,x(v),y0+18,o.f?o.f(v):fmt(v),{"text-anchor":"middle","font-size":o.fs||12})});
+  if(o.title)T(g,(x(ticks[0])+x(ticks[ticks.length-1]))/2,y0+38,o.title,{"text-anchor":"middle","font-size":12.5,"font-weight":700,fill:"#475569"})}
+function svgPt(svg,e){const p=svg.createSVGPoint();p.x=e.clientX;p.y=e.clientY;return p.matrixTransform(svg.getScreenCTM().inverse())}
+function seg(id,cb){const s=$(id);s.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{s.querySelectorAll("button").forEach(x=>x.classList.toggle("on",x===b));cb(b.dataset)}))}
+function tg(id,cb){const b=$(id);b.addEventListener("click",()=>{b.classList.toggle("on");cb(b.classList.contains("on"))});return b}
+const on=id=>$(id).classList.contains("on");
+const mix=(hex,t,base)=>`color-mix(in srgb,${hex} ${Math.round(t*100)}%,${base||"#ffffff"})`;
+const MONTHS=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+function spark(host,vals,W,H,o){o=o||{};const s=svgIn(host,W,H);const mn=Math.min(...vals,o.zero?0:Infinity),mx=Math.max(...vals,o.zero?0:-Infinity);
+  const x=lin(0,vals.length-1,3,W-4),y=lin(mn,mx,H-3,3);
+  if(o.zero&&mn<0&&mx>0)mk("line",{x1:0,x2:W,y1:y(0),y2:y(0),stroke:"#94a3b8","stroke-dasharray":"2 2"},s);
+  mk("polyline",{points:vals.map((v,i)=>x(i)+","+y(v)).join(" "),fill:"none",stroke:o.c||C.b,"stroke-width":1.8,"stroke-linejoin":"round","stroke-linecap":"round"},s);
+  if(o.hl){const i=vals.indexOf(mx),j=vals.lastIndexOf(mn);mk("circle",{cx:x(i),cy:y(mx),r:2.6,fill:C.up},s);mk("circle",{cx:x(j),cy:y(mn),r:2.6,fill:C.dn},s)}
+  return s}
+
+/* ======================= DATA ======================= */
+const SCARF=[150,170,140,150,180,180,210,230,140,200,170,160,290,200,210,110,90,140,150,230];
+const GOS={m:["Jan","Feb","Mar","Apr","May","Jun"],cost:[48123,56458,64125,52158,54718,50985],rev:[64124,66125,67125,48178,51785,55678],hc:[8,9,10,9,9,9]};
+const QUAL=["Good","Very Good","Excellent"],BINS=["$10–19","$20–29","$30–39","$40–49"];
+const XN=[[42,40,2,0],[34,64,46,6],[2,14,28,22]];
+const XW=[[2.6,2.5,0.5,null],[12.6,12.6,12.0,10.0],[25.5,29.1,34.0,32.3]],XWrow=[2.5,12.3,32.1],XWcol=[7.6,11.1,19.8,27.5],XWall=13.9;
+const ELEC={x:[2,5,1,3,4,1,5,3,4,2],y:[50,57,41,54,54,38,63,48,59,46]};
+const KN=[95,100,120,115,100,85,135,110,100,50,40,40],KS=[40,45,55,65,60,50,75,65,60,70,75,80],KT=KN.map((v,i)=>v+KS[i]);
+const ACC=[["Davis",24],["Edwards",11],["Francois",28],["Gentry",37],["Jones",15],["Lopez",29],["Smith",21],["Williams",6]];
+const G7=[[7,3,4,1,3,4,5,6,4,0],[3,0,6,9,0,4,5,8,6,3],[2,7,2,2,9,9,4,5,2,1],[2,2,4,5,2,0,9,2,0,4],[2,4,0,7,6,9,3,0,0,4],[7,7,8,9,2,6,7,2,4,7],[6,1,3,3,2,1,4,4,9,0],[3,6,6,2,7,5,5,2,5,4],[1,1,4,0,6,3,4,0,5,1],[3,7,5,2,7,5,7,7,3,9],[3,3,8,6,9,5,5,3,6,4],[7,6,0,3,0,9,9,0,2,9],[4,6,9,4,8,2,6,5,8,3],[9,3,9,2,2,8,4,3,9,8],[5,8,8,2,9,1,2,4,8,5],[1,7,4,0,1,1,9,9,5,8]];
+
+const DATA={"nyc":[["Greenwich Village/Financial District",1965,78.3,7.9,44.0],["Stuyvesant Town/Turtle Bay",1849,78.0,6.9,36.7],["Upper East Side",1706,78.2,5.9,29.1],["Upper West Side",1635,74.6,8.8,38.7],["Chelsea/Clinton/Midtown",1624,66.1,12.7,43.7],["Park Slope/Carroll Gardens",1566,61.8,8.4,37.5],["Bayside/Little Neck",1243,41.3,7.6,40.6],["Rego Park/Forest Hills",1192,51.2,10.4,42.5],["Queens Village",1184,30.2,6.2,41.3],["Flushing/Whitestone",1170,32.5,11.4,23.4],["South Ozone Park/Howard Beach",1148,17.3,8.1,42.0],["Hillcrest/Fresh Meadows",1138,39.6,12.9,41.6],["Sunnyside/Woodside",1137,31.8,10.2,44.7],["Elmhurst/Corona",1121,21.8,22.3,41.1],["Jackson Heights",1114,19.8,16.0,47.3],["Ozone Park/Woodhaven",1114,21.7,11.6,35.6],["Astoria",1106,36.8,15.9,35.4],["Brooklyn Heights/Fort Greene",1086,55.3,17.4,34.5],["Bay Ridge",1082,34.3,15.6,41.9],["Middle Village/Ridgewood",1078,20.1,12.1,39.7],["Flatlands/Canarsie",1052,26.6,9.3,42.0],["Mid-Island",999,28.4,11.3,32.5],["South Shore",999,27.6,4.3,25.9],["Sunset Park",995,21.8,27.6,43.1],["Borough Park",980,26.0,27.6,35.3],["Jamaica",980,19.8,12.7,42.8],["Riverdale/Kingsbridge",969,41.4,13.4,43.6],["Williamsburg/Greenpoint",959,33.9,31.7,33.8],["Williamsbridge/Baychester",950,20.1,16.7,31.9],["Morningside Heights/Hamilton",949,38.1,25.3,44.8],["Bushwick",945,13.3,33.5,35.5],["Sheepshead Bay/Gravesend",945,32.5,11.9,44.4],["East Flatbush",940,18.4,11.7,33.2],["Flatbush",931,28.3,25.1,43.9],["Pelham Parkway",929,22.7,17.4,44.8],["Throgs Neck/Co-op City",892,22.3,13.6,39.7],["East New York/Starrett City",890,13.7,29.2,43.9],["North Shore",889,26.5,17.4,43.0],["Bensonhurst",876,17.7,14.4,44.0],["Rockaways",875,22.2,20.1,40.4],["South Crown Heights",874,19.9,19.7,44.6],["Washington Heights/Inwood",874,28.8,25.9,42.5],["North Crown Heights/Prospect",872,29.7,24.8,42.8],["Kingsbridge Heights/Moshulu",860,16.0,35.0,31.6],["Soundview/Parkchester",848,15.8,27.9,42.4],["Bedford Stuyvesant",822,21.0,34.2,40.5],["Lower East Side/Chinatown",821,34.2,25.9,39.0],["University Heights/Fordham",813,11.6,40.9,29.2],["Coney Island",786,27.2,20.0,46.3],["Highbridge/South Concourse",781,11.2,31.4,44.6],["Morrisania/Belmont",727,11.3,38.9,39.7],["Brownsville/Ocean Hill",714,11.6,36.0,40.3],["East Harlem",677,23.7,30.0,44.2],["Central Harlem",665,30.6,27.1,25.0],["Mott Haven/Hunts Point",625,8.3,41.6,41.3]],"air":[["ATL",10.3,14.0,49.06],["CLT",9.45,7.0,22.19],["DEN",8.35,8.0,27.02],["AUS",5.3,8.0,5.8],["STL",4.8,7.0,6.25],["SMF",7.3,10.0,4.6],["RDU",6.75,6.5,4.8],["EWR",9.9,18.0,18.8],["SFO",7.25,18.0,24.0],["LAX",6.4,12.0,36.1],["SLC",4.5,10.0,10.8],["SAN",8.8,15.0,9.7],["MSY",4.6,16.0,5.3],["IAD",3.0,10.0,10.7],["BNA",2.5,12.0,5.6]]};
+/* ======================= PART A WIDGETS ======================= */
+/* title floaters */
+(function(){
+  const host=$("titleViz");if(!host)return;
+  const card=(l,t,lbl,w)=>{const d=document.createElement("div");d.className="fc";d.style.left=l+"px";d.style.top=t+"px";d.style.width=w+"px";d.innerHTML=`<b>${lbl}</b><div></div>`;host.appendChild(d);return d.lastChild};
+  // sorted bar
+  let h=card(0,0,"Sorted bar",210);let s=svgIn(h,190,110);[...ACC].sort((a,b)=>b[1]-a[1]).slice(0,5).forEach((d,i)=>{mk("path",{d:rbar(52,4+i*21,d[1]/37*130,15,"r"),fill:C.b},s);T(s,46,15+i*21,d[0],{"text-anchor":"end","font-size":10.5,fill:"#334155"})});
+  // line
+  h=card(220,70,"Line · North vs South",210);s=svgIn(h,190,100);const x=lin(0,11,6,184),y=lin(0,140,94,6);
+  [[KN,C.b],[KS,C.o]].forEach(([v,c])=>mk("polyline",{points:v.map((d,i)=>x(i)+","+y(d)).join(" "),fill:"none",stroke:c,"stroke-width":2.4,"stroke-linejoin":"round"},s));
+  // heat map
+  h=card(30,190,"Heat map",230);s=svgIn(h,210,96);const HV=[[-2,-1,0,2,4,5,6,8],[5,4,2,-2,-5,-8,-6,-8],[16,15,16,18,17,14,15,19],[-9,-6,-3,3,6,8,11,13]];
+  HV.forEach((r,i)=>r.forEach((v,j)=>mk("rect",{x:j*26,y:i*24,width:24,height:22,rx:4,fill:v>=0?`rgba(29,78,216,${.12+v/19*.88})`:`rgba(190,18,60,${.12+(-v)/13*.88})`},s)));
+  // bubble
+  h=card(200,320,"Bubble",220);s=svgIn(h,200,110);[[30,70,22],[80,40,14],[130,80,28],[165,30,10],[60,25,8],[110,60,12]].forEach(([a,b,r],i)=>mk("circle",{cx:a,cy:b,r,fill:CAT[i%4],"fill-opacity":.6,stroke:"#fff","stroke-width":2},s));
+})();
+
+/* 4 · count the 7s */
+(function(){
+  const g=$("s7grid");G7.flat().forEach(v=>{const s=document.createElement("span");s.textContent=v;if(v===7)s.className="s";g.appendChild(s)});
+  const total=G7.flat().filter(v=>v===7).length;
+  let t0=0,run=false,mode=null;const clock=$("s7clock"),done=$("s7done"),idx={plain:0,color:1,size:2};
+  function tick(){if(!run)return;clock.textContent=((performance.now()-t0)/1000).toFixed(1)+" s";requestAnimationFrame(tick)}
+  seg("s7mode",d=>{mode=d.m;g.className="sevens "+(d.m==="plain"?"":d.m);t0=performance.now();run=true;done.disabled=false;tick();$("s7out").innerHTML="Count silently… press <b>Done</b> when you finish."});
+  done.onclick=()=>{run=false;done.disabled=true;const t=((performance.now()-t0)/1000).toFixed(1);$("s7res").rows[idx[mode]].cells[1].textContent=t+" s";g.classList.add("hide");$("s7out").innerHTML="Time recorded and grid hidden. What's your count? Try the next round."};
+  $("s7rev").onclick=()=>{run=false;done.disabled=true;g.className="sevens color reveal";$("s7out").innerHTML=`There are <b>${total}</b> sevens. With colour or size, they <b>pop out</b>. That is a <b>preattentive attribute</b> at work: no digit-by-digit search needed.`};
+})();
+
+/* 5 · preattentive spot-it */
+(function(){
+  const host=$("paChart");let mode="color",cb=false,t0;
+  const MSG={color:"Colour pops out instantly. It is preattentive.",size:"Size works too, but small size differences are hard to judge.",shape:"Shape is preattentive, but weaker than colour.",length:"Length is the best attribute for quantities: longer means bigger.",conj:"Slower! When the target differs by a <b>combination</b> of colour <i>and</i> shape, you have to search item by item. Use one attribute per message."};
+  function draw(){const s=svgIn(host,640,290);if(cb)s.style.filter="url(#deut)";
+    const target=Math.floor(Math.random()*40),dc=cb?"#3f9142":"#334155",tc=cb?"#d64534":"#ea580c";
+    for(let i=0;i<40;i++){const col=i%10,row=Math.floor(i/10),x=36+col*63+(Math.random()*14-7),y=38+row*70+(Math.random()*12-6),isT=i===target;let n;const g=mk("g",{},s);
+      if(mode==="color")n=mk("circle",{cx:x,cy:y,r:13,fill:isT?tc:dc},g);
+      else if(mode==="size")n=mk("circle",{cx:x,cy:y,r:isT?20:12,fill:dc},g);
+      else if(mode==="shape")n=isT?mk("rect",{x:x-12,y:y-12,width:24,height:24,rx:3,fill:dc},g):mk("circle",{cx:x,cy:y,r:13,fill:dc},g);
+      else if(mode==="length")n=mk("rect",{x:x-4,y:y-(isT?13:27),width:8,height:isT?26:54,rx:3,fill:dc},g);
+      else{const k=isT?2:(Math.random()<.5?0:1);n=k===0?mk("circle",{cx:x,cy:y,r:13,fill:tc},g):mk("rect",{x:x-12,y:y-12,width:24,height:24,rx:3,fill:k===1?dc:tc},g)}
+      mk("circle",{cx:x,cy:y,r:30,fill:"transparent"},g);g.style.cursor="pointer";
+      g.onclick=()=>{if(isT){$("paOut").innerHTML=`✅ Found in <b>${((performance.now()-t0)/1000).toFixed(2)} s</b>. ${MSG[mode]}`;n.setAttribute("stroke","#d97706");n.setAttribute("stroke-width",4)}
+        else{$("paOut").innerHTML="❌ Not that one. Keep looking…";host.classList.remove("shake");void host.offsetWidth;host.classList.add("shake")}}}
+    t0=performance.now();$("paOut").innerHTML=cb&&mode==="color"?"Red target among green dots, as a colour-blind (deuteranope) viewer would see it. Can you still find it?":"Click the item that is different."}
+  seg("paMode",d=>{mode=d.m;draw()});$("paNew").onclick=draw;$("paCB").onchange=e=>{cb=e.target.checked;draw()};draw();
+})();
+
+/* 6 · data-ink */
+(function(){
+  const ITEMS=[["grid","Heavy gridlines",.5],["bg","Background fill",.6],["border","Chart border",.15],["markers","Big markers",.25],["labels","Label every point",.35],["legend","Pointless legend",.1],["heavy","3-D shadow",.3]];
+  const st={};ITEMS.forEach(i=>st[i[0]]=true);let tableLo=true;
+  const chips=$("inkChips");ITEMS.forEach(([k,l])=>{const b=document.createElement("button");b.className="tg on";b.textContent=l;b.dataset.k=k;b.onclick=()=>{st[k]=!st[k];draw()};chips.appendChild(b)});
+  function draw(){
+    chips.querySelectorAll("button").forEach(b=>b.classList.toggle("on",st[b.dataset.k]));
+    const W=660,H=330,L=56,R=st.legend?560:640,Tp=40,B=290;const s=svgIn($("inkChart"),W,H);
+    if(st.bg)mk("rect",{x:L,y:Tp,width:R-L,height:B-Tp,fill:"#dbeafe"},s);
+    if(st.border)mk("rect",{x:3,y:3,width:W-6,height:H-6,fill:"none",stroke:"#0f172a","stroke-width":3,rx:2},s);
+    const x=lin(0,21,L,R),y=lin(0,350,B,Tp);
+    const g=mk("g",{},s);yAxis(g,y,[0,50,100,150,200,250,300,350],L,R,{grid:false});
+    if(st.grid){[0,50,100,150,200,250,300,350].forEach(v=>mk("line",{x1:L,x2:R,y1:y(v),y2:y(v),stroke:"#64748b","stroke-width":1.2},s));for(let d=1;d<=20;d++)mk("line",{x1:x(d),x2:x(d),y1:Tp,y2:B,stroke:"#64748b","stroke-width":1.2},s)}
+    [1,5,10,15,20].forEach(d=>T(s,x(d),B+18,d,{"text-anchor":"middle"}));T(s,(L+R)/2,B+36,"Day",{"text-anchor":"middle","font-weight":700,fill:"#475569"});
+    T(s,L,24,"Scarf sales (units)",{"font-size":15,"font-weight":800,fill:C.ink});
+    mk("line",{x1:L,x2:R,y1:B,y2:B,stroke:st.heavy?"#0f172a":"#94a3b8","stroke-width":st.heavy?4:1},s);
+    if(st.heavy)mk("line",{x1:L,x2:L,y1:Tp,y2:B,stroke:"#0f172a","stroke-width":4},s);
+    const pts=SCARF.map((v,i)=>x(i+1)+","+y(v)).join(" ");
+    if(st.heavy)mk("polyline",{points:SCARF.map((v,i)=>(x(i+1)+6)+","+(y(v)+8)).join(" "),fill:"none",stroke:"#94a3b8","stroke-width":6,"stroke-linejoin":"round"},s);
+    mk("polyline",{points:pts,fill:"none",stroke:C.b,"stroke-width":st.heavy?5:2.2,"stroke-linejoin":"round","stroke-linecap":"round"},s);
+    SCARF.forEach((v,i)=>{if(st.markers)mk("rect",{x:x(i+1)-6,y:y(v)-6,width:12,height:12,fill:"#1e3a8a",stroke:"#fde047","stroke-width":2},s);
+      if(st.labels)T(s,x(i+1),y(v)-11,v,{"text-anchor":"middle","font-size":10.5,"font-weight":700,fill:"#0f172a"});
+      const hit=mk("circle",{cx:x(i+1),cy:y(v),r:12,fill:"transparent"},s);hov(hit,()=>`<b>Day ${i+1}</b><br>${v} units`)});
+    if(st.legend){mk("rect",{x:572,y:150,width:80,height:30,fill:"#fff",stroke:"#0f172a"},s);mk("line",{x1:580,x2:600,y1:165,y2:165,stroke:C.b,"stroke-width":3},s);T(s,604,169,"Series1",{fill:"#0f172a"})}
+    const n=ITEMS.reduce((a,i)=>a+(st[i[0]]?i[2]:0),0),ratio=Math.round(100/(1+.18+n));
+    $("inkMeter").innerHTML=`<div style="display:flex;align-items:center;gap:10px"><div style="flex:1;height:14px;background:#f1f5f9;border-radius:7px;overflow:hidden"><div style="width:${ratio}%;height:100%;background:${ratio>70?"#16a34a":ratio>45?"#d97706":"#e11d48"};transition:width .4s"></div></div><b style="font-family:var(--mono)">≈${ratio}%</b></div><span style="font-size:11.5px;color:#64748b">illustrative estimate of data-ink</span>`;
+    // table
+    let t=`<table class="dt ${tableLo?"lo":"hi"}"><thead><tr><th class="lbl">Day</th><th class="n">Sales (units)</th></tr></thead><tbody>`;SCARF.forEach((v,i)=>t+=`<tr><td class="lbl">${i+1}</td><td class="n">${v}</td></tr>`);$("inkTable").innerHTML=t+"</tbody></table>";
+  }
+  seg("inkView",d=>{$("inkChart").style.display=d.v==="chart"?"":"none";$("inkChips").style.display=d.v==="chart"?"":"none";$("inkTable").style.display=d.v==="table"?"":"none"});
+  $("inkAdd").onclick=()=>{ITEMS.forEach(i=>st[i[0]]=true);tableLo=true;draw()};
+  $("inkClean").onclick=()=>{let k=0;tableLo=false;ITEMS.forEach(i=>{if(st[i[0]]){setTimeout(()=>{st[i[0]]=false;draw()},k*220);k++}});draw()};
+  draw();
+})();
+
+/* 7 · table vs chart (Gossamer) */
+(function(){
+  let view="table",hc=false;
+  function table(){let t=`<table class="dt hi"><thead><tr><th class="lbl"></th>${GOS.m.map(m=>`<th class="n">${m}</th>`).join("")}<th class="n">Total</th></tr></thead><tbody>`;
+    if(hc)t+=`<tr><td class="lbl"><b>Head count</b></td>${GOS.hc.map(v=>`<td class="n">${v}</td>`).join("")}<td class="n"></td></tr>`;
+    t+=`<tr><td class="lbl"><b>Costs ($)</b></td>${GOS.cost.map(v=>`<td class="n">${fmt(v)}</td>`).join("")}<td class="n"><b>${fmt(GOS.cost.reduce((a,b)=>a+b))}</b></td></tr>`;
+    t+=`<tr><td class="lbl"><b>Revenues ($)</b></td>${GOS.rev.map(v=>`<td class="n">${fmt(v)}</td>`).join("")}<td class="n"><b>${fmt(GOS.rev.reduce((a,b)=>a+b))}</b></td></tr>`;
+    $("gosTable").innerHTML=t+"</tbody></table>"}
+  function chart(){const H=view==="both"?250:330,W=660,L=70,R=560,Tp=16,B=H-40;const s=svgIn($("gosChart"),W,H);const x=lin(0,5,L+20,R-10),y=lin(0,80000,B,Tp);
+    yAxis(s,y,[0,20000,40000,60000,80000],L,R);GOS.m.forEach((m,i)=>T(s,x(i),B+18,m,{"text-anchor":"middle"}));
+    const ser=[["Revenues",GOS.rev,C.b],["Costs",GOS.cost,C.o]];if(hc)ser.push(["Head count",GOS.hc,C.p]);
+    ser.forEach(([n,v,c])=>{mk("polyline",{points:v.map((d,i)=>x(i)+","+y(d)).join(" "),fill:"none",stroke:c,"stroke-width":2.4,"stroke-linejoin":"round"},s);
+      v.forEach((d,i)=>{const p=mk("circle",{cx:x(i),cy:y(d),r:5,fill:c,stroke:"#fff","stroke-width":2},s);hov(p,()=>`<b>${n}</b> · ${GOS.m[i]}<br>${n==="Head count"?d+" employees":"$"+fmt(d)}`)});
+      T(s,R+6,y(v[5])+(n==="Costs"?10:n==="Revenues"?-2:-4),n,{fill:"#334155","font-weight":700,"font-size":12.5})});
+    if(hc){mk("path",{d:`M${x(2)},${y(0)-50} L${x(2)},${y(0)-10}`,stroke:"#7c3aed","stroke-width":1.5,"marker-end":"url(#arr)"},s);T(s,x(2)-60,y(0)-56,"Head count is here, flattened to zero",{fill:"#7c3aed","font-weight":700})}}
+  function upd(){$("gosTable").style.display=view==="chart"?"none":"";$("gosChart").style.display=view==="table"?"none":"";table();if(view!=="table")chart();
+    $("gosOut").innerHTML=hc?(view==="table"?"In a <b>table</b>, head count (employees) sits happily next to dollars.":"On a $0–80,000 scale, 8–10 employees is a flat line at zero. <b>Different magnitudes → use a table</b> (never a second y-axis).")
+      :view==="table"?"Precise values: you can read exactly $64,124 in January.":view==="chart"?"The chart shows the <b>pattern</b> (revenue dips below costs in Apr–May), but the exact values are hard to read.":"<b>Chart + table</b>: the pattern <i>and</i> the precise values, without labelling every point."}
+  seg("gosView",d=>{view=d.v;upd()});$("gosHC").onchange=e=>{hc=e.target.checked;upd()};upd();
+})();
+
+/* 8 · table design */
+(function(){
+  const prof=GOS.rev.map((v,i)=>v-GOS.cost[i]);const f=v=>v<0?`(${fmt(-v)})`:fmt(v);const tot=a=>a.reduce((x,y)=>x+y,0);
+  const MSG={A:"Heavy borders on every cell: lots of non-data ink, and the eye bounces around.",B:"Lighter, but every cell is still boxed and the header is shaded. There is still clutter.",C:"Vertical rules cut the numbers apart, and the calculated row is not set off.",D:"<b>The textbook choice.</b> Lines only separate the headers from the data, the Total column and the calculated Profit row. Labels are left-aligned and numbers right-aligned."};
+  const host=$("tdes");["A","B","C","D"].forEach(k=>{const d=document.createElement("div");d.className="opt d"+k;d.dataset.k=k;
+    const row=(n,a,cls)=>`<tr class="${cls||""}"><td>${n}</td>${a.map(v=>`<td>${f(v)}</td>`).join("")}<td class="tot">${f(tot(a))}</td></tr>`;
+    d.innerHTML=`<span class="L">Design ${k}</span><table><thead><tr><th></th><th class="m" colspan="6" style="text-align:center">Month</th><th></th></tr><tr><th></th>${[1,2,3,4,5,6].map(i=>`<th>${i}</th>`).join("")}<th class="tot">Total</th></tr></thead><tbody>${row("Costs ($)",GOS.cost)}${row("Revenues ($)",GOS.rev)}${row("Profits ($)",prof,"pr")}</tbody></table>`;
+    d.onclick=()=>{host.querySelectorAll(".opt").forEach(o=>o.classList.remove("pick","best"));if(k!=="D")d.classList.add("pick");host.querySelector(".dD").classList.add("best");
+      $("tdOut").innerHTML=(k==="D"?"✅ ":"You picked "+k+": ")+MSG[k]+(k!=="D"?"<br><br>✅ "+MSG.D:"")};host.appendChild(d)});
+})();
+
+/* 9 · crosstab */
+(function(){
+  let mode="n";const rt=XN.map(r=>r.reduce((a,b)=>a+b)),ct=[0,1,2,3].map(j=>XN.reduce((a,r)=>a+r[j],0));
+  function val(i,j){if(mode==="n")return XN[i][j];if(mode==="row")return XN[i][j]/rt[i]*100;if(mode==="pct")return XN[i][j]/3;return XW[i][j]}
+  const show=v=>v===null?"–":mode==="n"?fmt(v):mode==="wait"?v.toFixed(1):v.toFixed(1)+"%";
+  function draw(){const mx=mode==="wait"?34:mode==="n"?64:mode==="row"?60:21.3;
+    let h=`<table class="xt"><thead><tr><th class="rl">Quality rating</th>${BINS.map(b=>`<th>${b}</th>`).join("")}<th>Total</th></tr></thead><tbody>`;
+    QUAL.forEach((q,i)=>{h+=`<tr><td class="rl"><b>${q}</b></td>`;[0,1,2,3].forEach(j=>{const v=val(i,j);const t=v===null?0:.06+.8*v/mx;
+      h+=`<td data-i="${i}" data-j="${j}" class="${v===null?"na":""}" style="background:${mix("#7c3aed",t,"#ffffff")};color:${t>.5?"#fff":"#0f172a"}">${show(v)}</td>`});
+      const tv=mode==="n"?rt[i]:mode==="row"?100:mode==="pct"?rt[i]/3:XWrow[i];h+=`<td class="tot" data-i="${i}" data-j="T">${show(tv)}</td></tr>`});
+    h+=`<tr><td class="rl"><b>Total</b></td>${[0,1,2,3].map(j=>{const v=mode==="n"?ct[j]:mode==="row"?ct[j]/3:mode==="pct"?ct[j]/3:XWcol[j];return`<td class="tot" data-i="T" data-j="${j}">${show(v)}</td>`}).join("")}<td class="tot" data-i="T" data-j="T">${mode==="n"?"300":mode==="wait"?XWall.toFixed(1):"100.0%"}</td></tr></tbody></table>
+      <p class="note">${mode==="row"?"Row %: each row adds up to 100%, so you can compare price profiles across quality levels.":mode==="wait"?"Average wait time in minutes (an average, not a count). No restaurant is Good and $40–49.":"Note: the textbook slide prints 300 as the Excellent row total. The correct total is 2 + 14 + 28 + 22 = <b>66</b>."}</p>`;
+    $("xtTable").innerHTML=h;
+    $("xtTable").querySelectorAll("td[data-i]").forEach(td=>td.onclick=()=>{$("xtTable").querySelectorAll("td.sel").forEach(x=>x.classList.remove("sel"));td.classList.add("sel");$("xtOut").innerHTML=explain(td.dataset.i,td.dataset.j,td.textContent)})}
+  function explain(i,j,txt){const q=i==="T"?"all":QUAL[i],b=j==="T"?"any price":BINS[j];
+    if(mode==="n")return i==="T"&&j==="T"?"<b>300</b> restaurants in total.":`<b>${txt}</b> ${q==="all"?"":q+" "}restaurants ${j==="T"?"in total":"with meals at "+b}.`+(i==1&&j==1?" This is the <b>largest cell</b>.":"");
+    if(mode==="row")return i==="T"?`<b>${txt}</b> of all restaurants charge ${b}.`:`<b>${txt}</b> of ${q} restaurants charge ${b}.`;
+    if(mode==="pct")return `<b>${txt}</b> of all 300 restaurants are ${q==="all"?"":q+" and "}${j==="T"?"":"priced "+b}.`.replace(" and .",".");
+    return txt==="–"?"No restaurants in this cell, so there is no average.":`${q==="all"?"Restaurants":q+" restaurants"} ${j==="T"?"overall":"at "+b} have an average wait of <b>${txt} min</b>.`}
+  seg("xtMode",d=>{mode=d.m;draw();$("xtOut").innerHTML=mode==="pct"?"Try: what share of restaurants are <b>Very Good</b>? (Total column)":mode==="wait"?"Pattern: waits <b>rise with quality</b>. Among Excellent restaurants, pricier ones tend to have longer waits.":"Click any cell to read it in plain English."});draw();
+})();
+
+/* 10 · PivotTable builder (rows rebuilt from the textbook summary) */
+const REST=(function(){const rows=[];let id=1;XN.forEach((r,i)=>r.forEach((n,j)=>{const m=XW[i][j];for(let k=0;k<n;k++){const a=n>1?((k/(n-1))*2-1)*Math.min(m,3):0;rows.push({id:id++,q:QUAL[i],p:10+10*j+(k*7)%10,w:m+a,bin:BINS[j]})}}));return rows})();
+(function(){
+  const F=[["Restaurant","r"],["Quality Rating","q"],["Meal Price ($)","p"],["Wait Time (min)","w"]];
+  function draw(){const R=$("pvRows").value,Cc=$("pvCols").value,V=$("pvVal").value,A=$("pvAs").value,grp=$("pvGroup").checked,mv=$("pvMove").checked;
+    const used={r:V==="cnt",q:R==="q"||Cc==="q",p:R==="p"||Cc==="p",w:V!=="cnt"};
+    $("pvFields").innerHTML=F.map(([n,k])=>`<div class="fld"><i class="${used[k]?"on":""}">${used[k]?"✓":""}</i>${n}</div>`).join("");
+    if(R&&R===Cc){$("pvOut").innerHTML="";$("pvMsg").innerHTML="⚠️ A field can only sit in <b>one</b> area. Excel moves it, rather than copying it.";return}
+    const key=(d,k)=>k==="q"?d.q:k==="p"?(grp?d.bin:String(d.p)):"";
+    const order=(k)=>{if(k==="q")return mv?["Good","Very Good","Excellent"]:["Excellent","Good","Very Good"];if(k==="p")return grp?BINS:[...new Set(REST.map(d=>d.p))].sort((a,b)=>a-b).map(String);return[""]};
+    const rk=order(R),ck=order(Cc);
+    const agg=a=>V==="cnt"?a.length:V==="sum"?a.reduce((s,d)=>s+d.w,0):a.length?a.reduce((s,d)=>s+d.w,0)/a.length:null;
+    const cell=(r,c)=>agg(REST.filter(d=>(!R||key(d,R)===r)&&(!Cc||key(d,Cc)===c)));
+    const GT=agg(REST);
+    const fv=(v,rowTot)=>{if(v===null||v===0&&V!=="cnt"&&false)return"";if(A==="gt")return(v/GT*100).toFixed(2)+"%";if(A==="row")return(v/rowTot*100).toFixed(2)+"%";return V==="cnt"?fmt(v):v.toFixed(1)};
+    const vn=V==="cnt"?"Count of Restaurant":V==="avg"?"Average of Wait Time (min)":"Sum of Wait Time (min)";
+    let h=`<table class="pvt"><thead>`;
+    if(Cc)h+=`<tr><th>${vn}</th><th colspan="${ck.length+1}" style="text-align:left">Column Labels ▾</th></tr>`;
+    h+=`<tr><th>${R?"Row Labels ▾":""}</th>${Cc?ck.map(c=>`<th>${c}</th>`).join(""):`<th>${vn}</th>`}${Cc?"<th>Grand Total</th>":""}</tr></thead><tbody>`;
+    const rl=R?rk:[""];
+    rl.forEach(r=>{const rt=agg(REST.filter(d=>!R||key(d,R)===r));h+=`<tr><td>${R?r:vn}</td>`;
+      if(Cc)ck.forEach(c=>{const v=cell(r,c);h+=`<td>${v===null||(V==="cnt"&&v===0)?"":fv(v,rt)}</td>`});
+      h+=`<td class="gt">${fv(rt,rt)}</td></tr>`});
+    if(R){h+=`<tr class="gt"><td>Grand Total</td>`;if(Cc)ck.forEach(c=>{const v=agg(REST.filter(d=>key(d,Cc)===c));h+=`<td>${fv(v,GT)}</td>`});h+=`<td>${fv(GT,GT)}</td></tr>`}
+    $("pvOut").innerHTML=h+"</tbody></table>";
+    let m;
+    if(!grp&&(R==="p"||Cc==="p"))m="Without grouping, Excel makes <b>one column per price</b>, which is far too many to read. Tick <b>Group</b> again.";
+    else if(V!=="cnt"&&A!=="no")m="Careful: % of totals suits <b>counts and sums</b>. An average as a % of the grand average is rarely meaningful.";
+    else if(V==="sum")m="Excel defaults to <b>Sum</b>. Summing wait times rarely helps, so change it in <b>Value Field Settings</b>.";
+    else if(!mv&&(R==="q"||Cc==="q"))m="Excel sorts labels <b>A–Z</b>: Excellent, Good, Very Good. Tick <b>Move “Excellent” to end</b> to get the natural order.";
+    else if(V==="cnt"&&A==="gt")m="<b>50%</b> of restaurants are Very Good, and <b>26%</b> have meals at $10–19. This matches textbook Fig. 3.14.";
+    else if(V==="avg")m="Wait time <b>increases with quality</b>. For Excellent restaurants, it also tends to rise with price.";
+    else m="This matches the crosstab on the previous slide. Now try <b>% of Grand Total</b> or <b>Average of Wait Time</b>.";
+    $("pvMsg").innerHTML=m}
+  ["pvRows","pvCols","pvVal","pvAs","pvGroup","pvMove"].forEach(id=>$(id).onchange=draw);draw();
+})();
+
+/* 12 · scatter */
+(function(){
+  const n=10,mx=ELEC.x.reduce((a,b)=>a+b)/n,my=ELEC.y.reduce((a,b)=>a+b)/n;let sxy=0,sxx=0,syy=0;ELEC.x.forEach((x,i)=>{sxy+=(x-mx)*(ELEC.y[i]-my);sxx+=(x-mx)**2;syy+=(ELEC.y[i]-my)**2});
+  const b1=sxy/sxx,b0=my-b1*mx,r=sxy/Math.sqrt(sxx*syy);
+  function draw(){const W=660,H=380,L=60,R=640,Tp=20,B=330;const s=svgIn($("scChart"),W,H);const x=lin(0,6,L,R),y=lin(0,70,B,Tp);
+    yAxis(s,y,[0,10,20,30,40,50,60,70],L,R,{grid:on("scGrid"),title:"Sales ($100s)"});mk("line",{x1:L,x2:R,y1:B,y2:B,stroke:"#94a3b8"},s);
+    xAxis(s,x,[0,1,2,3,4,5,6],B,Tp,{grid:on("scGrid"),title:"Number of commercials"});
+    if(on("scTrend")){const tl=mk("line",{x1:x(.5),y1:y(b0+b1*.5),x2:x(5.6),y2:y(b0+b1*5.6),stroke:C.o,"stroke-width":2.2,"stroke-dasharray":"6 4"},s);
+      T(s,x(5.6),y(b0+b1*5.6)-10,"Trendline",{"text-anchor":"end",fill:C.o,"font-weight":700})}
+    if(on("scEq"))T(s,x(.3),y(66),`ŷ = ${b0.toFixed(2)} + ${b1.toFixed(2)}x     r = ${r.toFixed(2)}`,{"font-size":15,"font-weight":800,fill:C.ink,"font-family":"JetBrains Mono,monospace"});
+    ELEC.x.forEach((xv,i)=>{const c=mk("circle",{cx:x(xv),cy:y(ELEC.y[i]),r:8,fill:C.b,stroke:"#fff","stroke-width":2},s);
+      hov(c,()=>`<b>Week ${i+1}</b><br>${xv} commercial${xv>1?"s":""} · sales $${fmt(ELEC.y[i]*100)}`,()=>$("scOut").innerHTML=`<b>Week ${i+1}</b>: ${xv} commercials and $${fmt(ELEC.y[i]*100)} in sales.`)});
+    $("scOut").innerHTML=on("scEq")?`<b>r = ${r.toFixed(2)}</b>: a strong <b>positive</b> relationship. Each extra commercial goes with about <b>$${Math.round(b1*100)}</b> more sales. That is association, not proof of causation.`:on("scTrend")?"The trendline slopes <b>upward</b>: weeks with more commercials tend to have higher sales.":"Hover a point to see its week."}
+  ["scTrend","scEq","scGrid"].forEach(id=>tg(id,draw));draw();
+})();
+
+/* 13 · line + sparklines */
+(function(){
+  let mode="tot";
+  function draw(){const W=660,H=370,L=60,R=600,Tp=16,B=322;const s=svgIn($("lnChart"),W,H);const x=lin(0,11,L+14,R-14),y=lin(0,250,B,Tp);
+    yAxis(s,y,[0,50,100,150,200,250],L,R,{title:"Sales ($100s)"});MONTHS.forEach((m,i)=>T(s,x(i),B+18,m,{"text-anchor":"middle"}));
+    const ser=mode==="tot"?[["Total",KT,C.b]]:[["North",KN,C.b],["South",KS,C.o]];
+    $("lnLeg").innerHTML=mode==="tot"?"":ser.map(([n,,c])=>`<span><i style="background:${c}"></i>${n}</span>`).join("");
+    ser.forEach(([n,v,c])=>{mk("polyline",{points:v.map((d,i)=>x(i)+","+y(d)).join(" "),fill:"none",stroke:c,"stroke-width":2.4,"stroke-linejoin":"round","stroke-linecap":"round"},s);
+      if(mode!=="tot")T(s,R-6,y(v[11])+4,n,{fill:"#334155","font-weight":700})});
+    const cross=mk("line",{y1:Tp,y2:B,stroke:"#94a3b8","stroke-dasharray":"3 3",opacity:0},s);const dots=ser.map(([,,c])=>mk("circle",{r:5.5,fill:c,stroke:"#fff","stroke-width":2,opacity:0},s));
+    const ov=mk("rect",{x:L,y:Tp,width:R-L,height:B-Tp,fill:"transparent"},s);
+    const move=e=>{const p=svgPt(s,e);const i=Math.max(0,Math.min(11,Math.round(x.inv(p.x))));cross.setAttribute("x1",x(i));cross.setAttribute("x2",x(i));cross.setAttribute("opacity",1);
+      ser.forEach(([n,v],k)=>{dots[k].setAttribute("cx",x(i));dots[k].setAttribute("cy",y(v[i]));dots[k].setAttribute("opacity",1)});
+      showTip(e,`<b>${MONTHS[i]}</b><br>`+ser.map(([n,v,c])=>`<span style="color:${c}">●</span> ${n}: ${v[i]}`).join("<br>"))};
+    ov.addEventListener("mousemove",move);ov.addEventListener("click",move);ov.addEventListener("mouseleave",()=>{hideTip();cross.setAttribute("opacity",0);dots.forEach(d=>d.setAttribute("opacity",0))})}
+  seg("lnMode",d=>{mode=d.m;draw()});draw();
+  let t=`<table class="mini"><tr><th>Region</th><th>Sparkline</th><th>Jan</th><th>Dec</th></tr>`;[["North",KN,C.b],["South",KS,C.o],["Total",KT,"#334155"]].forEach(([n,v],i)=>t+=`<tr><td><b>${n}</b></td><td><div id="spk${i}" style="width:120px"></div></td><td>${v[0]}</td><td>${v[11]}</td></tr>`);
+  $("spTable").innerHTML=t+"</table>";[[KN,C.b],[KS,C.o],[KT,"#334155"]].forEach(([v,c],i)=>spark($("spk"+i),v,120,26,{c,hl:true}));
+})();
+
+/* 14 · bar */
+(function(){
+  const W=660,H=360,L=100,R=630,Tp=10,rh=40;const s=svgIn($("barChart"),W,H);const x=lin(0,40,L,R);
+  const gridG=mk("g",{},s);[0,10,20,30,40].forEach(v=>{mk("line",{x1:x(v),x2:x(v),y1:Tp,y2:Tp+8*rh,stroke:C.grid,class:"gl"},gridG);T(s,x(v),Tp+8*rh+18,v,{"text-anchor":"middle"})});
+  T(s,(L+R)/2,Tp+8*rh+38,"Accounts managed",{"text-anchor":"middle","font-weight":700,fill:"#475569"});
+  mk("line",{x1:L,x2:L,y1:Tp,y2:Tp+8*rh,stroke:"#94a3b8"},s);
+  const gs=ACC.map(([n,v])=>{const g=mk("g",{},s);g.style.transition="transform .7s cubic-bezier(.3,.7,.2,1)";
+    mk("path",{d:rbar(L,8,x(v)-L,rh-16,"r"),fill:C.b},g);T(g,L-10,rh/2+4,n,{"text-anchor":"end",fill:"#334155","font-weight":600,"font-size":13});
+    const lb=T(g,x(v)+6,rh/2+4,v,{fill:"#0f172a","font-weight":800,"font-size":13,class:"lab"});lb.style.display="none";
+    hov(g,()=>`<b>${n}</b><br>${v} accounts`);return g});
+  function place(){const ord=on("barSort")?[...ACC].map((d,i)=>[d,i]).sort((a,b)=>b[0][1]-a[0][1]).map(d=>d[1]):ACC.map((d,i)=>i);
+    ord.forEach((idx,pos)=>gs[idx].style.transform=`translate(0px,${Tp+pos*rh}px)`);
+    s.querySelectorAll(".lab").forEach(l=>l.style.display=on("barLab")?"":"none");gridG.style.display=on("barGrid")?"":"none";
+    $("barOut").innerHTML=on("barSort")?"Sorted: <b>Gentry (37)</b> leads and <b>Williams (6)</b> trails. The ranking is visible instantly.":"Unsorted (alphabetical): who manages the most? It takes a moment to find out."}
+  ["barSort","barLab","barGrid"].forEach(id=>tg(id,place));place();
+})();
+
+/* 15 · pie */
+(function(){
+  const PC=["#2563eb","#ea580c","#0d9488","#a855f7","#ca8a04","#db2777","#64748b","#65a30d"];
+  const s=svgIn($("pieChart"),520,300),cx=150,cy=150,r=135,tot=ACC.reduce((a,d)=>a+d[1],0);let a0=-Math.PI/2;
+  ACC.forEach(([n,v],i)=>{const a1=a0+v/tot*2*Math.PI,lg=a1-a0>Math.PI?1:0;const p=mk("path",{d:`M${cx},${cy}L${cx+r*Math.cos(a0)},${cy+r*Math.sin(a0)}A${r},${r} 0 ${lg} 1 ${cx+r*Math.cos(a1)},${cy+r*Math.sin(a1)}Z`,fill:PC[i],stroke:"#fff","stroke-width":2},s);
+    hov(p,()=>`<b>${n}</b>`);a0=a1;mk("rect",{x:330,y:40+i*28,width:14,height:14,rx:3,fill:PC[i]},s);T(s,352,52+i*28,n,{fill:"#334155","font-size":14,"font-weight":600})});
+  const bs=svgIn($("pieBar"),520,250);const x=lin(0,40,90,500);[...ACC].sort((a,b)=>b[1]-a[1]).forEach(([n,v],i)=>{const hl=n==="Lopez"||n==="Francois";
+    mk("path",{d:rbar(90,4+i*30,x(v)-90,22,"r"),fill:hl?C.o:C.b},bs);T(bs,82,19+i*30,n,{"text-anchor":"end",fill:"#334155","font-weight":hl?800:600,"font-size":13});T(bs,x(v)+6,19+i*30,v,{fill:"#0f172a","font-weight":800,"font-size":13})});
+  document.querySelectorAll("[data-ans]").forEach(b=>b.onclick=()=>{const ok=b.dataset.ans==="Lopez";document.querySelectorAll("[data-ans]").forEach(x=>{x.disabled=true;if(x.dataset.ans==="Lopez")x.style.cssText="background:#16a34a;color:#fff;border-color:#16a34a"});
+    if(!ok)b.style.cssText="background:#e11d48;color:#fff;border-color:#e11d48";$("pieBar").classList.remove("hidden");
+    $("pieOut").innerHTML=(ok?"✅ <b>Lopez</b>, but only just: 29 vs 28. ":"❌ It's <b>Lopez</b>: 29 vs 28. ")+"In the sorted bar chart on the right, it's obvious. In the pie, the wedge angles are nearly impossible to compare."});
+})();
+
+/* 16 · stacked vs clustered */
+(function(){
+  let mode="stack",ori="col";
+  function draw(){const W=660,H=380;const s=svgIn($("stkChart"),W,H);const max=mode==="stack"?250:150,ticks=mode==="stack"?[0,50,100,150,200,250]:[0,25,50,75,100,125,150];
+    const tipF=i=>`<b>${MONTHS[i]}</b><br><span style="color:${C.b}">●</span> North ${KN[i]}<br><span style="color:${C.o}">●</span> South ${KS[i]}<br>Total ${KT[i]}`;
+    if(ori==="col"){const L=56,R=650,Tp=12,B=340,y=lin(0,max,B,Tp),bw=(R-L)/12;yAxis(s,y,ticks,L,R,{title:"Sales ($100s)"});
+      MONTHS.forEach((m,i)=>{const x0=L+i*bw;T(s,x0+bw/2,B+18,m,{"text-anchor":"middle"});const g=mk("g",{},s);
+        if(mode==="stack"){const w=bw*.62,xx=x0+(bw-w)/2;mk("path",{d:rbar(xx,y(KN[i]),w,B-y(KN[i]),"n"),fill:C.b},g);mk("path",{d:rbar(xx,y(KT[i]),w,y(KN[i])-y(KT[i])-2,"t"),fill:C.o},g)}
+        else{const w=bw*.36,xx=x0+bw*.13;mk("path",{d:rbar(xx,y(KN[i]),w,B-y(KN[i]),"t"),fill:C.b},g);mk("path",{d:rbar(xx+w+2,y(KS[i]),w,B-y(KS[i]),"t"),fill:C.o},g)}
+        mk("rect",{x:x0,y:Tp,width:bw,height:B-Tp,fill:"transparent"},g);hov(g,()=>tipF(i))})}
+    else{const L=48,R=640,Tp=4,B=346,x=lin(0,max,L,R),bh=(B-Tp)/12;ticks.forEach(v=>{mk("line",{x1:x(v),x2:x(v),y1:Tp,y2:B,stroke:C.grid},s);T(s,x(v),B+18,v,{"text-anchor":"middle"})});
+      T(s,(L+R)/2,B+34,"Sales ($100s)",{"text-anchor":"middle","font-weight":700,fill:"#475569"});
+      MONTHS.forEach((m,i)=>{const y0=Tp+i*bh;T(s,L-8,y0+bh/2+4,m,{"text-anchor":"end"});const g=mk("g",{},s);
+        if(mode==="stack"){const h=bh*.66,yy=y0+(bh-h)/2;mk("path",{d:rbar(L,yy,x(KN[i])-L,h,"n"),fill:C.b},g);mk("path",{d:rbar(x(KN[i])+2,yy,x(KT[i])-x(KN[i])-2,h,"r"),fill:C.o},g)}
+        else{const h=bh*.38,yy=y0+bh*.1;mk("path",{d:rbar(L,yy,x(KN[i])-L,h,"r"),fill:C.b},g);mk("path",{d:rbar(L,yy+h+1.5,x(KS[i])-L,h,"r"),fill:C.o},g)}
+        mk("rect",{x:L,y:y0,width:R-L,height:bh,fill:"transparent"},g);hov(g,()=>tipF(i))})}
+    $("stkOut").innerHTML=mode==="stack"?"<b>Stacked</b> shows the total: <b>July</b> peaks at 210. But can you tell when South overtakes North?":"<b>Clustered</b>: from <b>October</b>, South (70) overtakes North (50). That's easy to see side by side."}
+  seg("scMode",d=>{mode=d.m;draw()});seg("scOri",d=>{ori=d.o;draw()});draw();
+})();
+
+/* 17 · chooser */
+(function(){
+  const TYPES=["Scatter","Line","Sorted bar","Stacked column","Table","Sparkline","Pie"];
+  const Q=[["Do weeks with more Facebook-ad spending also have higher sales?","Scatter","Two quantitative variables, so look for a relationship with a scatter chart (and add a trendline)."],
+    ["Monthly sales of one product over the last 24 months.","Line","A time series: a line chart shows the trend."],
+    ["Accounts managed by each of 8 managers, ranked.","Sorted bar","Compare categories by length, sorted to show the ranking. Not a pie!"],
+    ["Total monthly sales, plus how much came from North vs South.","Stacked column","The total is the column height, and the segments show each region's share."],
+    ["Exact monthly costs, revenues and head count for an auditor.","Table","Precise values with mixed units and magnitudes, so use a table."],
+    ["A tiny trend next to every store's row in a big Excel sheet.","Sparkline","A sparkline is a minimal line chart that fits inside a cell."]];
+  let score=0;const host=$("chooser");
+  Q.forEach(([q,a,why])=>{const d=document.createElement("div");d.className="chc";d.innerHTML=`<div class="q">${q}</div><div class="opts">${TYPES.map(t=>`<button>${t}</button>`).join("")}</div><div class="why"></div>`;
+    d.querySelectorAll("button").forEach(b=>b.onclick=()=>{const ok=b.textContent===a;if(ok)score++;d.classList.add(ok?"ok":"no");d.querySelectorAll("button").forEach(x=>{x.disabled=true;if(x.textContent===a)x.classList.add("r")});if(!ok)b.classList.add("w");
+      d.querySelector(".why").innerHTML=(ok?"✅ ":"❌ Best: <b>"+a+"</b>. ")+why;$("chScore").textContent=score+" / 6"});host.appendChild(d)});
+})();
+/* ======================= PART B WIDGETS ======================= */
+/* part B floaters */
+(function(){
+  const host=$("partbViz");if(!host)return;
+  const card=(l,t,lbl,w)=>{const d=document.createElement("div");d.className="fc";d.style.left=l+"px";d.style.top=t+"px";d.style.width=w+"px";d.innerHTML=`<b>${lbl}</b><div></div>`;host.appendChild(d);return d.lastChild};
+  let s=svgIn(card(0,0,"Treemap",230),210,120);[[0,0,120,120,C.b],[122,0,88,70,C.b],[122,72,44,48,C.o],[168,72,42,48,C.t]].forEach(([x,y,w,h,c])=>mk("rect",{x,y,width:w,height:h,rx:4,fill:c},s));
+  s=svgIn(card(200,150,"Waterfall",220),200,110);let run=0;[40,25,10,-12,-9,14].forEach((v,i)=>{const y0=100-run*1.4,y1=100-(run+v)*1.4;mk("rect",{x:6+i*28,y:Math.min(y0,y1),width:22,height:Math.abs(y1-y0),rx:3,fill:v>0?C.up:C.dn},s);run+=v});mk("rect",{x:174,y:100-run*1.4,width:22,height:run*1.4,rx:3,fill:C.b},s);
+  s=svgIn(card(20,300,"Parallel coordinates",240),220,110);[20,110,200].forEach(x=>mk("line",{x1:x,x2:x,y1:4,y2:106,stroke:"#94a3b8"},s));
+  [[[10,96,20],C.b],[[20,90,30],C.b],[[96,10,80],C.o],[[90,20,70],C.o]].forEach(([v,c])=>mk("polyline",{points:v.map((y,i)=>(20+i*90)+","+y).join(" "),fill:"none",stroke:c,"stroke-width":2.4},s));
+})();
+
+/* 20 · bubble */
+(function(){
+  const AIR=DATA.air;
+  function draw(){const W=660,H=400,L=56,R=640,Tp=14,B=350;const s=svgIn($("bbChart"),W,H);const x=lin(0,12,L,R),y=lin(0,20,B,Tp);const sz=on("bbSize"),best=on("bbBest");
+    yAxis(s,y,[0,5,10,15,20],L,R,{title:"Cheapest parking ($ per day)",f:v=>"$"+v});xAxis(s,x,[0,2,4,6,8,10,12],B,Tp,{title:"TSA wait time (minutes)"});mk("line",{x1:L,x2:R,y1:B,y2:B,stroke:"#94a3b8"},s);
+    if(best){mk("rect",{x:x(0),y:y(10),width:x(6)-x(0),height:y(0)-y(10),fill:"#dcfce7",stroke:C.up,"stroke-dasharray":"5 4"},s);T(s,x(.2),y(10)+16,"Short wait + cheap parking",{fill:"#166534","font-weight":800})}
+    [...AIR].sort((a,b)=>b[3]-a[3]).forEach(([c,t,k,e])=>{const r=sz?Math.max(7,Math.sqrt(e/49.06)*36):10,isB=t<6&&k<=10;const col=best?(isB?C.up:"#94a3b8"):C.b;
+      const g=mk("g",{},s);mk("circle",{cx:x(t),cy:y(k),r,fill:col,"fill-opacity":best&&!isB?.35:.6,stroke:"#fff","stroke-width":2},g);
+      T(g,x(t),r>13?y(k)+4:y(k)-r-4,c,{"text-anchor":"middle","font-size":11,"font-weight":800,fill:r>13?"#0f172a":"#334155"});
+      hov(g,()=>`<b>${c}</b><br>TSA wait ${t} min<br>Parking $${k.toFixed(2)}/day<br>${e} million passengers`,()=>$("bbOut").innerHTML=`<b>${c}</b>: ${t}-min wait, $${k}/day parking, <b>${e}M</b> passengers a year.`)});
+    if(best)$("bbOut").innerHTML="<b>AUS, STL, SLC and IAD</b> combine short waits with cheap parking. Bubble size shows they are mid-sized airports.";
+    else if(!sz)$("bbOut").innerHTML="Without size, this is just a scatter chart, and the third variable (passengers) is lost.";}
+  tg("bbSize",draw);tg("bbBest",draw);draw();
+})();
+
+/* 21 · scatter matrix */
+(function(){
+  const NY=DATA.nyc,V=["Median rent ($)","% college grads","Poverty rate (%)","Commute (min)"],SH=["Rent","Grads","Poverty","Commute"];
+  const col=k=>NY.map(r=>r[k+1]),rng=k=>{const c=col(k);return[Math.min(...c),Math.max(...c)]};
+  const corr=(a,b)=>{const A=col(a),B=col(b),n=A.length,ma=A.reduce((x,y)=>x+y)/n,mb=B.reduce((x,y)=>x+y)/n;let sab=0,saa=0,sbb=0;A.forEach((v,i)=>{sab+=(v-ma)*(B[i]-mb);saa+=(v-ma)**2;sbb+=(B[i]-mb)**2});return sab/Math.sqrt(saa*sbb)};
+  let sel=[0,1];const cs=104,gp=6,o=4;const s=svgIn($("spMatrix"),4*cs+3*gp+2*o,4*cs+3*gp+2*o);const cells=[];
+  for(let i=0;i<4;i++)for(let j=0;j<4;j++){const x0=o+j*(cs+gp),y0=o+i*(cs+gp),g=mk("g",{},s);const bg=mk("rect",{x:x0,y:y0,width:cs,height:cs,rx:8,fill:i===j?"#ede9fe":"#fff",stroke:"#e2e8f0"},g);cells.push([i,j,bg]);
+    if(i===j){T(g,x0+cs/2,y0+cs/2-2,SH[i],{"text-anchor":"middle","font-size":15,"font-weight":800,fill:"#5b21b6"});T(g,x0+cs/2,y0+cs/2+16,V[i].replace(/^[^(]*/,""),{"text-anchor":"middle","font-size":10.5,fill:"#6d28d9"});continue}
+    const [ax,bx]=rng(j),[ay,by]=rng(i),xs=lin(ax,bx,x0+8,x0+cs-8),ys=lin(ay,by,y0+cs-8,y0+8);NY.forEach(r=>mk("circle",{cx:xs(r[j+1]),cy:ys(r[i+1]),r:1.9,fill:C.p,"fill-opacity":.75},g));
+    g.style.cursor="pointer";g.onclick=()=>{sel=[j,i];zoom()};hov(g,()=>`<b>${SH[i]}</b> vs <b>${SH[j]}</b><br>r = ${corr(i,j).toFixed(2)} · click to zoom`)}
+  function zoom(){const [a,b]=sel;cells.forEach(([i,j,bg])=>{bg.setAttribute("stroke",i===b&&j===a?"#d97706":"#e2e8f0");bg.setAttribute("stroke-width",i===b&&j===a?3:1)});
+    const W=520,H=420,L=58,R=505,Tp=14,B=360;const z=svgIn($("spZoom"),W,H);const [ax,bx]=rng(a),[ay,by]=rng(b);const tx=niceTicks(ax,bx,5),ty=niceTicks(ay,by,5);
+    const x=lin(tx[0]>ax?ax:Math.min(tx[0],ax),Math.max(tx[tx.length-1],bx),L,R),y=lin(Math.min(ty[0],ay),Math.max(ty[ty.length-1],by),B,Tp);
+    yAxis(z,y,ty.filter(v=>v>=y.inv(B)-1e-9&&v<=y.inv(Tp)+1e-9),L,R,{title:V[b],tx:12});xAxis(z,x,tx.filter(v=>v>=x.inv(L)-1e-9&&v<=x.inv(R)+1e-9),B,Tp,{title:V[a]});
+    const A=col(a),Bc=col(b),n=A.length,ma=A.reduce((p,q)=>p+q)/n,mb=Bc.reduce((p,q)=>p+q)/n;let sab=0,saa=0;A.forEach((v,i)=>{sab+=(v-ma)*(Bc[i]-mb);saa+=(v-ma)**2});const b1=sab/saa,b0=mb-b1*ma;
+    mk("line",{x1:x(ax),y1:y(b0+b1*ax),x2:x(bx),y2:y(b0+b1*bx),stroke:C.o,"stroke-width":2,"stroke-dasharray":"6 4"},z);
+    NY.forEach(r=>{const c=mk("circle",{cx:x(r[a+1]),cy:y(r[b+1]),r:5.5,fill:C.p,"fill-opacity":.7,stroke:"#fff","stroke-width":1.5},z);hov(c,()=>`<b>${esc(r[0])}</b><br>${SH[a]}: ${r[a+1]}<br>${SH[b]}: ${r[b+1]}`)});
+    const r=corr(a,b),st=Math.abs(r)>.7?"strong":Math.abs(r)>.4?"moderate":Math.abs(r)>.2?"weak":"little or no";
+    $("spOut").innerHTML=`<b>${SH[b]} vs ${SH[a]}: r = ${r.toFixed(2)}</b>. ${st==="little or no"?"Little or no linear relationship.":`A ${st} <b>${r>0?"positive":"negative"}</b> relationship: as ${SH[a].toLowerCase()} rises, ${SH[b].toLowerCase()} tends to ${r>0?"rise":"fall"}.`}`}
+  zoom();
+})();
+
+/* 22 · table lens */
+(function(){
+  const NY=DATA.nyc,H=["Median rent ($)","% college grads","Poverty rate (%)","Commute (min)"],MX=[0,1,2,3].map(k=>Math.max(...NY.map(r=>r[k+1])));
+  const MSG=["Sorted by <b>rent</b>: % college grads falls as rent falls (<b>positive</b>), poverty climbs (<b>negative</b>), and commute shows no clear pattern.",
+    "Sorted by <b>% grads</b>: rent follows it down (<b>positive</b>), and poverty mostly rises (<b>negative</b>).",
+    "Sorted by <b>poverty</b>: rent and % grads mostly grow toward the bottom, which mirrors the negative relationships.",
+    "Sorted by <b>commute</b>: the other columns look random, so there is no strong relationship with commute time."];
+  const host=$("lens");host.innerHTML=`<div class="hd">${H.map((h,k)=>`<button data-k="${k}">${h} ↓</button>`).join("")}</div><div class="rows" style="height:${NY.length*7}px"></div>`;
+  const rows=host.querySelector(".rows");const els=NY.map(r=>{const d=document.createElement("div");d.className="r";d.innerHTML=[1,2,3,4].map(k=>`<div class="b"><i style="width:${r[k]/MX[k-1]*100}%"></i></div>`).join("");
+    hov(d,()=>`<b>${esc(r[0])}</b><br>Rent $${fmt(r[1])} · Grads ${r[2]}%<br>Poverty ${r[3]}% · Commute ${r[4]} min`,()=>d.classList.add("hl"),()=>d.classList.remove("hl"));rows.appendChild(d);return d});
+  function sort(k){host.querySelectorAll(".hd button").forEach(b=>b.classList.toggle("on",+b.dataset.k===k));
+    const ord=NY.map((r,i)=>i);if(k>=0)ord.sort((a,b)=>NY[b][k+1]-NY[a][k+1]);else ord.sort((a,b)=>NY[a][0].localeCompare(NY[b][0]));
+    ord.forEach((idx,pos)=>els[idx].style.transform=`translateY(${pos*7}px)`);$("lensOut").innerHTML=k<0?"Unsorted (A–Z by name): the bars look like noise. Now click <b>Median rent</b>.":MSG[k]}
+  host.querySelectorAll(".hd button").forEach(b=>b.onclick=()=>sort(+b.dataset.k));sort(-1);
+})();
+
+/* 23 · PivotChart */
+(function(){
+  let m="q";
+  function draw(){const W=660,H=360,L=56,R=650,Tp=12,B=320;const s=svgIn($("pcChart"),W,H),y=lin(0,40,B,Tp);yAxis(s,y,[0,10,20,30,40],L,R,{title:"Avg wait (min)"});
+    const cats=m==="q"?QUAL:BINS,sers=m==="q"?BINS:QUAL,val=(c,k)=>m==="q"?XW[c][k]:XW[k][c];
+    $("pcLeg").innerHTML=sers.map((n,k)=>`<span><i style="background:${CAT[k]}"></i>${n}</span>`).join("")+`<span style="color:#64748b;font-weight:600">· legend = ${m==="q"?"Meal Price":"Quality"}</span>`;
+    const gw=(R-L)/cats.length,bw=gw*.78/sers.length;
+    cats.forEach((c,ci)=>{const x0=L+ci*gw+gw*.11;T(s,L+ci*gw+gw/2,B+20,c,{"text-anchor":"middle","font-weight":700,fill:"#334155","font-size":13});
+      sers.forEach((n,k)=>{const v=val(ci,k);if(v===null){T(s,x0+k*bw+bw/2,B-6,"n/a",{"text-anchor":"middle","font-size":10});return}
+        const p=mk("path",{d:rbar(x0+k*bw+1,y(v),bw-2,B-y(v),"t"),fill:CAT[k]},s);
+        hov(p,()=>`<b>${m==="q"?c+" · "+n:n+" · "+c}</b><br>Average wait ${v.toFixed(1)} min`,()=>$("pcOut").innerHTML=`${m==="q"?c:n} restaurants at ${m==="q"?n:c}: average wait <b>${v.toFixed(1)} min</b>.`)})});
+    mk("line",{x1:L,x2:R,y1:B,y2:B,stroke:"#94a3b8"},s)}
+  seg("pcSwap",d=>{m=d.s;draw();$("pcOut").innerHTML=m==="q"?"Hover a column. What happens to waiting time as quality goes up?":"Swapped axis and legend: same numbers, new story. Within each price band, quality drives the wait."});draw();
+})();
+
+/* 24 · heat map */
+(function(){
+  const HM=[["St. Louis",[-2,-1,-1,0,2,4,3,5,6,7,8,8]],["Phoenix",[5,4,4,2,2,-2,-5,-8,-6,-5,-7,-8]],["Albany",[-5,-6,-4,-5,-2,-5,-5,-3,-1,-2,-1,-2]],["Austin",[16,15,15,16,18,17,14,15,16,19,18,16]],
+    ["Cincinnati",[-9,-6,-7,-3,3,6,8,11,10,11,13,11]],["San Francisco",[2,4,5,8,4,2,4,3,1,-1,1,2]],["Seattle",[7,7,8,7,5,4,2,0,-2,-4,-6,-5]],["Chicago",[5,3,2,6,8,7,8,5,8,10,9,8]],
+    ["Atlanta",[12,14,13,17,12,11,8,7,7,8,5,3]],["Miami",[2,3,0,1,-1,-4,-6,-8,-11,-13,-11,-10]],["Minneapolis",[-6,-6,-8,-5,-6,-5,-5,-7,-5,-2,-1,-2]],["Denver",[5,4,1,1,2,3,1,-1,0,1,2,3]],
+    ["Salt Lake City",[7,7,7,13,12,8,5,9,10,9,7,6]],["Raleigh",[4,2,0,5,4,3,5,5,9,11,8,6]],["Boston",[-5,-5,-3,-4,-5,-4,-3,-1,1,2,3,5]],["Pittsburgh",[-6,-6,-4,-5,-3,-3,-1,-2,-2,-1,-2,-1]]];
+  let sort="orig",hl=null;const tb=$("heat");
+  function draw(){const heat=on("htOn"),sp=on("htSp");const ord=HM.map((r,i)=>i);if(sort==="dec")ord.sort((a,b)=>HM[b][1][11]-HM[a][1][11]);if(sort==="chg")ord.sort((a,b)=>(HM[b][1][11]-HM[b][1][0])-(HM[a][1][11]-HM[a][1][0]));
+    let h=`<tr><th></th>${MONTHS.map(m=>`<th>${m}</th>`).join("")}${sp?"<th>Trend</th>":""}</tr>`;
+    ord.forEach(i=>{const [c,v]=HM[i];h+=`<tr data-i="${i}" class="${hl===i?"hl":""}"><td class="cty">${c}</td>`+v.map((x,j)=>{const t=Math.min(1,Math.abs(x)/19);const bg=!heat?"#fff":x>0?mix("#1d4ed8",t*.92,"#f1f5f9"):x<0?mix("#be123c",t*.92,"#f1f5f9"):"#f1f5f9";
+      return`<td style="background:${bg};color:${heat&&t>.45?"#fff":"#0f172a"}" data-c="${esc(c)}" data-m="${j}" data-v="${x}">${x}%</td>`}).join("")+(sp?`<td class="sp"><div id="hs${i}"></div></td>`:"")+"</tr>"});
+    tb.innerHTML=h;if(sp)ord.forEach(i=>spark($("hs"+i),HM[i][1],90,20,{zero:true,c:"#334155"}));
+    tb.querySelectorAll("td[data-v]").forEach(td=>hov(td,()=>`<b>${td.dataset.c}</b> · ${MONTHS[td.dataset.m]}<br>Same-store sales ${td.dataset.v>0?"+":""}${td.dataset.v}%`));
+    tb.querySelectorAll("td.cty").forEach(td=>td.onclick=()=>{const i=+td.parentNode.dataset.i;hl=hl===i?null:i;draw()})}
+  tg("htOn",draw);tg("htSp",draw);seg("htSort",d=>{sort=d.s;draw()});draw();
+})();
+
+/* 25 · treemap / tree */
+(function(){
+  const BR=[["Technology","Apple",205.5],["Technology","Google",167.7],["Technology","Microsoft",125.3],["Technology","Amazon",97.0],["Technology","Facebook",88.9],["Technology","Samsung",53.1],["Beverages","Coca-Cola",59.2],["Leisure","Disney",52.2],["Automotive","Toyota",44.6],["Restaurants","McDonald's",43.8]];
+  const IND=["Technology","Beverages","Leisure","Automotive","Restaurants"],IC={};IND.forEach((n,i)=>IC[n]=CAT[i]);
+  $("tmLeg").innerHTML=IND.map(n=>`<span><i style="background:${IC[n]}"></i>${n}</span>`).join("");
+  function squarify(items,x,y,w,h){const tot=items.reduce((s,d)=>s+d.v,0),sc=w*h/tot,nodes=items.map(d=>Object.assign({},d,{a:d.v*sc}));const out=[];let row=[],rx=x,ry=y,rw=w,rh=h;
+    const worst=(r,side)=>{const s=r.reduce((a,d)=>a+d.a,0);let mx=-Infinity,mn=Infinity;r.forEach(d=>{mx=Math.max(mx,d.a);mn=Math.min(mn,d.a)});return Math.max(side*side*mx/(s*s),s*s/(side*side*mn))};
+    const lay=r=>{const s=r.reduce((a,d)=>a+d.a,0);if(rw>=rh){const cw=s/rh;let cy=ry;r.forEach(d=>{const hh=d.a/cw;out.push(Object.assign(d,{x:rx,y:cy,w:cw,h:hh}));cy+=hh});rx+=cw;rw-=cw}else{const ch=s/rw;let cx=rx;r.forEach(d=>{const ww=d.a/ch;out.push(Object.assign(d,{x:cx,y:ry,w:ww,h:ch}));cx+=ww});ry+=ch;rh-=ch}};
+    let i=0;while(i<nodes.length){const side=Math.min(rw,rh),d=nodes[i];if(!row.length||worst(row.concat([d]),side)<=worst(row,side)){row.push(d);i++}else{lay(row);row=[]}}if(row.length)lay(row);return out}
+  const tot=BR.reduce((a,b)=>a+b[2],0),indTot=n=>BR.filter(b=>b[0]===n).reduce((a,b)=>a+b[2],0);
+  const tipB=b=>`<b>${b[1]}</b> · ${b[0]}<br>$${b[2]} billion (${(b[2]/tot*100).toFixed(1)}% of top 10)`;
+  function map(){const W=680,H=370,s=svgIn($("tmChart"),W,H);
+    squarify(IND.map(n=>({n,v:indTot(n)})),0,0,W,H).forEach(ir=>{squarify(BR.filter(b=>b[0]===ir.n).map(b=>({b,v:b[2]})),ir.x,ir.y,ir.w,ir.h).forEach(r=>{const g=mk("g",{},s);
+      mk("rect",{x:r.x+1.5,y:r.y+1.5,width:Math.max(0,r.w-3),height:Math.max(0,r.h-3),rx:5,fill:IC[r.b[0]]},g);
+      if(r.w>58&&r.h>34){T(g,r.x+9,r.y+21,r.b[1],{fill:"#fff","font-weight":800,"font-size":r.w>150?16:12.5});T(g,r.x+9,r.y+(r.w>150?40:36),"$"+r.b[2]+"B",{fill:"#fff","font-size":r.w>150?13:11,"fill-opacity":.9})}
+      hov(g,()=>tipB(r.b),()=>$("tmOut").innerHTML=`<b>${r.b[1]}</b>: $${r.b[2]}B. ${r.b[0]} totals <b>$${indTot(r.b[0]).toFixed(1)}B</b> (${(indTot(r.b[0])/tot*100).toFixed(0)}% of the top 10).`)})})}
+  function tree(){const W=680,H=370,s=svgIn($("tmChart"),W,H);const bx=480,ix=250,rx=40,by=i=>18+i*35.5;
+    T(s,rx-6,H/2-14,"Top 10",{"font-weight":800,fill:C.ink,"font-size":14});T(s,rx-6,H/2+4,"brands",{"font-weight":800,fill:C.ink,"font-size":14});
+    IND.forEach(n=>{const kids=BR.map((b,i)=>[b,i]).filter(([b])=>b[0]===n),iy=(by(kids[0][1])+by(kids[kids.length-1][1]))/2;
+      mk("path",{d:`M${rx+56},${H/2-4} C${(rx+56+ix)/2},${H/2-4} ${(rx+56+ix)/2},${iy} ${ix-8},${iy}`,fill:"none",stroke:"#cbd5e1","stroke-width":1.5},s);
+      mk("circle",{cx:ix,cy:iy,r:7,fill:IC[n]},s);T(s,ix+12,iy+4,n,{"font-weight":800,fill:"#334155","font-size":13});
+      kids.forEach(([b,i])=>{mk("path",{d:`M${ix+100},${iy} C${(ix+100+bx)/2},${iy} ${(ix+100+bx)/2},${by(i)} ${bx-8},${by(i)}`,fill:"none",stroke:"#cbd5e1","stroke-width":1.5},s);
+        const g=mk("g",{},s);mk("circle",{cx:bx,cy:by(i),r:6,fill:IC[n]},g);T(g,bx+12,by(i)+4,`${b[1]}  $${b[2]}B`,{fill:"#334155","font-size":12.5,"font-weight":600});hov(g,()=>tipB(b))})})}
+  seg("tmView",d=>{d.v==="map"?map():tree();$("tmOut").innerHTML=d.v==="map"?"Which industry dominates? Hover a rectangle.":"The tree shows the <b>structure</b>, but not the <b>size</b>. A treemap shows both."});map();
+})();
+
+/* 26 · waterfall */
+(function(){
+  const PR=GOS.rev.map((v,i)=>v-GOS.cost[i]),TOT=PR.reduce((a,b)=>a+b);let shown=7,timer=null;
+  function draw(){const W=660,H=380,L=70,R=650,Tp=16,B=332;const s=svgIn($("wfChart"),W,H),y=lin(0,35000,B,Tp),bw=(R-L)/7;
+    yAxis(s,y,[0,5000,10000,15000,20000,25000,30000,35000],L,R,{title:"Gross profit ($)"});mk("line",{x1:L,x2:R,y1:B,y2:B,stroke:"#94a3b8"},s);let run=0;
+    for(let i=0;i<7;i++){const x0=L+i*bw+bw*.18,w=bw*.64;T(s,L+i*bw+bw/2,B+18,i<6?"Month "+(i+1):"Total",{"text-anchor":"middle","font-weight":i===6?800:400});if(i>=shown){continue}
+      const g=mk("g",{},s);g.style.animation="none";
+      if(i<6){const v=PR[i],a=run,b=run+v;mk("path",{d:rbar(x0,y(Math.max(a,b)),w,Math.abs(y(a)-y(b)),v>0?"t":"b"),fill:v>0?C.up:C.dn},g);
+        T(g,x0+w/2,v>0?y(b)-7:y(b)+16,(v>0?"▲ +":"▼ −")+fmt(Math.abs(v)),{"text-anchor":"middle","font-weight":800,fill:v>0?"#166534":"#9f1239","font-size":12});
+        if(i<6&&i+1<shown)mk("line",{x1:x0+w,x2:x0+bw,y1:y(b),y2:y(b),stroke:"#64748b","stroke-dasharray":"3 3"},s);
+        hov(g,()=>`<b>Month ${i+1}</b><br>Revenue $${fmt(GOS.rev[i])} − cost $${fmt(GOS.cost[i])}<br>= ${v>0?"+":"−"}$${fmt(Math.abs(v))}<br>Running total $${fmt(b)}`);run=b}
+      else{mk("path",{d:rbar(x0,y(TOT),w,B-y(TOT),"t"),fill:C.b},g);T(g,x0+w/2,y(TOT)-7,"$"+fmt(TOT),{"text-anchor":"middle","font-weight":800,fill:"#1e3a8a"});hov(g,()=>`<b>Total gross profit</b><br>$${fmt(TOT)} over 6 months`)}}
+    let msg;if(shown===0)msg="Ready… press Play.";else if(shown===7)msg=`Six months add up to <b>$${fmt(TOT)}</b>. Months 4 and 5 lost money: revenue fell below cost.`;
+    else{const i=shown-1,v=PR[i],rt=PR.slice(0,shown).reduce((a,b)=>a+b);msg=`<b>Month ${i+1}</b>: ${v>0?"+":"−"}$${fmt(Math.abs(v))} → running total <b>$${fmt(rt)}</b>.${v<0?" A loss month.":""}`}$("wfOut").innerHTML=msg}
+  $("wfPlay").onclick=()=>{clearInterval(timer);shown=0;draw();timer=setInterval(()=>{shown++;draw();if(shown>=7)clearInterval(timer)},900)};
+  $("wfAll").onclick=()=>{clearInterval(timer);shown=7;draw()};draw();
+})();
+
+/* 27 · stock */
+(function(){
+  const SK=[["20-Apr",58.91,57.96,58.13],["21-Apr",58.04,56.72,56.82],["22-Apr",58.57,57.23,57.99],["23-Apr",58.66,57.47,57.59],["24-Apr",57.99,56.83,57.93]];
+  function draw(){const W=660,H=370,L=70,R=640,Tp=14,B=324;const s=svgIn($("skChart"),W,H),y=lin(56.5,59.5,B,Tp),x=lin(-.5,4.5,L,R);
+    yAxis(s,y,[56.5,57,57.5,58,58.5,59,59.5],L,R,{f:v=>"$"+v.toFixed(2),title:"Price per share"});
+    SK.forEach(([d,h,l,c],i)=>{T(s,x(i),B+20,d,{"text-anchor":"middle","font-weight":600});const g=mk("g",{},s);
+      mk("line",{x1:x(i),x2:x(i),y1:y(h),y2:y(l),stroke:C.b,"stroke-width":4,"stroke-linecap":"round"},g);
+      if(on("skClose"))mk("circle",{cx:x(i),cy:y(c),r:7,fill:C.o,stroke:"#fff","stroke-width":2},g);
+      if(on("skLab"))T(g,x(i)+12,y(c)+4,"$"+c.toFixed(2),{fill:"#0f172a","font-weight":800});
+      mk("rect",{x:x(i)-40,y:Tp,width:80,height:B-Tp,fill:"transparent"},g);
+      hov(g,()=>`<b>${d}</b><br>High $${h.toFixed(2)}<br>Low $${l.toFixed(2)}<br>Close $${c.toFixed(2)}<br>Range $${(h-l).toFixed(2)}`,()=>$("skOut").innerHTML=`<b>${d}</b>: traded between $${l.toFixed(2)} and $${h.toFixed(2)} (range <b>$${(h-l).toFixed(2)}</b>), closed at $${c.toFixed(2)}.${d==="22-Apr"?" The <b>widest range</b> of the week.":""}`)})}
+  tg("skClose",draw);tg("skLab",draw);draw();
+})();
+
+/* 28 · parallel coordinates */
+(function(){
+  const TB=[["1B · textbook",39,1,.338,"1B"],["2B · textbook",0,30,.222,"2B"]];
+  const IL=[["1B",32,2,.301],["1B",28,0,.276],["1B",41,3,.289],["1B",25,5,.312],["1B",35,1,.265],["2B",8,22,.271],["2B",4,18,.248],["2B",12,26,.284],["2B",2,35,.259],["2B",6,15,.237]].map((d,i)=>["Illustrative "+d[0]+" #"+(i%5+1),d[1],d[2],d[3],d[0]]);
+  const AX=[["Home runs (HR)",0,45,v=>v],["Stolen bases (SB)",0,35,v=>v],["Batting avg (AVG)",.2,.35,v=>v.toFixed(3).replace(/^0/,"")]];
+  function draw(){const W=660,H=380,Tp=30,B=340,xs=[110,330,550];const s=svgIn($("parChart"),W,H);
+    AX.forEach(([n,a,b,f],k)=>{mk("line",{x1:xs[k],x2:xs[k],y1:Tp,y2:B,stroke:"#475569","stroke-width":1.5},s);T(s,xs[k],Tp-12,n,{"text-anchor":"middle","font-weight":800,fill:"#334155","font-size":13});
+      const y=lin(a,b,B,Tp);niceTicks(a,b,5).forEach(v=>{mk("line",{x1:xs[k]-4,x2:xs[k],y1:y(v),y2:y(v),stroke:"#475569"},s);T(s,xs[k]-8,y(v)+4,f(v),{"text-anchor":"end","font-size":11})})});
+    const data=on("pcMore")?IL.concat(TB):TB;
+    data.forEach(d=>{const tb=d[0].includes("textbook"),c=d[4]==="1B"?C.b:C.o;const pts=AX.map(([,a,b],k)=>xs[k]+","+lin(a,b,B,Tp)(d[k+1])).join(" ");
+      const g=mk("g",{},s);const ln=mk("polyline",{points:pts,fill:"none",stroke:c,"stroke-width":tb?4:2,"stroke-opacity":tb?1:.55,"stroke-linejoin":"round"},g);
+      mk("polyline",{points:pts,fill:"none",stroke:"transparent","stroke-width":14},g);
+      hov(g,()=>`<b>${d[0]}</b><br>HR ${d[1]} · SB ${d[2]} · AVG ${AX[2][3](d[3])}`,()=>{ln.setAttribute("stroke-width",6);ln.setAttribute("stroke-opacity",1)},()=>{ln.setAttribute("stroke-width",tb?4:2);ln.setAttribute("stroke-opacity",tb?1:.55)})});
+    $("parOut").innerHTML=on("pcMore")?"Patterns appear: <b>1B lines</b> run high-low-high (power hitters), while <b>2B lines</b> run low-high-low (speed players). Lines that cross between two axes signal a <b>negative</b> relationship.":"The textbook example: a 1B with 39 HR, 1 SB, .338 AVG and a 2B with 0 HR, 30 SB, .222 AVG. The lines cross: <b>opposite profiles</b>."}
+  tg("pcMore",draw);draw();
+})();
+
+/* 29 · tile cartogram */
+(function(){
+  // explicit [state,row,col]
+  const POS=[["AK",0,0],["ME",0,10],["WI",1,6],["VT",1,9],["NH",1,10],["WA",2,1],["ID",2,2],["MT",2,3],["ND",2,4],["MN",2,5],["IL",2,6],["MI",2,7],["NY",2,9],["MA",2,10],
+    ["OR",3,1],["NV",3,2],["WY",3,3],["SD",3,4],["IA",3,5],["IN",3,6],["OH",3,7],["PA",3,8],["NJ",3,9],["CT",3,10],["RI",3,11],
+    ["CA",4,1],["UT",4,2],["CO",4,3],["NE",4,4],["MO",4,5],["KY",4,6],["WV",4,7],["VA",4,8],["MD",4,9],["DE",4,10],
+    ["AZ",5,2],["NM",5,3],["KS",5,4],["AR",5,5],["TN",5,6],["NC",5,7],["SC",5,8],
+    ["OK",6,4],["LA",6,5],["MS",6,6],["AL",6,7],["GA",6,8],["HI",7,0],["TX",7,4],["FL",7,9]];
+  const NAME={AK:"Alaska",ME:"Maine",WI:"Wisconsin",VT:"Vermont",NH:"New Hampshire",WA:"Washington",ID:"Idaho",MT:"Montana",ND:"North Dakota",MN:"Minnesota",IL:"Illinois",MI:"Michigan",NY:"New York",MA:"Massachusetts",OR:"Oregon",NV:"Nevada",WY:"Wyoming",SD:"South Dakota",IA:"Iowa",IN:"Indiana",OH:"Ohio",PA:"Pennsylvania",NJ:"New Jersey",CT:"Connecticut",RI:"Rhode Island",CA:"California",UT:"Utah",CO:"Colorado",NE:"Nebraska",MO:"Missouri",KY:"Kentucky",WV:"West Virginia",VA:"Virginia",MD:"Maryland",DE:"Delaware",AZ:"Arizona",NM:"New Mexico",KS:"Kansas",AR:"Arkansas",TN:"Tennessee",NC:"North Carolina",SC:"South Carolina",OK:"Oklahoma",LA:"Louisiana",MS:"Mississippi",AL:"Alabama",GA:"Georgia",HI:"Hawaii",TX:"Texas",FL:"Florida"};
+  const BAND={4:"AK MD NJ CT",3:"HI WA CA UT CO MN VA NH MA DE",2:"OR NV AZ WY ND SD NE KS TX IA WI IL PA NY VT RI",1:"ID MT NM OK MO AR LA IN KY TN MI OH WV NC AL SC GA FL ME",0:"MS"};
+  const B={};Object.entries(BAND).forEach(([b,l])=>l.split(" ").forEach(s=>B[s]=+b));
+  const LBL=["< $40k","$40–50k","$50–60k","$60–70k","> $70k"],COL=["#dbeafe","#93c5fd","#3b82f6","#1d4ed8","#172554"];let sel=null;
+  const grid=$("tiles");grid.style.gridTemplateColumns="repeat(12,1fr)";const cells={};
+  for(let r=0;r<8;r++)for(let c=0;c<12;c++){const d=document.createElement("div");d.className="e";grid.appendChild(d);cells[r+","+c]=d}
+  POS.forEach(([s,r,c])=>{const d=cells[r+","+c],b=B[s];d.className="st";d.textContent=s;d.style.background=COL[b];d.style.color=b>=2?"#fff":"#0f172a";d.dataset.b=b;
+    hov(d,()=>`<b>${NAME[s]}</b><br>Median income ${LBL[b]}`)});
+  const ramp=$("tileRamp");ramp.innerHTML=LBL.map((l,i)=>`<span data-b="${i}"><i style="background:${COL[i]}"></i>${l}</span>`).join("");
+  ramp.querySelectorAll("span").forEach(sp=>sp.onclick=()=>{const b=+sp.dataset.b;sel=sel===b?null:b;ramp.querySelectorAll("span").forEach(x=>x.classList.toggle("on",+x.dataset.b===sel));
+    grid.querySelectorAll(".st").forEach(d=>d.classList.toggle("dim",sel!==null&&+d.dataset.b!==sel))});
+})();
+
+/* 30 · dashboard */
+(function(){
+  const TY=["Email","Internet","Software"],TC={Email:C.b,Internet:C.o,Software:C.t,Idle:"#94a3b8"};let sel=null;
+  const HR=["8:00","9:00","10:00","11:00","12:00"],VOL=[[13,7,3],[9,5,5],[7,4,9],[3,2,4],[1,2,5]];
+  const BRK=[["Email",20],["Internet",18],["Software",47],["Idle",15]],UNR=[["W59","Internet",20],["W24","Software",170],["W5","Software",280],["T57","Software",340]];
+  const OFF=[["Houston",[7,6,5]],["Dallas",[5,6,16]],["Austin",[22,9,4]]];
+  const HIST=[["<1",10],["1–2",13],["2–3",10],["3–4",9],["4–5",5],["5–6",2],["6–7",1],["7–8",6],["8–10",3],["10–15",2],["15–16",1],["17–18",2],["21–23",1],["32+",2]];
+  const op=t=>sel&&t!==sel&&t!=="Idle"?.18:1;
+  $("dbLeg").innerHTML=TY.map(t=>`<span class="lg" data-t="${t}"><i style="background:${TC[t]}"></i>${t}</span>`).join("");
+  $("dbLeg").querySelectorAll(".lg").forEach(b=>b.onclick=()=>{sel=sel===b.dataset.t?null:b.dataset.t;$("dbLeg").querySelectorAll(".lg").forEach(x=>x.classList.toggle("off",sel&&x.dataset.t!==sel));draw()});
+  const tot=VOL.flat().reduce((a,b)=>a+b);
+  function draw(){
+    const k=sel?TY.indexOf(sel):-1;$("dbKpi").innerHTML=`<div class="kpi">Calls this shift<b>${k<0?tot:VOL.reduce((a,r)=>a+r[k],0)}</b></div><div class="kpi">Unresolved &gt;15 min<b>${UNR.filter(u=>!sel||u[1]===sel).length}</b></div><div class="kpi">Software time<b>47%</b></div>`;
+    // 1 stacked
+    let s=svgIn($("db1"),380,150),y=lin(0,25,128,6),bw=(370-34)/5;yAxis(s,y,[0,10,20],34,372,{fs:10});
+    HR.forEach((h,i)=>{let base=0;const x0=34+i*bw+bw*.2,w=bw*.6;T(s,x0+w/2,144,h,{"text-anchor":"middle","font-size":10});
+      VOL[i].forEach((v,j)=>{const top=j===2;const p=mk("path",{d:rbar(x0,y(base+v),w,y(base)-y(base+v)-(j?1.5:0),top?"t":"n",3),fill:TC[TY[j]],opacity:op(TY[j])},s);hov(p,()=>`<b>${h} · ${TY[j]}</b><br>${v} calls`);base+=v})});
+    // 2 breakdown
+    s=svgIn($("db2"),330,150);y=lin(0,50,128,6);yAxis(s,y,[0,25,50],30,325,{fs:10,f:v=>v+"%"});bw=295/4;
+    BRK.forEach(([t,v],i)=>{const x0=30+i*bw+bw*.2,w=bw*.6;const p=mk("path",{d:rbar(x0,y(v),w,128-y(v),"t",3),fill:TC[t],opacity:op(t)},s);T(s,x0+w/2,y(v)-4,v+"%",{"text-anchor":"middle","font-size":10.5,"font-weight":800,fill:"#0f172a"});T(s,x0+w/2,144,t,{"text-anchor":"middle","font-size":10});hov(p,()=>`<b>${t}</b><br>${v}% of employee time (approx.)`)});
+    // 3 unresolved
+    s=svgIn($("db3"),330,150);let x=lin(0,420,46,318);[0,120,240,360].forEach(v=>{mk("line",{x1:x(v),x2:x(v),y1:4,y2:128,stroke:C.grid},s);T(s,x(v),144,v,{"text-anchor":"middle","font-size":10})});
+    UNR.forEach(([c,t,v],i)=>{const yy=8+i*30;T(s,40,yy+15,c,{"text-anchor":"end","font-size":10.5,"font-weight":700,fill:"#334155"});const p=mk("path",{d:rbar(46,yy,x(v)-46,20,"r",3),fill:TC[t],opacity:op(t)},s);T(s,x(v)+4,yy+14,v+" min",{"font-size":10,"font-weight":700,fill:"#0f172a"});hov(p,()=>`<b>Case ${c}</b> · ${t}<br>Open ${v} minutes`)});
+    // 4 by office (clustered bar)
+    s=svgIn($("db4"),380,150);x=lin(0,25,64,370);[0,10,20].forEach(v=>{mk("line",{x1:x(v),x2:x(v),y1:4,y2:130,stroke:C.grid},s);T(s,x(v),144,v,{"text-anchor":"middle","font-size":10})});
+    OFF.forEach(([o,vals],i)=>{const y0=6+i*42;T(s,58,y0+22,o,{"text-anchor":"end","font-size":11,"font-weight":700,fill:"#334155"});vals.forEach((v,j)=>{const p=mk("path",{d:rbar(64,y0+j*12.5,x(v)-64,11,"r",3),fill:TC[TY[j]],opacity:op(TY[j])},s);hov(p,()=>`<b>${o} · ${TY[j]}</b><br>${v} calls`)})});
+    // 5 histogram
+    s=svgIn($("db5"),700,150);y=lin(0,14,128,6);yAxis(s,y,[0,5,10],30,695,{fs:10});bw=665/HIST.length;
+    HIST.forEach(([l,v],i)=>{const x0=30+i*bw+1;const p=mk("path",{d:rbar(x0,y(v),bw-2,128-y(v),"t",3),fill:"#4f46e5"},s);T(s,x0+bw/2-1,144,l,{"text-anchor":"middle","font-size":10});hov(p,()=>`<b>${l} min</b><br>${v} cases`)});
+  }
+  draw();
+})();
+/* ======================= QUIZZES ======================= */
+const QUIZ={
+  qa:[
+    {q:"Which <b>preattentive attribute</b> is best for showing <b>quantitative</b> values, such as sales by manager?",o:["Colour","Shape","Length","2-D area (size)"],a:2,w:"Length: a longer bar means a bigger value, and people compare lengths accurately. People are poor at comparing 2-D areas, and colour or shape is better for categories."},
+    {q:"You remove the gridlines, border and background shading from an Excel chart. You have…",o:["lowered the data-ink ratio","increased the data-ink ratio by decluttering","added preattentive attributes","created a PivotChart"],a:1,w:"Removing non-data-ink (decluttering) increases the share of ink that carries data, so the data-ink ratio goes up."},
+    {q:"You must show monthly <b>revenues ($)</b> and <b>head count</b> together. The best choice is…",o:["one line chart with both series","a chart with two y-axes","a table","a pie chart"],a:2,w:"The values have different units and very different magnitudes, so a table shows both precisely. Head count would flatten to zero on a dollar scale."}
+  ],
+  exitA:[
+    {q:"In a PivotTable, which setting turns counts into “50% of restaurants are Very Good”?",o:["Value Field Settings ▸ Sum","Show Values As ▸ % of Grand Total","Group ▸ By 10","Move “Excellent” to End"],a:1,w:"<b>Show Values As ▸ % of Grand Total</b> divides every cell by the total count (300)."},
+    {q:"Best chart for the relationship between <b>number of TV commercials</b> and <b>weekly sales</b>?",o:["Pie chart","Scatter chart","Stacked column chart","Sparkline"],a:1,w:"Two quantitative variables call for a scatter chart. A trendline then shows the direction."},
+    {q:"Kirkland's monthly sales for one year should be shown as a…",o:["line chart","pie chart","bubble chart","table lens"],a:0,w:"A time series, so use a line chart."},
+    {q:"Your manager asks: <i>“In which months did South sell more than North?”</i> Choose…",o:["stacked column","clustered column","pie chart per month","3-D column"],a:1,w:"Clustered columns put North and South side by side on a common baseline. Stacked columns are better for totals."},
+    {q:"Why does the textbook warn against pie charts?",o:["Excel can't sort them","They use size and colour, which are hard to compare and hard for colour-blind readers","They only allow 3 categories","They need a PivotTable"],a:1,w:"Wedge angles and areas are hard to compare, and colour coding fails for colour-blind readers. A sorted bar chart is clearer."}
+  ],
+  exitB:[
+    {q:"A bubble chart displays how many variables?",o:["One","Two","Three","Any number"],a:2,w:"x position, y position and bubble size: three variables on a 2-D chart."},
+    {q:"Which chart shows the <b>cumulative effect</b> of monthly gains and losses on total profit?",o:["Treemap","Waterfall chart","Stock chart","Choropleth map"],a:1,w:"In a waterfall chart, each column starts where the previous one ended and builds up to the total."},
+    {q:"Conditional formatting with a Blue–White–Red colour scale on a grid of numbers creates a…",o:["sparkline","heat map","table lens","parallel-coordinates plot"],a:1,w:"A heat map uses shades of colour to show size, and the colour does the preattentive work."},
+    {q:"Brand values by <b>industry ▸ brand</b>, with each rectangle sized by value, is a…",o:["treemap","bubble chart","waterfall chart","scatter-chart matrix"],a:0,w:"A treemap uses size, colour and arrangement of rectangles for hierarchical data."},
+    {q:"The main weakness of a <b>population cartogram</b> is that…",o:["it cannot show colour","the distortion can make the geography unreadable","Excel draws it too slowly","it only works for one state"],a:1,w:"Resizing regions by population distorts shapes. An equal-area cartogram balances size and position."},
+    {q:"Which is <b>NOT</b> a principle of an effective data dashboard?",o:["Show all KPIs for one area on a single screen","KPIs should link to decisions","Use as many colours as possible so it looks lively","Avoid scrolling by using several related dashboards"],a:2,w:"Use colour with purpose: to call attention or to separate categories. Decoration adds clutter."}
+  ]
+};
+function buildQuiz(el){
+  const qs=QUIZ[el.dataset.quiz];let i=0,score=0;const res=[];
+  function render(){
+    if(i>=qs.length){const pct=Math.round(score/qs.length*100);
+      el.innerHTML=`<div class="qcard qdone"><div class="big">${score} / ${qs.length}</div><p class="lead">${pct===100?"Perfect. You have the chart sense!":pct>=60?"Good work. Review the ones you missed.":"Worth another look: revisit the slides, then try again."}</p><div class="qnav" style="justify-content:center"><button class="btn ghost" type="button">Try again</button></div></div>`;
+      el.querySelector("button").onclick=()=>{i=0;score=0;res.length=0;render()};return}
+    const q=qs[i];const L="ABCD";
+    el.innerHTML=`<div class="qhead"><div class="qdots">${qs.map((_,k)=>`<i class="${res[k]===true?"ok":res[k]===false?"no":k===i?"cur":""}"></i>`).join("")}</div><div class="qscore">Question ${i+1} of ${qs.length} · Score ${score}</div></div>
+      <div class="qcard"><div class="qq">${q.q}</div><div class="qopts">${q.o.map((o,k)=>`<button class="qopt" type="button" data-k="${k}"><span class="L">${L[k]}</span><span>${o}</span></button>`).join("")}</div>
+      <div class="qwhy"></div><div class="qnav"><button class="btn" type="button" disabled>${i===qs.length-1?"See score":"Next question"} →</button></div></div>`;
+    const why=el.querySelector(".qwhy"),nx=el.querySelector(".qnav .btn");
+    el.querySelectorAll(".qopt").forEach(b=>b.onclick=()=>{const k=+b.dataset.k,ok=k===q.a;if(ok)score++;res[i]=ok;
+      el.querySelectorAll(".qopt").forEach(x=>{x.disabled=true;if(+x.dataset.k===q.a)x.classList.add("right")});if(!ok)b.classList.add("wrong");
+      why.innerHTML=(ok?"✅ <b>Correct.</b> ":"❌ <b>Not quite.</b> ")+q.w;why.classList.add("show");
+      el.querySelector(".qscore").textContent=`Question ${i+1} of ${qs.length} · Score ${score}`;el.querySelectorAll(".qdots i")[i].className=ok?"ok":"no";nx.disabled=false;nx.focus()});
+    nx.onclick=()=>{i++;render()};
+  }
+  render();
+}
+
+/* ======================= DECK ======================= */
+const slides=[...document.querySelectorAll(".slide")];
+const deck=$("deck");
+slides.forEach(s=>s.querySelectorAll(".quiz").forEach(buildQuiz));
+document.querySelectorAll("[data-go]").forEach(b=>b.addEventListener("click",()=>go(+b.dataset.go-1)));
+const menuList=$("menuList");
+const accOf=s=>getComputedStyle(s).getPropertyValue("--acc").trim()||"#2563eb";
+const PARTB=slides.findIndex(s=>s.classList.contains("partb"));
+slides.forEach((s,i)=>{
+  if(i===0){const h=document.createElement("h4");h.textContent="Part A · Chapter 4";menuList.appendChild(h)}
+  if(i===PARTB){const h=document.createElement("h4");h.textContent="Part B · Chapter 5";h.style.marginTop="14px";menuList.appendChild(h)}
+  if(!s.classList.contains("title-slide")){const f=document.createElement("div");f.className="foot";f.innerHTML=`<span>BPMNK2033 · ${i<PARTB?"Chapter 4 · Data Visualization (Part A)":"Chapter 5 · Data Exploration (Part B)"}</span><span>${i+1}</span>`;s.appendChild(f)}
+  const a=document.createElement("a");a.href="#"+(i+1);a.innerHTML=`<span class="n" style="background:${accOf(s)}">${i+1}</span>${esc(s.dataset.title||"Slide "+(i+1))}`;
+  a.onclick=e=>{e.preventDefault();go(i);toggleMenu(false)};menuList.appendChild(a)});
+let cur=-1;
+function go(n){
+  n=Math.max(0,Math.min(slides.length-1,n));if(n===cur)return;
+  if(document.body.classList.contains("mobile")){cur=n;slides[n].scrollIntoView({behavior:"smooth"});return}
+  slides.forEach((s,i)=>{s.classList.toggle("active",i===n);s.classList.toggle("prev",i<n)});
+  cur=n;$("count").textContent=`${n+1} / ${slides.length}`;
+  $("progress").style.width=((n+1)/slides.length*100)+"%";
+  menuList.querySelectorAll("a").forEach((a,i)=>a.classList.toggle("cur",i===n));
+  if(location.hash!=="#"+(n+1))history.replaceState(null,"","#"+(n+1));
+  hideTip();
+  if(!timerStarted&&n>0&&n!==PARTB)startTimer();
+}
+function fit(){
+  const mobile=window.innerWidth<760;document.body.classList.toggle("mobile",mobile);
+  if(mobile){deck.style.transform="";return}
+  const sc=Math.min(window.innerWidth/1320,(window.innerHeight-70)/736);deck.style.transform=`scale(${sc})`;
+}
+window.addEventListener("resize",fit);
+document.addEventListener("keydown",e=>{
+  if(e.target.matches("input,select,textarea"))return;
+  if(document.body.classList.contains("mobile"))return;
+  const k=e.key;
+  if(["ArrowRight","PageDown"," "].includes(k)){e.preventDefault();go(cur+1)}
+  else if(["ArrowLeft","PageUp"].includes(k)){e.preventDefault();go(cur-1)}
+  else if(k==="Home")go(0);else if(k==="End")go(slides.length-1);
+  else if(k==="m"||k==="M")toggleMenu();else if(k==="f"||k==="F")toggleFs();else if(k==="t"||k==="T")toggleTimer();
+  else if(k==="Escape")toggleMenu(false);
+});
+$("prevBtn").onclick=()=>go(cur-1);
+$("nextBtn").onclick=()=>go(cur+1);
+$("menuBtn").onclick=()=>toggleMenu();
+$("scrim").onclick=()=>toggleMenu(false);
+$("fsBtn").onclick=toggleFs;
+function toggleMenu(v){const m=$("menu");const o=v===undefined?!m.classList.contains("open"):v;m.classList.toggle("open",o);$("scrim").classList.toggle("show",o)}
+function toggleFs(){if(!document.fullscreenElement)document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen().catch(()=>{});else document.exitFullscreen()}
+let tx=null;document.addEventListener("touchstart",e=>{if(e.target.closest(".panel,.quiz,select,.chart,.choose,.tdes,.dash,.heatwrap"))return;tx=e.touches[0].clientX},{passive:true});
+document.addEventListener("touchend",e=>{if(tx===null||document.body.classList.contains("mobile"))return;const dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>60)go(cur+(dx<0?1:-1));tx=null});
+const LIMIT=70*60;let tStart=0,tAcc=0,tRun=false,timerStarted=false;const tEl=$("timer");
+function startTimer(){timerStarted=true;if(!tRun){tRun=true;tStart=Date.now()}}
+function toggleTimer(){timerStarted=true;if(tRun){tAcc+=Date.now()-tStart;tRun=false}else{tRun=true;tStart=Date.now()}paint()}
+function paint(){const s=Math.floor((tAcc+(tRun?Date.now()-tStart:0))/1000);const mm=String(Math.floor(s/60)).padStart(2,"0"),ss=String(s%60).padStart(2,"0");
+  tEl.textContent=(tRun?"⏸ ":"▶ ")+mm+":"+ss;tEl.classList.toggle("over",s>LIMIT)}
+setInterval(paint,1000);
+tEl.onclick=toggleTimer;tEl.ondblclick=()=>{tAcc=0;tRun=false;timerStarted=false;paint()};
+fit();
+const h0=parseInt(location.hash.slice(1),10);go(isNaN(h0)?0:h0-1);
+window.addEventListener("hashchange",()=>{const n=parseInt(location.hash.slice(1),10);if(!isNaN(n))go(n-1)});
+
+</script>
+</body>
+</html>

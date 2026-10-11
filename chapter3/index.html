@@ -602,7 +602,7 @@ body.mobile .pvwrap{overflow-x:auto}
       <div><b>Data-ink</b> carries meaning. <b>Non-data-ink</b> (heavy borders, grids, shading, 3-D) adds nothing.</div>
       <div><b>Decluttering</b> raises the ratio. <b>White space</b> works the same way.</div>
       <div><b>Tip:</b> Excel's defaults add clutter. Clean them up before you present.</div>
-      <div style="border-left-color:#0f172a"><b>Ink meter</b><div id="inkMeter" style="margin-top:6px"></div></div>
+      <div style="border-left-color:#0f172a"><b>Data-ink ratio <span style="font-weight:500;color:#16a34a">(higher = better)</span></b><div id="inkMeter" style="margin-top:6px"></div></div>
     </div>
     <div class="panel">
       <div class="ctl"><div class="seg" id="inkView"><button data-v="chart" class="on">Chart</button><button data-v="table">Table</button></div>
@@ -1188,7 +1188,7 @@ const DATA={"nyc":[["Greenwich Village/Financial District",1965,78.3,7.9,44.0],[
       const hit=mk("circle",{cx:x(i+1),cy:y(v),r:12,fill:"transparent"},s);hov(hit,()=>`<b>Day ${i+1}</b><br>${v} units`)});
     if(st.legend){mk("rect",{x:572,y:150,width:80,height:30,fill:"#fff",stroke:"#0f172a"},s);mk("line",{x1:580,x2:600,y1:165,y2:165,stroke:C.b,"stroke-width":3},s);T(s,604,169,"Series1",{fill:"#0f172a"})}
     const n=ITEMS.reduce((a,i)=>a+(st[i[0]]?i[2]:0),0),ratio=Math.round(100/(1+.18+n));
-    $("inkMeter").innerHTML=`<div style="display:flex;align-items:center;gap:10px"><div style="flex:1;height:14px;background:#f1f5f9;border-radius:7px;overflow:hidden"><div style="width:${ratio}%;height:100%;background:${ratio>70?"#16a34a":ratio>45?"#d97706":"#e11d48"};transition:width .4s"></div></div><b style="font-family:var(--mono)">≈${ratio}%</b></div><span style="font-size:11.5px;color:#64748b">illustrative estimate of data-ink</span>`;
+    $("inkMeter").innerHTML=`<div style="display:flex;align-items:center;gap:10px"><div style="flex:1;height:14px;background:#f1f5f9;border-radius:7px;overflow:hidden"><div style="width:${ratio}%;height:100%;background:${ratio>70?"#16a34a":ratio>45?"#d97706":"#e11d48"};transition:width .4s"></div></div><b style="font-family:var(--mono)">≈${ratio}%</b></div><span style="font-size:11.5px;color:#64748b">share of ink that shows data · declutter ⇒ ratio ↑ (illustrative)</span>`;
     // table
     let t=`<table class="dt ${tableLo?"lo":"hi"}"><thead><tr><th class="lbl">Day</th><th class="n">Sales (units)</th></tr></thead><tbody>`;SCARF.forEach((v,i)=>t+=`<tr><td class="lbl">${i+1}</td><td class="n">${v}</td></tr>`);$("inkTable").innerHTML=t+"</tbody></table>";
   }

@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Stage 1 · Group Data Generation</title>
+<meta name="description" content="BPMNK2033 Stage 1 pre-class group task: generate, freeze, check and submit a unique 90-day sales activity dataset in Excel.">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0f172a;--muted:#475569;--line:#e2e8f0;--indigo:#4f46e5;--violet:#7c3aed;--green:#107c41;--amber:#d97706;--red:#dc2626}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:'Plus Jakarta Sans',system-ui,sans-serif;color:var(--ink);background:radial-gradient(900px 500px at 0% 0%,#dbeafe,transparent 60%),radial-gradient(800px 500px at 100% 100%,#fce7f3,transparent 55%),#f4f7fb;min-height:100vh;line-height:1.55}
+.wrap{max-width:960px;margin:0 auto;padding:0 16px 64px}
+header.hero{background:linear-gradient(120deg,var(--indigo),var(--violet));color:#fff;border-radius:0 0 28px 28px;padding:36px 28px 32px;margin:0 -16px 26px;position:relative;overflow:hidden}
+header.hero::after{content:"";position:absolute;right:-60px;top:-60px;width:240px;height:240px;border-radius:50%;background:rgba(255,255,255,.08)}
+.back{font-size:14px;color:#e0e7ff;text-decoration:none;font-weight:600}
+.kick{display:inline-block;margin-top:16px;font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;background:rgba(255,255,255,.18);padding:5px 12px;border-radius:999px}
+h1{font-size:clamp(28px,4.8vw,44px);line-height:1.08;margin:12px 0 10px;letter-spacing:-.02em}
+.hero p{font-size:17px;max-width:640px;margin:0;color:#eef2ff}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.chips span{font-size:13px;font-weight:700;background:#fff;color:var(--indigo);padding:5px 12px;border-radius:999px}
+nav.toc{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px}
+nav.toc a{font-size:13.5px;font-weight:700;text-decoration:none;color:var(--c);background:color-mix(in srgb,var(--c) 10%,#fff);border:1px solid color-mix(in srgb,var(--c) 25%,#fff);padding:6px 12px;border-radius:999px}
+nav.toc a:hover{background:var(--c);color:#fff}
+section.card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:22px;margin-bottom:20px;box-shadow:0 18px 40px -30px rgba(15,23,42,.35);border-top:6px solid var(--c);scroll-margin-top:12px}
+h2{font-size:22px;margin:0 0 10px;display:flex;align-items:center;gap:10px}
+h2 .ic{display:inline-flex;width:34px;height:34px;border-radius:10px;background:var(--c);color:#fff;font-size:17px;align-items:center;justify-content:center;flex:none}
+p{margin:0 0 12px}
+.callout{border-radius:12px;padding:12px 14px;font-size:15px;margin:12px 0 0;background:color-mix(in srgb,var(--k) 9%,#fff);border-left:4px solid var(--k)}
+.callout b{color:var(--k)}
+.tbl{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:15px;min-width:520px}
+th{text-align:left;background:#f1f5f9;font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);padding:10px}
+td{padding:10px;border-top:1px solid var(--line)}
+td.col{font-weight:800;color:var(--indigo);width:60px}
+td code{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:500}
+.big{display:flex;align-items:center;gap:10px;margin-top:14px;font-weight:700;font-size:15px}
+.big strong{font-size:22px;color:var(--indigo)}
+ol.steps{list-style:none;margin:0;padding:0;display:grid;gap:14px}
+ol.steps li>div{min-width:0}
+ol.steps li{border:1px solid var(--line);border-radius:14px;padding:16px;display:grid;grid-template-columns:44px 1fr;gap:14px;transition:box-shadow .2s,transform .2s}
+ol.steps li:hover{box-shadow:0 14px 30px -22px rgba(15,23,42,.5);transform:translateY(-2px)}
+.num{width:44px;height:44px;border-radius:12px;background:var(--s);color:#fff;font-weight:800;font-size:18px;display:flex;align-items:center;justify-content:center}
+.steps h3{margin:2px 0 6px;font-size:17px}
+.cell{display:inline-block;font-weight:800;color:var(--s);background:color-mix(in srgb,var(--s) 12%,#fff);padding:1px 8px;border-radius:6px;font-size:14px}
+.fx{display:flex;align-items:stretch;margin:10px 0 8px;border:1px solid #cbd5e1;border-radius:10px;overflow:hidden;background:#f8fafc}
+.fx code{flex:1;min-width:0;font-family:'JetBrains Mono',monospace;font-size:14px;padding:10px 12px;overflow-x:auto;white-space:nowrap;color:#0f172a}
+.fx button{border:0;background:var(--s);color:#fff;font:700 13px 'Plus Jakarta Sans',sans-serif;padding:0 14px;cursor:pointer;flex:none}
+.fx button.ok{background:var(--green)}
+.steps .why{font-size:14.5px;color:var(--muted);margin:0}
+ol.plain{margin:0;padding-left:20px;font-size:16px}
+ol.plain li{margin:4px 0}
+.checks{display:grid;gap:8px}
+.checks label{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--line);border-radius:12px;padding:11px 14px;cursor:pointer;font-size:15.5px;transition:background .15s,border-color .15s}
+.checks input{width:20px;height:20px;accent-color:var(--green);flex:none;margin-top:2px}
+.checks label.done{background:#ecfdf3;border-color:#a7f3d0}
+.bar{height:10px;border-radius:999px;background:#e2e8f0;overflow:hidden;margin:4px 0 14px}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--amber),var(--green));transition:width .3s}
+.prog{font-weight:700;font-size:14px;color:var(--muted)}
+.ready{display:none;margin-top:12px;font-weight:700;color:var(--green)}
+.btn{display:inline-flex;align-items:center;gap:8px;border:0;background:var(--c);color:#fff;font:700 15px 'Plus Jakarta Sans',sans-serif;padding:10px 16px;border-radius:10px;cursor:pointer}
+.btn:hover{filter:brightness(1.08)}
+#preview table{min-width:640px;font-size:14px}
+#preview td{padding:7px 10px}
+#preview tr.abs td{color:#94a3b8}
+.st{font-weight:700;padding:2px 8px;border-radius:999px;font-size:12.5px}
+.st.p{background:#ecfdf3;color:var(--green)}.st.a{background:#fef2f2;color:var(--red)}
+.fname{font-family:'JetBrains Mono',monospace;background:#f1f5f9;padding:8px 12px;border-radius:8px;display:inline-block;font-size:15px;margin:4px 0 12px;word-break:break-all}
+footer{margin-top:32px;font-size:13px;color:#64748b;text-align:center}
+@media (max-width:560px){
+  header.hero{padding:28px 20px 26px}
+  section.card{padding:18px 16px}
+  ol.steps li{grid-template-columns:1fr;gap:10px}
+  .num{width:38px;height:38px;font-size:16px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <a class="back" href="../">← BPMNK2033 home</a><br>
+  <span class="kick">Group Assignment · Stage 1 · Pre-class task</span>
+  <h1>Generate your group sales activity dataset</h1>
+  <p>Build a unique three-month synthetic dataset in Excel, freeze it, check it, and submit it <b>before</b> the analytics class.</p>
+  <div class="chips"><span>6 managers</span><span>90 days</span><span>540 records</span><span>7 columns</span></div>
+</header>
+
+<nav class="toc">
+  <a href="#purpose" style="--c:#4f46e5">1 · Purpose</a>
+  <a href="#structure" style="--c:#0891b2">2 · Structure</a>
+  <a href="#steps" style="--c:#7c3aed">3 · Formulas</a>
+  <a href="#freeze" style="--c:#dc2626">4 · Freeze</a>
+  <a href="#check" style="--c:#107c41">5 · Check</a>
+  <a href="#submit" style="--c:#c026d3">6 · Submit</a>
+</nav>
+
+<section class="card" id="purpose" style="--c:#4f46e5">
+  <h2><span class="ic">🎯</span>Purpose of this task</h2>
+  <p>Your group will generate its own synthetic operational dataset. It represents the daily activity of <b>six sales managers</b> over a <b>90-day</b> period. In class, you will use this dataset for PivotTable, attendance, sales, expenditure, trend and relationship analysis.</p>
+  <div class="callout" style="--k:#4f46e5"><b>Different numbers are expected.</b> The dataset uses random generation, so every group gets different values. That is how it should be.</div>
+</section>
+
+<section class="card" id="structure" style="--c:#0891b2">
+  <h2><span class="ic">🧱</span>Dataset structure</h2>
+  <p>Type these seven column headings in <b>Row 1</b> of a new Excel sheet, starting at cell A1.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Col</th><th>Heading (Row 1)</th><th>Meaning</th></tr></thead>
+    <tbody>
+      <tr><td class="col">A</td><td><code>Date</code></td><td>Scheduled activity date</td></tr>
+      <tr><td class="col">B</td><td><code>Record_ID</code></td><td>Unique record number</td></tr>
+      <tr><td class="col">C</td><td><code>Region</code></td><td>North, Central, South or East</td></tr>
+      <tr><td class="col">D</td><td><code>Manager</code></td><td>Manager 1 to Manager 6</td></tr>
+      <tr><td class="col">E</td><td><code>Status</code></td><td>Present or Absent</td></tr>
+      <tr><td class="col">F</td><td><code>Daily_Promotion_Spend</code></td><td>Daily promotional expenditure (RM) when present</td></tr>
+      <tr><td class="col">G</td><td><code>Total_Sales</code></td><td>Daily sales (RM) generated when present</td></tr>
+    </tbody>
+  </table></div>
+  <div class="big">90 days × 6 managers = <strong>540</strong> manager-day records (Rows 2 to 541)</div>
+</section>
+
+<section class="card" id="steps" style="--c:#7c3aed">
+  <h2><span class="ic">🧮</span>Step-by-step data generation</h2>
+  <p>Enter each formula in Row 2, then fill it down. Tap <b>Copy</b> to copy a formula exactly.</p>
+  <ol class="steps">
+    <li style="--s:#4f46e5"><div class="num">1</div><div>
+      <h3>Generate the date <span class="cell">A2</span></h3>
+      <div class="fx"><code>=DATE(2026,6,1)+INT((ROW()-2)/6)</code><button>Copy</button></div>
+      <p class="why">Each date repeats six times, once for each manager. Format column A as a date if Excel shows a number.</p>
+    </div></li>
+    <li style="--s:#0891b2"><div class="num">2</div><div>
+      <h3>Create a unique Record ID <span class="cell">B2</span></h3>
+      <div class="fx"><code>="S"&amp;TEXT(ROW()-1,"000")</code><button>Copy</button></div>
+      <p class="why">This gives IDs such as S001, S002, S003 and so on.</p>
+    </div></li>
+    <li style="--s:#0d9488"><div class="num">3</div><div>
+      <h3>Assign a region randomly <span class="cell">C2</span></h3>
+      <div class="fx"><code>=CHOOSE(RANDBETWEEN(1,4),"North","Central","South","East")</code><button>Copy</button></div>
+      <p class="why">A manager may appear in different regions on different dates.</p>
+    </div></li>
+    <li style="--s:#107c41"><div class="num">4</div><div>
+      <h3>Generate the six managers <span class="cell">D2</span></h3>
+      <div class="fx"><code>=CHOOSE(MOD(ROW()-2,6)+1,"Manager 1","Manager 2","Manager 3","Manager 4","Manager 5","Manager 6")</code><button>Copy</button></div>
+      <p class="why">The formula cycles through all six managers for every date.</p>
+    </div></li>
+    <li style="--s:#d97706"><div class="num">5</div><div>
+      <h3>Generate attendance status <span class="cell">E2</span></h3>
+      <div class="fx"><code>=IF(RAND()&lt;=0.85,"Present","Absent")</code><button>Copy</button></div>
+      <p class="why">Each manager has about an 85% chance of being present on a scheduled day.</p>
+    </div></li>
+    <li style="--s:#dc2626"><div class="num">6</div><div>
+      <h3>Generate daily promotional spend <span class="cell">F2</span></h3>
+      <div class="fx"><code>=IF(E2="Present",RANDBETWEEN(500,2000),"")</code><button>Copy</button></div>
+      <p class="why">If the manager is absent, spend is left blank because no activity took place.</p>
+    </div></li>
+    <li style="--s:#c026d3"><div class="num">7</div><div>
+      <h3>Generate total sales <span class="cell">G2</span></h3>
+      <div class="fx"><code>=IF(E2="Present",ROUND(MAX(2000,MIN(15000,F2*5+RANDBETWEEN(-1500,1500))),0),"")</code><button>Copy</button></div>
+      <p class="why">This creates a positive but imperfect relationship between promotion spend and sales, kept between RM2,000 and RM15,000. Absent rows stay blank.</p>
+    </div></li>
+    <li style="--s:#7c3aed"><div class="num">8</div><div>
+      <h3>Fill all formulas down to Row 541</h3>
+      <p class="why" style="color:var(--ink)">Select <b>A2:G2</b>, then drag the fill handle down to <b>Row 541</b>. Quicker way: type <code style="font-family:'JetBrains Mono',monospace">A2:G541</code> in the Name Box, press Enter, then press <b>Ctrl + D</b>.</p>
+    </div></li>
+  </ol>
+</section>
+
+<section class="card" style="--c:#0891b2">
+  <h2><span class="ic">👀</span>What your data should look like</h2>
+  <p>Tap the button to see 12 sample rows built with the same rules. Your own values will be different.</p>
+  <button class="btn" id="gen">🎲 Show sample rows</button>
+  <div id="preview" class="tbl" style="margin-top:14px"></div>
+</section>
+
+<section class="card" id="freeze" style="--c:#dc2626">
+  <h2><span class="ic">🧊</span>Freeze your generated dataset</h2>
+  <div class="callout" style="--k:#dc2626;margin:0 0 14px"><b>Do not skip this step.</b> RAND() and RANDBETWEEN() recalculate every time Excel recalculates, so your values keep changing until you turn the formulas into fixed values.</div>
+  <ol class="plain">
+    <li>Select the whole dataset (A1:G541).</li>
+    <li>Copy it (<b>Ctrl + C</b>).</li>
+    <li>Right-click → <b>Paste Special → Values</b> (or <b>Ctrl + Alt + V</b>, then V, Enter).</li>
+    <li>Click any cell in F or G. The formula bar should show a number, not a formula.</li>
+    <li>Save the workbook.</li>
+  </ol>
+</section>
+
+<section class="card" id="check" style="--c:#107c41">
+  <h2><span class="ic">✅</span>Check your dataset before submission</h2>
+  <p>Tick each item as your group confirms it.</p>
+  <div class="prog" id="progtxt">0 of 8 checked</div>
+  <div class="bar"><i id="progbar"></i></div>
+  <div class="checks" id="checks">
+    <label><input type="checkbox">The dataset has 540 manager-day records (Rows 2 to 541).</label>
+    <label><input type="checkbox">Each date appears six times, from 1 June 2026 to 29 August 2026.</label>
+    <label><input type="checkbox">Managers cycle from Manager 1 to Manager 6.</label>
+    <label><input type="checkbox">Region varies across records (North, Central, South, East).</label>
+    <label><input type="checkbox">Status contains both Present and Absent.</label>
+    <label><input type="checkbox">Absent rows have blank Promotion Spend and Total Sales.</label>
+    <label><input type="checkbox">Present rows have numbers in Promotion Spend and Total Sales.</label>
+    <label><input type="checkbox">Values are frozen (no formulas remain).</label>
+  </div>
+  <div class="ready" id="ready">🎉 All checks done. Your dataset is ready to submit.</div>
+</section>
+
+<section class="card" id="submit" style="--c:#c026d3">
+  <h2><span class="ic">📤</span>Submission</h2>
+  <p>Submit <b>one Excel workbook per group</b> on <b>UUM Online Learning</b> before the stated deadline. Only <b>one group representative</b> submits, so there are no duplicate files.</p>
+  <p style="margin-bottom:4px"><b>Filename:</b></p>
+  <span class="fname">GroupC01_Sales_Activity_Data.xlsx</span>
+  <p class="why" style="color:var(--muted);font-size:14.5px">Replace <b>C01</b> with your own team code (for example, D04).</p>
+  <div class="callout" style="--k:#c026d3"><b>Do not analyse the data yet</b> unless told to. You will complete the next stage during class.</div>
+</section>
+
+<footer>BPMNK2033 Business Intelligence &amp; Data Analytics · Dr. Khairol Anuar Ishak · School of Business Management, UUM · Session A261</footer>
+</div>
+
+<script>
+// Copy buttons
+document.querySelectorAll('.fx button').forEach(b=>{
+  b.addEventListener('click',async()=>{
+    const t=b.previousElementSibling.textContent;
+    try{await navigator.clipboard.writeText(t)}catch(e){
+      const ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();
+      try{document.execCommand('copy')}catch(_){}ta.remove();
+    }
+    b.textContent='Copied ✓';b.classList.add('ok');
+    setTimeout(()=>{b.textContent='Copy';b.classList.remove('ok')},1600);
+  });
+});
+
+// Checklist with progress (remembered on this device)
+const boxes=[...document.querySelectorAll('#checks input')];
+let saved=[];try{saved=JSON.parse(localStorage.getItem('bida-s1-checks')||'[]')}catch(e){}
+boxes.forEach((c,i)=>{c.checked=!!saved[i];c.addEventListener('change',upd)});
+function upd(){
+  const n=boxes.filter(c=>c.checked).length;
+  boxes.forEach(c=>c.parentElement.classList.toggle('done',c.checked));
+  document.getElementById('progtxt').textContent=n+' of '+boxes.length+' checked';
+  document.getElementById('progbar').style.width=(n/boxes.length*100)+'%';
+  document.getElementById('ready').style.display=n===boxes.length?'block':'none';
+  try{localStorage.setItem('bida-s1-checks',JSON.stringify(boxes.map(c=>c.checked)))}catch(e){}
+}
+upd();
+
+// Sample preview using the same rules
+const rb=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const regions=['North','Central','South','East'];
+const fmt=d=>d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+document.getElementById('gen').addEventListener('click',()=>{
+  let h='<table><thead><tr><th>Date</th><th>Record_ID</th><th>Region</th><th>Manager</th><th>Status</th><th>Promo Spend</th><th>Total Sales</th></tr></thead><tbody>';
+  for(let i=0;i<12;i++){
+    const row=i+2,d=new Date(2026,5,1+Math.floor((row-2)/6));
+    const present=Math.random()<=0.85;
+    const f=present?rb(500,2000):'';
+    const g=present?Math.round(Math.max(2000,Math.min(15000,f*5+rb(-1500,1500)))):'';
+    h+=`<tr class="${present?'':'abs'}"><td>${fmt(d)}</td><td>S${String(row-1).padStart(3,'0')}</td><td>${regions[rb(0,3)]}</td><td>Manager ${(row-2)%6+1}</td><td><span class="st ${present?'p':'a'}">${present?'Present':'Absent'}</span></td><td>${f===''?'':f.toLocaleString()}</td><td>${g===''?'':g.toLocaleString()}</td></tr>`;
+  }
+  document.getElementById('preview').innerHTML=h+'</tbody></table>';
+  document.getElementById('gen').textContent='🎲 Generate again';
+});
+</script>
+</body>
+</html>

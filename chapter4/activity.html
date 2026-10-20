@@ -1,0 +1,589 @@
+<title>Campus Eats Data Lab</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Nunito+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+/* Layout: gradient course header, then a single column of activity blocks; the six missions sit behind colour-coded tabs, one accent per topic. */
+:root{
+  --bg:#f5f5fb; --surface:#ffffff; --surface-2:#f0effa; --ink:#1c1a3a; --muted:#5f5c7d; --line:#e2e0f0;
+  --indigo:#4f46e5; --violet:#7c3aed; --head-a:#4338ca; --head-b:#7c3aed; --on-head:#ffffff;
+  --m1:#0284c7; --m2:#0d9488; --m3:#d97706; --m4:#e11d48; --m5:#7c3aed; --m6:#16a34a;
+  --m1-soft:#e0f2fe; --m2-soft:#ccfbf1; --m3-soft:#fef3c7; --m4-soft:#ffe4e6; --m5-soft:#ede9fe; --m6-soft:#dcfce7;
+  --good:#15803d; --good-soft:#dcfce7; --bad:#be123c; --bad-soft:#ffe4e6;
+  --code-bg:#eef0ff; --code-ink:#3730a3;
+  --f-display:"Sora",ui-sans-serif,system-ui,sans-serif;
+  --f-body:"Nunito Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,"SFMono-Regular",Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#12111f; --surface:#1c1b2e; --surface-2:#25233b; --ink:#ecebfa; --muted:#a9a6c6; --line:#34324f;
+  --head-a:#3730a3; --head-b:#6d28d9;
+  --m1:#38bdf8; --m2:#2dd4bf; --m3:#fbbf24; --m4:#fb7185; --m5:#a78bfa; --m6:#4ade80;
+  --m1-soft:#0c2a3d; --m2-soft:#0b302c; --m3-soft:#372a0c; --m4-soft:#3d1520; --m5-soft:#2a1f4a; --m6-soft:#0f3320;
+  --good:#4ade80; --good-soft:#0f3320; --bad:#fb7185; --bad-soft:#3d1520;
+  --code-bg:#272552; --code-ink:#c7c4ff; --indigo:#818cf8; --violet:#a78bfa; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#12111f; --surface:#1c1b2e; --surface-2:#25233b; --ink:#ecebfa; --muted:#a9a6c6; --line:#34324f;
+  --head-a:#3730a3; --head-b:#6d28d9;
+  --m1:#38bdf8; --m2:#2dd4bf; --m3:#fbbf24; --m4:#fb7185; --m5:#a78bfa; --m6:#4ade80;
+  --m1-soft:#0c2a3d; --m2-soft:#0b302c; --m3-soft:#372a0c; --m4-soft:#3d1520; --m5-soft:#2a1f4a; --m6-soft:#0f3320;
+  --good:#4ade80; --good-soft:#0f3320; --bad:#fb7185; --bad-soft:#3d1520;
+  --code-bg:#272552; --code-ink:#c7c4ff; --indigo:#818cf8; --violet:#a78bfa; color-scheme:dark}
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+main>*,section.block>*,.mission>*,.answer>*,.two>*{min-width:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.6}
+.wrap{max-width:1040px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--f-display);line-height:1.2;text-wrap:balance;margin:0}
+h2{font-size:clamp(1.3rem,2.6vw,1.65rem);font-weight:700}
+h3{font-size:1.08rem;font-weight:700}
+p{margin:0}
+.eyebrow{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700}
+code,.chip{font-family:var(--f-mono);font-size:.82rem;background:var(--code-bg);color:var(--code-ink);padding:.12em .45em;border-radius:6px;white-space:nowrap}
+.num{font-variant-numeric:tabular-nums}
+.task code,.def code{white-space:normal;overflow-wrap:anywhere}
+
+/* header */
+header.top{background:linear-gradient(120deg,var(--head-a),var(--head-b));color:var(--on-head)}
+header.top .wrap{padding-block:34px 30px;display:grid;gap:14px}
+header.top h1{font-size:clamp(2rem,5vw,3.1rem);font-weight:800;letter-spacing:-.02em}
+header.top .lede{max-width:62ch;opacity:.93;font-size:1.04rem}
+.meta{display:flex;flex-wrap:wrap;gap:8px}
+.meta span{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);padding:4px 12px;border-radius:999px;font-size:.84rem;font-weight:700}
+.topics{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.topics a{color:var(--on-head);text-decoration:none;font-size:.85rem;font-weight:700;padding:5px 12px;border-radius:8px;background:rgba(0,0,0,.18);border:1px solid rgba(255,255,255,.18)}
+.topics a:hover,.topics a:focus-visible{background:rgba(0,0,0,.32)}
+
+main{display:grid;gap:28px;padding-block:28px 60px}
+section.block{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:22px;display:grid;gap:16px;min-width:0}
+.block-head{display:grid;gap:6px}
+.block-head p{color:var(--muted);max-width:70ch}
+
+/* run sheet */
+details.run{background:var(--surface-2);border:1px dashed var(--line);border-radius:14px;padding:14px 18px}
+details.run summary{cursor:pointer;font-weight:800;font-family:var(--f-display)}
+.timeline{display:grid;gap:8px;margin-top:12px}
+.tl{display:grid;grid-template-columns:92px 1fr;gap:12px;align-items:start}
+.tl b{font-family:var(--f-mono);font-size:.82rem;color:var(--indigo);padding-top:2px}
+.tl div{min-width:0}
+.run .note{margin-top:12px;color:var(--muted);font-size:.92rem}
+
+/* warm-up */
+.two{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:18px}
+@media (max-width:820px){.two{grid-template-columns:1fr}}
+label.lbl{font-weight:800;font-size:.9rem;display:block;margin-bottom:6px}
+textarea,input[type=text]{width:100%;font-family:var(--f-mono);font-size:.95rem;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+button{font:inherit;cursor:pointer}
+.btn{font-weight:800;font-size:.9rem;padding:9px 16px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:transform .12s, background .12s}
+.btn:hover{transform:translateY(-1px);background:var(--surface-2)}
+.btn:focus-visible,.tab:focus-visible,.seg button:focus-visible,.cls button:focus-visible{outline:3px solid var(--indigo);outline-offset:2px}
+.btn.primary{background:var(--indigo);border-color:var(--indigo);color:#fff}
+.btn.primary:hover{background:var(--violet)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.seg button{border:0;background:var(--surface);color:var(--ink);padding:7px 12px;font-weight:700;font-size:.85rem}
+.seg button[aria-pressed=true]{background:var(--ink);color:var(--bg)}
+.chart{width:100%;overflow-x:auto}
+.chart svg{display:block;width:100%;height:auto;min-width:520px}
+.chart.narrow svg{min-width:300px}
+.svg-axis{stroke:var(--muted);stroke-width:1}
+.svg-grid{stroke:var(--line);stroke-width:1}
+.svg-text{fill:var(--muted);font-family:var(--f-mono);font-size:11px}
+.svg-label{fill:var(--ink);font-family:var(--f-body);font-size:12px;font-weight:700}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
+.stat{background:var(--surface-2);border-radius:12px;padding:10px 12px}
+.stat .k{font-size:.76rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+.stat .v{font-family:var(--f-display);font-weight:700;font-size:1.35rem;font-variant-numeric:tabular-nums}
+.stat .s{font-size:.8rem;color:var(--muted)}
+.defs{display:grid;gap:10px}
+.def{border-left:4px solid var(--indigo);padding:8px 12px;background:var(--surface-2);border-radius:0 10px 10px 0}
+.def b{font-family:var(--f-display)}
+table{border-collapse:collapse;width:100%;font-size:.9rem}
+th,td{padding:7px 10px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+th{font-size:.76rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);background:var(--surface-2);position:sticky;top:0}
+td.r,th.r{text-align:right;font-variant-numeric:tabular-nums}
+.tablebox{overflow:auto;max-height:420px;border:1px solid var(--line);border-radius:12px}
+.tablebox.short{max-height:none}
+tr.hl td{background:var(--m3-soft)}
+
+/* missions */
+.tabs{display:flex;flex-wrap:wrap;gap:8px}
+.tab{border:2px solid var(--line);background:var(--surface);color:var(--ink);border-radius:12px;padding:8px 14px;font-weight:800;font-size:.9rem;display:flex;gap:8px;align-items:center}
+.tab .dot{width:10px;height:10px;border-radius:50%;background:var(--c)}
+.tab[aria-selected=true]{border-color:var(--c);background:var(--cs)}
+.mission{border-top:5px solid var(--c);border-radius:14px;background:var(--surface);padding:20px;display:grid;gap:16px;border-left:1px solid var(--line);border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+.mission .eyebrow{color:var(--c)}
+.task{background:var(--cs);border-radius:12px;padding:14px 16px;display:grid;gap:8px}
+.task ol{margin:0;padding-left:1.3em;display:grid;gap:4px}
+.decision{border:2px dashed var(--c);border-radius:12px;padding:12px 16px}
+.decision b{color:var(--c)}
+.answer{display:grid;gap:14px;border-top:1px solid var(--line);padding-top:16px}
+.answer[hidden]{display:none!important}
+.cls{display:grid;gap:8px}
+.cls .item{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px 12px;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+.cls .item.ok{border-color:var(--good);background:var(--good-soft)}
+.cls .item.no{border-color:var(--bad);background:var(--bad-soft)}
+.cls .item .why{grid-column:1/-1;font-size:.88rem;color:var(--muted)}
+.cls .item .why[hidden]{display:none!important}
+.cls button{border:1px solid var(--line);background:var(--surface-2);color:var(--ink);border-radius:8px;padding:5px 10px;font-weight:700;font-size:.82rem}
+.cls button[aria-pressed=true]{background:var(--ink);color:var(--bg)}
+.ex{font-family:var(--f-mono);font-size:.8rem;color:var(--muted)}
+.callout{background:var(--surface-2);border-radius:12px;padding:12px 16px}
+.score{font-weight:800}
+.big{font-family:var(--f-display);font-weight:800;font-size:1.9rem;font-variant-numeric:tabular-nums}
+
+/* exit ticket */
+.q{border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:grid;gap:8px}
+.q .opts{display:grid;gap:6px}
+.q button.opt{text-align:left;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:9px;padding:8px 12px;font-weight:600}
+.q button.opt.ok{border-color:var(--good);background:var(--good-soft)}
+.q button.opt.no{border-color:var(--bad);background:var(--bad-soft)}
+.q .fb{font-size:.9rem;color:var(--muted)}
+footer{color:var(--muted);font-size:.85rem;padding-block:0 40px}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+@media (max-width:520px){section.block,.mission{padding:16px}.tl{grid-template-columns:1fr;gap:2px}}
+</style>
+
+<header class="top">
+  <div class="wrap">
+    <div class="eyebrow" style="opacity:.85">BPMNK2033 · Chapter 4 · Descriptive Statistics · Class activity</div>
+    <h1>Campus Eats Data Lab</h1>
+    <p class="lede">Campus Eats is a food-delivery service around UUM. You have one week of its orders. In pairs, use Excel to answer six missions, one for each part of the chapter, and make a real business decision with each answer.</p>
+    <div class="meta"><span>Work in pairs</span><span>Excel + this page</span><span>70 minutes</span><span>40 orders · 10 variables</span></div>
+    <nav class="topics" aria-label="Jump to">
+      <a href="#warmup">Warm-up</a><a href="#data">Dataset</a><a href="#missions">Six missions</a><a href="#exit">Exit ticket</a>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap">
+<main>
+
+<details class="run">
+  <summary>Lecturer run-sheet (70 minutes)</summary>
+  <div class="timeline">
+    <div class="tl"><b>0–8 min</b><div><strong>30-Second Challenge.</strong> Everyone opens the phone stopwatch, starts together on your signal, and stops it when they <em>feel</em> 30 seconds have passed, without looking. Collect 10 times from volunteers and type them into the warm-up box.</div></div>
+    <div class="tl"><b>8–15 min</b><div><strong>Variance as squares.</strong> Walk through the picture: each guess's distance from the mean becomes a square; variance is the average square; SD is the side of that square, back in seconds. Ask: "Is our class good at feeling 30 seconds?"</div></div>
+    <div class="tl"><b>15–20 min</b><div><strong>Set-up.</strong> Pairs copy the dataset into Excel with the <em>Copy for Excel</em> button (or open the workbook from UUM OL).</div></div>
+    <div class="tl"><b>20–38 min</b><div><strong>Missions 1–3</strong> (about 6 min each): types of data, distributions, measures of location. Reveal each answer on screen and take one decision from the floor.</div></div>
+    <div class="tl"><b>38–58 min</b><div><strong>Missions 4–6</strong>: variability, analysing distributions, association. Mission 4 is the anchor for variance and SD; give it 8 minutes.</div></div>
+    <div class="tl"><b>58–65 min</b><div><strong>Debrief.</strong> Ask pairs for one decision they would put in front of the Campus Eats manager.</div></div>
+    <div class="tl"><b>65–70 min</b><div><strong>Exit ticket</strong>: five questions at the bottom of this page. Good practice for Quiz 1 (Chapters 1–4).</div></div>
+  </div>
+  <p class="note">Splitting across two lectures: run the warm-up and Missions 1–2 with Part A (data and distributions), and Missions 3–6 with Part B (summary measures and association).</p>
+</details>
+
+<!-- WARM-UP -->
+<section class="block" id="warmup">
+  <div class="block-head">
+    <div class="eyebrow" style="color:var(--indigo)">Warm-up · Measures of variability</div>
+    <h2>The 30-Second Challenge: see variance as squares</h2>
+    <p>Each dot is one person's guess of 30 seconds. Each square has a side equal to that guess's distance from the mean. Variance is the size of the <em>average square</em>, in seconds². Standard deviation is the <em>side</em> of that average square, so it is back in plain seconds.</p>
+  </div>
+  <div class="two">
+    <div style="display:grid;gap:12px;min-width:0">
+      <div>
+        <label class="lbl" for="guesses">Class guesses (seconds, separated by commas)</label>
+        <textarea id="guesses" rows="2">27, 31, 24, 35, 29, 33, 22, 30, 38, 26</textarea>
+      </div>
+      <div class="row">
+        <button class="btn primary" id="drawBtn">Draw the squares</button>
+        <div class="seg" role="group" aria-label="Divide by">
+          <button id="divS" aria-pressed="true">Sample ÷ (n − 1)</button>
+          <button id="divP" aria-pressed="false">Population ÷ n</button>
+        </div>
+      </div>
+      <div class="chart"><svg id="sqSvg" viewBox="0 0 720 300" role="img" aria-label="Dot plot with deviation squares"></svg></div>
+      <div class="stats" id="sqStats"></div>
+    </div>
+    <div class="defs">
+      <div class="def"><b>Deviation</b><br>How far one value is from the mean: x − x̄. Positive and negative deviations always add to zero, so we cannot simply average them.</div>
+      <div class="def" style="border-color:var(--m4)"><b>Variance (s²)</b><br>The average <em>squared</em> deviation. Squaring removes the minus signs and punishes big misses. Its unit is squared (seconds², RM²), which is why it is hard to interpret on its own. Excel: <code>=VAR.S()</code></div>
+      <div class="def" style="border-color:var(--m6)"><b>Standard deviation (s)</b><br>The square root of variance. Read it as the <em>typical distance</em> of a value from the mean, in the original unit. Excel: <code>=STDEV.S()</code></div>
+      <div class="def" style="border-color:var(--m3)"><b>Coefficient of variation</b><br>SD ÷ mean × 100%. Use it to compare spread when the means or units differ.</div>
+      <p class="ex">s² uses n − 1 because our data is a sample. σ² and σ (divide by n) are for a whole population: <code>VAR.P</code>, <code>STDEV.P</code>.</p>
+    </div>
+  </div>
+</section>
+
+<!-- DATA -->
+<section class="block" id="data">
+  <div class="block-head">
+    <div class="eyebrow" style="color:var(--indigo)">The dataset</div>
+    <h2>One week of Campus Eats orders</h2>
+    <p>40 orders delivered by two riders, Aiman and Mei. Copy the table and paste it into cell A1 of a new Excel sheet. Row 26 (CE-1025) is a staff catering order for a department meeting.</p>
+  </div>
+  <div class="row"><button class="btn primary" id="copyBtn">Copy for Excel</button><span id="copyMsg" class="ex" role="status"></span></div>
+  <div class="tablebox"><table id="dataTable"></table></div>
+  <textarea id="copyFallback" rows="3" hidden aria-label="Dataset as tab-separated text"></textarea>
+</section>
+
+<!-- MISSIONS -->
+<section class="block" id="missions">
+  <div class="block-head">
+    <div class="eyebrow" style="color:var(--indigo)">Six missions</div>
+    <h2>Answer in Excel first, then reveal</h2>
+    <p>Each mission matches one section of Chapter 4. Work out the answer with your partner, then press <strong>Reveal</strong> to check and discuss the decision.</p>
+  </div>
+  <div class="tabs" role="tablist" id="tabs"></div>
+  <div id="panels"></div>
+</section>
+
+<!-- EXIT -->
+<section class="block" id="exit">
+  <div class="block-head">
+    <div class="eyebrow" style="color:var(--indigo)">Exit ticket</div>
+    <h2>Five questions before you leave</h2>
+    <p>Tap an answer. You get instant feedback.</p>
+  </div>
+  <div id="quiz" style="display:grid;gap:12px"></div>
+  <p class="score" id="quizScore" role="status"></p>
+</section>
+
+</main>
+<footer>BPMNK2033 Business Intelligence &amp; Data Analytics · Dr. Khairol Anuar Ishak · A261. Campus Eats is a teaching dataset created for this activity.</footer>
+</div>
+
+<script>
+const ROWS = [["CE-1001","Mon","Staff","E-wallet","Aiman",3.5,23,20.86,2.0,5],["CE-1002","Tue","Student","Cash","Mei",3.0,15,6.06,0.6,4],["CE-1003","Wed","Student","DuitNow QR","Aiman",3.5,26,7.36,0.0,1],["CE-1004","Thu","Staff","DuitNow QR","Mei",2.7,23,13.8,2.0,5],["CE-1005","Fri","Student","Card","Aiman",3.6,25,17.35,2.0,5],["CE-1006","Sat","Student","E-wallet","Mei",1.1,21,10.3,0.7,4],["CE-1007","Sun","Staff","Cash","Aiman",3.0,21,13.47,0.9,4],["CE-1008","Mon","Student","E-wallet","Mei",1.3,10,15.22,2.1,5],["CE-1009","Tue","Student","Card","Aiman",1.7,18,16.76,0,3],["CE-1010","Wed","Staff","E-wallet","Mei",3.6,33,10.3,2.3,5],["CE-1011","Thu","Staff","E-wallet","Aiman",1.3,15,16.27,0.7,3],["CE-1012","Fri","Student","DuitNow QR","Mei",3.6,25,22.97,1.0,5],["CE-1013","Sat","Visitor","E-wallet","Aiman",2.5,21,10.59,1.5,5],["CE-1014","Sun","Student","Card","Mei",2.3,24,10.82,2.2,5],["CE-1015","Mon","Student","DuitNow QR","Aiman",2.3,20,9.66,0.9,4],["CE-1016","Tue","Student","Cash","Mei",3.3,10,12.86,1.9,5],["CE-1017","Wed","Student","E-wallet","Aiman",2.7,21,15.35,1.9,5],["CE-1018","Thu","Staff","E-wallet","Mei",2.6,13,17.22,0.9,3],["CE-1019","Fri","Staff","DuitNow QR","Aiman",1.1,16,26.95,2.6,5],["CE-1020","Sat","Student","Cash","Mei",1.7,29,10.92,1.5,4],["CE-1021","Sun","Student","DuitNow QR","Aiman",1.3,18,17.26,1.6,5],["CE-1022","Mon","Student","Cash","Mei",3.5,17,16.45,2.4,5],["CE-1023","Tue","Student","Cash","Aiman",3.4,24,18.28,0.0,1],["CE-1024","Wed","Student","Card","Mei",3.4,23,10.28,0.7,4],["CE-1025","Fri","Staff","DuitNow QR","Aiman",2.5,21,486.0,1.9,5],["CE-1026","Fri","Student","E-wallet","Mei",2.7,15,14.88,2.2,5],["CE-1027","Sat","Student","DuitNow QR","Aiman",2.7,22,15.22,0.6,4],["CE-1028","Sun","Student","Cash","Mei",3.5,39,20.04,0,3],["CE-1029","Mon","Student","E-wallet","Aiman",1.1,18,7.45,0.0,2],["CE-1030","Tue","Visitor","DuitNow QR","Mei",1.9,17,5.4,1.5,4],["CE-1031","Wed","Student","DuitNow QR","Aiman",1.9,19,21.16,1.8,5],["CE-1032","Thu","Student","E-wallet","Mei",2.5,28,26.22,0.4,4],["CE-1033","Fri","Student","Card","Aiman",3.3,24,8.33,0.0,2],["CE-1034","Sat","Student","E-wallet","Mei",1.4,22,14.0,1.7,5],["CE-1035","Sun","Student","E-wallet","Aiman",2.6,22,13.0,1.8,5],["CE-1036","Mon","Staff","E-wallet","Mei",1.3,15,11.68,1.5,5],["CE-1037","Tue","Student","DuitNow QR","Aiman",3.6,25,19.21,0.1,3],["CE-1038","Wed","Staff","E-wallet","Mei",2.5,21,14.83,2.8,5],["CE-1039","Thu","Visitor","Cash","Aiman",1.4,17,15.4,0.5,4],["CE-1040","Fri","Student","E-wallet","Mei",1.1,15,17.39,0.3,3]];
+const COLS = ["Order ID","Day","Customer","Payment","Rider","Distance (km)","Delivery time (min)","Order value (RM)","Tip (RM)","Rating (1–5)"];
+const D = ROWS.map(r=>({id:r[0],day:r[1],customer:r[2],payment:r[3],rider:r[4],dist:r[5],time:r[6],value:r[7],tip:r[8],rating:r[9]}));
+const $ = s=>document.querySelector(s);
+const NS="http://www.w3.org/2000/svg";
+
+/* ---------- stats helpers ---------- */
+const sum=a=>a.reduce((s,x)=>s+x,0);
+const mean=a=>sum(a)/a.length;
+const median=a=>{const s=[...a].sort((x,y)=>x-y),n=s.length;return n%2?s[(n-1)/2]:(s[n/2-1]+s[n/2])/2};
+const varS=(a,pop)=>{const m=mean(a);return sum(a.map(x=>(x-m)**2))/(a.length-(pop?0:1))};
+const sd=(a,pop)=>Math.sqrt(varS(a,pop));
+const quartExc=(a,p)=>{const s=[...a].sort((x,y)=>x-y),L=p*(s.length+1);const i=Math.floor(L),f=L-i;if(i<1)return s[0];if(i>=s.length)return s[s.length-1];return s[i-1]+f*(s[i]-s[i-1])};
+const cov=(x,y)=>{const mx=mean(x),my=mean(y);return sum(x.map((v,i)=>(v-mx)*(y[i]-my)))/(x.length-1)};
+const corr=(x,y)=>cov(x,y)/(sd(x)*sd(y));
+const f=(v,d=2)=>Number(v).toLocaleString("en-MY",{minimumFractionDigits:d,maximumFractionDigits:d});
+function el(tag,attrs={},parent){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e}
+function txt(parent,x,y,s,cls="svg-text",anchor="middle",extra={}){const t=el("text",{x,y,class:cls,"text-anchor":anchor,...extra},parent);t.textContent=s;return t}
+function niceTicks(lo,hi,count=6){const span=hi-lo||1;const step0=span/count;const mag=10**Math.floor(Math.log10(step0));const step=[1,2,2.5,5,10].map(m=>m*mag).find(s=>s>=step0);const out=[];for(let v=Math.ceil(lo/step)*step;v<=hi+1e-9;v+=step)out.push(+v.toFixed(6));return out}
+function stat(k,v,s=""){return `<div class="stat"><div class="k">${k}</div><div class="v">${v}</div>${s?`<div class="s">${s}</div>`:""}</div>`}
+
+/* ---------- warm-up squares ---------- */
+let popMode=false;
+function drawSquares(){
+  const vals=$("#guesses").value.split(/[,\s]+/).map(Number).filter(v=>!isNaN(v)&&v>0);
+  const svg=$("#sqSvg");svg.innerHTML="";
+  if(vals.length<2){$("#sqStats").innerHTML=stat("Need data","≥ 2 values");return}
+  const m=mean(vals),v=varS(vals,popMode),s=Math.sqrt(v);
+  const maxDev=Math.max(...vals.map(x=>Math.abs(x-m)));
+  const lo=Math.floor(Math.min(...vals)-2),hi=Math.ceil(Math.max(...vals)+2);
+  const W=720,H=300,L=30,R=200,base=250;
+  let px=(W-L-R)/(hi-lo); px=Math.min(px,(base-30)/Math.max(maxDev,s,1));
+  const X=x=>L+(x-lo)*px;
+  // axis
+  el("line",{x1:L,x2:L+(hi-lo)*px,y1:base,y2:base,class:"svg-axis"},svg);
+  niceTicks(lo,hi,8).forEach(t=>{el("line",{x1:X(t),x2:X(t),y1:base,y2:base+5,class:"svg-axis"},svg);txt(svg,X(t),base+18,t)});
+  txt(svg,L+(hi-lo)*px/2,base+36,"seconds","svg-text");
+  // squares: on left of point if below mean, right if above, sit on axis
+  vals.forEach((x,i)=>{
+    const d=x-m,side=Math.abs(d)*px;
+    const hue=d<0?"var(--m1)":"var(--m4)";
+    el("rect",{x:d<0?X(x):X(m),y:base-side,width:side,height:side,fill:hue,"fill-opacity":.12,stroke:hue,"stroke-opacity":.55,"stroke-width":1},svg);
+  });
+  vals.forEach(x=>el("circle",{cx:X(x),cy:base,r:5.5,fill:"var(--ink)"},svg));
+  el("line",{x1:X(m),x2:X(m),y1:20,y2:base+4,stroke:"var(--indigo)","stroke-width":2,"stroke-dasharray":"5 4"},svg);
+  txt(svg,X(m),14,`mean ${f(m,1)}`,"svg-label");
+  // ±1 SD band on axis
+  el("rect",{x:X(m-s),y:base-4,width:2*s*px,height:8,fill:"var(--m6)","fill-opacity":.45,rx:3},svg);
+  // average square at right
+  const sx=W-R+40, side=s*px;
+  el("rect",{x:sx,y:base-side,width:side,height:side,fill:"var(--m6)","fill-opacity":.22,stroke:"var(--m6)","stroke-width":2},svg);
+  txt(svg,sx+side/2,base-side-22,"average square","svg-label");
+  txt(svg,sx+side/2,base-side-8,`area = s² = ${f(v,1)} s²`,"svg-text");
+  txt(svg,sx+side/2,base+18,`side = s = ${f(s,2)} s`,"svg-label");
+  txt(svg,sx+side/2,base+34,"(same scale as the axis)","svg-text");
+  $("#sqStats").innerHTML=
+    stat("Mean",f(m,2)+" s")+
+    stat("Range",f(Math.max(...vals)-Math.min(...vals),0)+" s")+
+    stat(popMode?"Variance σ²":"Variance s²",f(v,2)+" s²",popMode?"÷ n":"÷ (n − 1)")+
+    stat(popMode?"Std dev σ":"Std dev s",f(s,2)+" s","typical miss from the mean")+
+    stat("CV",f(s/m*100,1)+"%");
+}
+$("#drawBtn").onclick=drawSquares;
+$("#guesses").addEventListener("input",drawSquares);
+$("#divS").onclick=()=>{popMode=false;$("#divS").setAttribute("aria-pressed","true");$("#divP").setAttribute("aria-pressed","false");drawSquares()};
+$("#divP").onclick=()=>{popMode=true;$("#divP").setAttribute("aria-pressed","true");$("#divS").setAttribute("aria-pressed","false");drawSquares()};
+drawSquares();
+
+/* ---------- data table + copy ---------- */
+(function(){
+  const t=$("#dataTable");const num=[5,6,7,8,9];
+  let h="<thead><tr><th class='r'>#</th>"+COLS.map((c,i)=>`<th class="${num.includes(i)?"r":""}">${c}</th>`).join("")+"</tr></thead><tbody>";
+  ROWS.forEach((r,ri)=>{h+=`<tr class="${r[7]>200?"hl":""}"><td class="r">${ri+1}</td>`+r.map((v,i)=>`<td class="${num.includes(i)?"r":""}">${i===7?f(v):i===5||i===8?f(v,1):v}</td>`).join("")+"</tr>"});
+  t.innerHTML=h+"</tbody>";
+  const tsv=[COLS.join("\t"),...ROWS.map(r=>r.join("\t"))].join("\n");
+  $("#copyBtn").onclick=async()=>{
+    try{await navigator.clipboard.writeText(tsv);$("#copyMsg").textContent="Copied. Click cell A1 in Excel and press Ctrl+V."}
+    catch(e){const fb=$("#copyFallback");fb.hidden=false;fb.value=tsv;fb.focus();fb.select();$("#copyMsg").textContent="Press Ctrl+C to copy the selected text, then paste into Excel."}
+  };
+})();
+
+/* ---------- missions ---------- */
+const MISSIONS=[
+ {key:"m1",title:"Types of data",sec:"4.1 · Types of data"},
+ {key:"m2",title:"Distributions",sec:"4.2 · Creating distributions from data"},
+ {key:"m3",title:"Location",sec:"4.3 · Measures of location"},
+ {key:"m4",title:"Variability",sec:"4.4 · Measures of variability"},
+ {key:"m5",title:"Analysing distributions",sec:"4.5 · Analysing distributions"},
+ {key:"m6",title:"Association",sec:"4.6 · Measures of association"}];
+const tabs=$("#tabs"),panels=$("#panels");
+MISSIONS.forEach((m,i)=>{
+  const b=document.createElement("button");b.className="tab";b.role="tab";b.id="tab-"+m.key;
+  b.style.setProperty("--c",`var(--${m.key})`);b.style.setProperty("--cs",`var(--${m.key}-soft)`);
+  b.innerHTML=`<span class="dot"></span>${i+1}. ${m.title}`;b.setAttribute("aria-controls","panel-"+m.key);
+  b.onclick=()=>showTab(m.key);tabs.appendChild(b);
+  const p=document.createElement("div");p.className="mission";p.id="panel-"+m.key;p.role="tabpanel";
+  p.style.setProperty("--c",`var(--${m.key})`);p.style.setProperty("--cs",`var(--${m.key}-soft)`);
+  panels.appendChild(p);
+});
+function showTab(k){MISSIONS.forEach(m=>{const on=m.key===k;$("#tab-"+m.key).setAttribute("aria-selected",on);$("#panel-"+m.key).hidden=!on});try{localStorage.setItem("ceTab",k)}catch(e){}}
+function revealBtn(id){return `<div class="row"><button class="btn primary" data-reveal="${id}">Reveal answer</button></div>`}
+document.addEventListener("click",e=>{const id=e.target?.dataset?.reveal;if(id){const a=$("#"+id);a.hidden=!a.hidden;e.target.textContent=a.hidden?"Reveal answer":"Hide answer";if(!a.hidden&&RENDER[id])RENDER[id]()}});
+const RENDER={};
+
+/* M1 */
+const TYPES=[
+ ["Order ID","CE-1001","C","A label. Averaging order IDs means nothing."],
+ ["Day","Mon","C","Names a group (day of week)."],
+ ["Customer","Student","C","Names a group."],
+ ["Payment","DuitNow QR","C","Names a group."],
+ ["Rider","Aiman","C","Names a group."],
+ ["Distance (km)","2.5","Q","A measured amount. You can add and average it."],
+ ["Delivery time (min)","21","Q","A measured amount."],
+ ["Order value (RM)","20.86","Q","A money amount."],
+ ["Tip (RM)","1.90","Q","A money amount."],
+ ["Rating (1–5)","5","C","Trap: digits, but they are ordered labels (ordinal). A 4 is not exactly twice a 2. Firms often average ratings anyway, so accept either answer if the pair can justify it."]];
+$("#panel-m1").innerHTML=`
+ <div class="eyebrow">Mission 1 · ${MISSIONS[0].sec}</div>
+ <h3>Before any formula: what kind of data is each column?</h3>
+ <div class="task"><b>Your task</b><ol>
+  <li>Classify each variable as <strong>Categorical</strong> or <strong>Quantitative</strong>. Test: can you sensibly add or average it?</li>
+  <li>Is this file <strong>cross-sectional</strong> or <strong>time series</strong>?</li>
+  <li>Campus Eats delivered about 1,200 orders this month. Are these 40 orders a <strong>population</strong> or a <strong>sample</strong>?</li></ol></div>
+ <div class="cls" id="clsList"></div>
+ <div class="row"><button class="btn primary" id="clsCheck">Check my answers</button><span class="score" id="clsScore" role="status"></span></div>
+ <div class="answer" id="a1" hidden>
+  <div class="callout"><b>Cross-sectional.</b> Many orders observed in the same week. If we recorded total sales each day for a year, that would be time series.</div>
+  <div class="callout"><b>Sample.</b> 40 of about 1,200 orders. That is why we use the sample formulas <code>VAR.S</code> and <code>STDEV.S</code> later.</div>
+ </div>
+ <div class="decision"><b>Decision:</b> The manager asks for "the average payment method". What do you tell her, and what should she ask for instead?</div>
+ ${revealBtn("a1")}`;
+(function(){
+  const box=$("#clsList");const pick={};
+  TYPES.forEach((t,i)=>{const d=document.createElement("div");d.className="item";d.id="ci"+i;
+    d.innerHTML=`<div><b>${t[0]}</b> <span class="ex">e.g. ${t[1]}</span></div><div class="row"><button data-i="${i}" data-v="C" aria-pressed="false">Categorical</button><button data-i="${i}" data-v="Q" aria-pressed="false">Quantitative</button></div><div class="why" hidden>${t[3]}</div>`;box.appendChild(d)});
+  box.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;const i=b.dataset.i;pick[i]=b.dataset.v;b.parentElement.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b))});
+  $("#clsCheck").onclick=()=>{let ok=0;TYPES.forEach((t,i)=>{const d=$("#ci"+i);d.classList.remove("ok","no");const good=pick[i]===t[2]||(i===9&&pick[i]);if(pick[i])d.classList.add(good?"ok":"no");if(good)ok++;d.querySelector(".why").hidden=false});$("#clsScore").textContent=`${ok} / ${TYPES.length} correct`};
+})();
+
+/* M2 */
+$("#panel-m2").innerHTML=`
+ <div class="eyebrow">Mission 2 · ${MISSIONS[1].sec}</div>
+ <h3>How do customers pay, and how long do deliveries take?</h3>
+ <div class="task"><b>Your task</b><ol>
+  <li>Build a frequency distribution of <strong>Payment</strong>: frequency, relative frequency, percent and cumulative percent. <code>=COUNTIF(D:D,"E-wallet")</code></li>
+  <li>Make a histogram of <strong>Delivery time</strong> with bins of 5 minutes (10–14, 15–19, …). <code>=FREQUENCY(G2:G41,bins)</code> or Insert › Statistic chart › Histogram.</li>
+  <li>Describe the shape. Where do most deliveries fall?</li></ol></div>
+ <div class="decision"><b>Decision:</b> The cash float costs the riders time. If the shop stops accepting cash, what share of orders is affected?</div>
+ ${revealBtn("a2")}
+ <div class="answer" id="a2" hidden>
+  <div class="tablebox short"><table id="freqT"></table></div>
+  <div class="row"><span class="lbl" style="margin:0">Bin width</span><div class="seg" role="group" aria-label="Bin width" id="binSeg"><button data-w="3" aria-pressed="false">3 min</button><button data-w="5" aria-pressed="true">5 min</button><button data-w="10" aria-pressed="false">10 min</button></div></div>
+  <div class="chart"><svg id="histSvg" viewBox="0 0 720 280" role="img" aria-label="Histogram of delivery time"></svg></div>
+  <p class="callout" id="histNote"></p>
+ </div>`;
+let binW=5;
+RENDER.a2=()=>{
+  const cats=["E-wallet","DuitNow QR","Cash","Card"],n=D.length;let cum=0;
+  let h="<thead><tr><th>Payment</th><th class='r'>Frequency</th><th class='r'>Relative</th><th class='r'>Percent</th><th class='r'>Cumulative %</th></tr></thead><tbody>";
+  cats.forEach(c=>{const k=D.filter(d=>d.payment===c).length;cum+=k;h+=`<tr><td>${c}</td><td class="r">${k}</td><td class="r">${f(k/n)}</td><td class="r">${f(k/n*100,1)}%</td><td class="r">${f(cum/n*100,1)}%</td></tr>`});
+  h+=`<tr><td><b>Total</b></td><td class="r"><b>${n}</b></td><td class="r">1.00</td><td class="r">100%</td><td></td></tr></tbody>`;$("#freqT").innerHTML=h;
+  drawHist();
+};
+function drawHist(){
+  const svg=$("#histSvg");svg.innerHTML="";const t=D.map(d=>d.time);const start=Math.floor(Math.min(...t)/binW)*binW;const bins=[];
+  for(let b=start;b<=Math.max(...t);b+=binW)bins.push({lo:b,hi:b+binW-1,k:t.filter(x=>x>=b&&x<b+binW).length});
+  const W=720,H=280,L=44,R=16,T=20,B=48,maxK=Math.max(...bins.map(b=>b.k));const bw=(W-L-R)/bins.length;
+  const Y=k=>H-B-(k/maxK)*(H-T-B);
+  niceTicks(0,maxK,5).forEach(v=>{el("line",{x1:L,x2:W-R,y1:Y(v),y2:Y(v),class:"svg-grid"},svg);txt(svg,L-8,Y(v)+4,v,"svg-text","end")});
+  bins.forEach((b,i)=>{el("rect",{x:L+i*bw,y:Y(b.k),width:bw,height:H-B-Y(b.k),fill:"var(--m2)","fill-opacity":.75,stroke:"var(--surface)","stroke-width":1},svg);
+    if(b.k)txt(svg,L+i*bw+bw/2,Y(b.k)-5,b.k,"svg-label");txt(svg,L+i*bw+bw/2,H-B+16,`${b.lo}–${b.hi}`,"svg-text")});
+  el("line",{x1:L,x2:W-R,y1:H-B,y2:H-B,class:"svg-axis"},svg);txt(svg,(W)/2,H-10,"Delivery time (minutes)","svg-text");
+  const top=bins.reduce((a,b)=>b.k>a.k?b:a);
+  $("#histNote").innerHTML=`Most deliveries take <b>${top.lo}–${top.hi} minutes</b>. The shape is roughly symmetric with a longer right tail: a few slow deliveries (up to ${Math.max(...t)} min). Cash is <b>${D.filter(d=>d.payment==="Cash").length/D.length*100}%</b> of orders, so dropping cash affects 1 order in 5. Try the 3-minute and 10-minute bins: too narrow looks noisy, too wide hides the shape.`;
+}
+document.addEventListener("click",e=>{const b=e.target.closest("#binSeg button");if(!b)return;binW=+b.dataset.w;document.querySelectorAll("#binSeg button").forEach(x=>x.setAttribute("aria-pressed",x===b));drawHist()});
+
+/* M3 */
+$("#panel-m3").innerHTML=`
+ <div class="eyebrow">Mission 3 · ${MISSIONS[2].sec}</div>
+ <h3>What is a "typical" Campus Eats order?</h3>
+ <div class="task"><b>Your task</b><ol>
+  <li>Find the mean and median of <strong>Order value</strong>. <code>=AVERAGE(H2:H41)</code> <code>=MEDIAN(H2:H41)</code></li>
+  <li>Find the mode of <strong>Rating</strong>. <code>=MODE.SNGL(J2:J41)</code> Why is there no useful mode for order value?</li>
+  <li>Remove the catering order (CE-1025) and recompute the mean and median. Which one moved?</li></ol></div>
+ <div class="decision"><b>Decision:</b> Marketing wants a poster line: "A typical Campus Eats meal costs RM __". Which number goes on the poster, and why?</div>
+ ${revealBtn("a3")}
+ <div class="answer" id="a3" hidden>
+  <div class="row"><div class="seg" role="group" aria-label="Catering order" id="catSeg"><button data-c="1" aria-pressed="true">Include catering order</button><button data-c="0" aria-pressed="false">Exclude it</button></div></div>
+  <div class="stats" id="locStats"></div>
+  <div class="chart"><svg id="locSvg" viewBox="0 0 720 120" role="img" aria-label="Order values on a number line with mean and median"></svg></div>
+  <p class="callout" id="locNote"></p>
+ </div>`;
+let incCat=true;
+RENDER.a3=()=>{
+  const v=D.filter(d=>incCat||d.value<200).map(d=>d.value);const m=mean(v),md=median(v);
+  const rc={};D.forEach(d=>rc[d.rating]=(rc[d.rating]||0)+1);const mode=Object.entries(rc).sort((a,b)=>b[1]-a[1])[0];
+  $("#locStats").innerHTML=stat("Mean","RM "+f(m),`${v.length} orders`)+stat("Median","RM "+f(md))+stat("Gap","RM "+f(m-md),"mean − median")+stat("Mode of rating",mode[0]+" ★",`${mode[1]} of 40 orders`);
+  const svg=$("#locSvg");svg.innerHTML="";const W=720,L=20,R=20,y=60;const hi=incCat?500:Math.ceil(Math.max(...v)/5)*5+5;const X=x=>L+(x/hi)*(W-L-R);
+  el("line",{x1:L,x2:W-R,y1:y,y2:y,class:"svg-axis"},svg);niceTicks(0,hi,8).forEach(t=>txt(svg,X(t),y+20,"RM"+t));
+  v.forEach(x=>el("circle",{cx:X(x),cy:y,r:5,fill:"var(--m3)","fill-opacity":.55},svg));
+  [[m,"mean","var(--m4)",-26],[md,"median","var(--m6)",-10]].forEach(([x,l,c,dy])=>{el("line",{x1:X(x),x2:X(x),y1:y-30,y2:y+6,stroke:c,"stroke-width":2.5},svg);txt(svg,X(x)+4,y+dy,l,"svg-label","start")});
+  $("#locNote").innerHTML=incCat
+   ?`One RM486 catering order drags the mean up to RM${f(m)}, while the median stays at RM${f(md)}. <b>${D.filter(d=>d.value<m).length} of 40 orders</b> are below the mean, so the mean does not describe a typical order. Use the <b>median</b> on the poster. Order value has no useful mode because almost every value is different; mode suits categories and small whole numbers like ratings.`
+   :`Without the catering order the mean falls to RM${f(m)}, a drop of RM${f(mean(D.map(d=>d.value))-m)}. The median barely moves (RM${f(md)}). The median resists outliers; the mean does not.`;
+};
+document.addEventListener("click",e=>{const b=e.target.closest("#catSeg button");if(!b)return;incCat=b.dataset.c==="1";document.querySelectorAll("#catSeg button").forEach(x=>x.setAttribute("aria-pressed",x===b));RENDER.a3()});
+
+/* M4 */
+$("#panel-m4").innerHTML=`
+ <div class="eyebrow">Mission 4 · ${MISSIONS[3].sec}</div>
+ <h3>Same average, different rider: who is more reliable?</h3>
+ <div class="task"><b>Your task</b><ol>
+  <li>Filter by <strong>Rider</strong>. For Aiman and for Mei, find the mean, range, variance, standard deviation and CV of <strong>Delivery time</strong>.<br><code>=AVERAGEIF(E:E,"Aiman",G:G)</code> <code>=MAX()-MIN()</code> <code>=VAR.S()</code> <code>=STDEV.S()</code></li>
+  <li>Count how many of each rider's deliveries took more than 25 minutes. <code>=COUNTIFS(E:E,"Mei",G:G,"&gt;25")</code></li></ol></div>
+ <div class="decision"><b>Decision:</b> Campus Eats will launch <em>"Delivered in 25 minutes or your drink is free"</em> on the Express route. Only one rider can run it. Who gets it, and what does the mean alone fail to tell you?</div>
+ ${revealBtn("a4")}
+ <div class="answer" id="a4" hidden>
+  <div class="tablebox short"><table id="varT"></table></div>
+  <div class="chart"><svg id="varSvg" viewBox="0 0 720 210" role="img" aria-label="Delivery times of Aiman and Mei with plus and minus one standard deviation bands"></svg></div>
+  <p class="callout" id="varNote"></p>
+ </div>`;
+RENDER.a4=()=>{
+  const R={};["Aiman","Mei"].forEach(r=>{const t=D.filter(d=>d.rider===r).map(d=>d.time);R[r]={t,m:mean(t),rg:Math.max(...t)-Math.min(...t),v:varS(t),s:sd(t),late:t.filter(x=>x>25).length}});
+  const row=(k,fn)=>`<tr><td>${k}</td><td class="r">${fn(R.Aiman)}</td><td class="r">${fn(R.Mei)}</td></tr>`;
+  $("#varT").innerHTML=`<thead><tr><th>Delivery time</th><th class="r">Aiman</th><th class="r">Mei</th></tr></thead><tbody>
+   ${row("Deliveries",r=>r.t.length)}${row("Mean (min)",r=>f(r.m))}${row("Range (min)",r=>r.rg)}${row("Variance (min²)",r=>f(r.v))}${row("Standard deviation (min)",r=>f(r.s))}${row("Coefficient of variation",r=>f(r.s/r.m*100,1)+"%")}${row("Deliveries over 25 min",r=>r.late+" of "+r.t.length)}</tbody>`;
+  const svg=$("#varSvg");svg.innerHTML="";const W=720,L=70,Rr=20,lo=5,hi=45;const X=x=>L+(x-lo)/(hi-lo)*(W-L-Rr);
+  niceTicks(lo,hi,8).forEach(t=>{el("line",{x1:X(t),x2:X(t),y1:16,y2:170,class:"svg-grid"},svg);txt(svg,X(t),188,t)});
+  txt(svg,(W+L)/2,205,"Delivery time (minutes)");
+  el("line",{x1:X(25),x2:X(25),y1:10,y2:172,stroke:"var(--m4)","stroke-width":2,"stroke-dasharray":"6 4"},svg);txt(svg,X(25)+4,14,"25-min promise","svg-label","start");
+  [["Aiman",60,"var(--m1)"],["Mei",130,"var(--m3)"]].forEach(([r,y,c])=>{const o=R[r];
+    el("rect",{x:X(o.m-o.s),y:y-18,width:(X(o.m+o.s)-X(o.m-o.s)),height:36,fill:c,"fill-opacity":.16,rx:8},svg);
+    const seen={};o.t.forEach(x=>{seen[x]=(seen[x]||0)+1;const k=seen[x];el("circle",{cx:X(x),cy:y+(k%2?1:-1)*Math.floor(k/2)*9,r:5,fill:c},svg)});
+    el("line",{x1:X(o.m),x2:X(o.m),y1:y-22,y2:y+22,stroke:"var(--ink)","stroke-width":2},svg);
+    txt(svg,L-10,y+4,r,"svg-label","end")});
+  $("#varNote").innerHTML=`Both riders average about <b>${f(R.Aiman.m,1)} minutes</b>, so the mean says they are the same. The spread says otherwise. Aiman's SD is <b>${f(R.Aiman.s)} min</b>: his deliveries are typically within about 3 minutes of his mean. Mei's SD is <b>${f(R.Mei.s)} min</b>, more than twice as large, and ${R.Mei.late} of her deliveries break the 25-minute promise against ${R.Aiman.late} of Aiman's. Give the Express route to <b>Aiman</b>. The shaded band is mean ± 1 SD. Low SD means predictable service; high SD means a promise you cannot keep. Note the variance column: ${f(R.Mei.v,1)} min² is hard to picture, which is why we report the SD.`;
+};
+
+/* M5 */
+$("#panel-m5").innerHTML=`
+ <div class="eyebrow">Mission 5 · ${MISSIONS[4].sec}</div>
+ <h3>Which orders are unusual enough to check?</h3>
+ <div class="task"><b>Your task</b><ol>
+  <li>For <strong>Order value</strong>, find Q1, median and Q3, the IQR, and the fences Q1 − 1.5·IQR and Q3 + 1.5·IQR. <code>=QUARTILE.EXC(H2:H41,1)</code></li>
+  <li>Find the z-score of the catering order. <code>=STANDARDIZE(486,AVERAGE(H2:H41),STDEV.S(H2:H41))</code></li>
+  <li>Repeat for <strong>Delivery time</strong>. Is the 39-minute delivery an outlier by the boxplot rule? By the |z| &gt; 3 rule?</li>
+  <li>Is order value skewed left, skewed right, or symmetric? Use the mean and median.</li></ol></div>
+ <div class="decision"><b>Decision:</b> The finance team's system auto-deletes any order with |z| &gt; 3 as a "data error". Should CE-1025 be deleted? What should they do instead?</div>
+ ${revealBtn("a5")}
+ <div class="answer" id="a5" hidden>
+  <div class="row"><div class="seg" role="group" aria-label="Variable" id="boxSeg"><button data-v="value" aria-pressed="true">Order value (RM)</button><button data-v="time" aria-pressed="false">Delivery time (min)</button></div></div>
+  <div class="stats" id="boxStats"></div>
+  <div class="chart"><svg id="boxSvg" viewBox="0 0 720 150" role="img" aria-label="Boxplot"></svg></div>
+  <p class="callout" id="boxNote"></p>
+ </div>`;
+let boxVar="value";
+RENDER.a5=()=>{
+  const v=D.map(d=>d[boxVar]);const q1=quartExc(v,.25),q2=median(v),q3=quartExc(v,.75),iqr=q3-q1,lf=q1-1.5*iqr,uf=q3+1.5*iqr;const m=mean(v),s=sd(v);
+  const outs=v.filter(x=>x<lf||x>uf);const mx=Math.max(...v);const z=(mx-m)/s;const u=boxVar==="value"?"RM":"";const un=boxVar==="value"?"":" min";
+  $("#boxStats").innerHTML=stat("Q1",u+f(q1)+un)+stat("Median",u+f(q2)+un)+stat("Q3",u+f(q3)+un)+stat("IQR",u+f(iqr)+un)+stat("Upper fence",u+f(uf)+un)+stat("z of largest",f(z),`${u}${f(mx,boxVar==="value"?2:0)}${un}`);
+  const svg=$("#boxSvg");svg.innerHTML="";const W=720,L=24,R=24,y=60;const lo=0,hi=boxVar==="value"?500:45;const X=x=>L+(x-lo)/(hi-lo)*(W-L-R);
+  niceTicks(lo,hi,8).forEach(t=>{el("line",{x1:X(t),x2:X(t),y1:20,y2:104,class:"svg-grid"},svg);txt(svg,X(t),122,u+t)});
+  const inside=v.filter(x=>x>=lf&&x<=uf);const wl=Math.min(...inside),wh=Math.max(...inside);
+  el("line",{x1:X(wl),x2:X(q1),y1:y,y2:y,stroke:"var(--ink)","stroke-width":1.5},svg);el("line",{x1:X(q3),x2:X(wh),y1:y,y2:y,stroke:"var(--ink)","stroke-width":1.5},svg);
+  [wl,wh].forEach(x=>el("line",{x1:X(x),x2:X(x),y1:y-10,y2:y+10,stroke:"var(--ink)","stroke-width":1.5},svg));
+  el("rect",{x:X(q1),y:y-20,width:X(q3)-X(q1),height:40,fill:"var(--m5)","fill-opacity":.25,stroke:"var(--m5)","stroke-width":2,rx:4},svg);
+  el("line",{x1:X(q2),x2:X(q2),y1:y-20,y2:y+20,stroke:"var(--m5)","stroke-width":3},svg);
+  el("line",{x1:X(uf),x2:X(uf),y1:24,y2:100,stroke:"var(--m4)","stroke-width":1.5,"stroke-dasharray":"4 4"},svg);txt(svg,X(uf)+4,32,"upper fence","svg-text","start");
+  el("line",{x1:X(m),x2:X(m),y1:y+24,y2:y+34,stroke:"var(--m4)","stroke-width":2.5},svg);txt(svg,X(m),y+46,"mean","svg-text");
+  outs.forEach(x=>el("circle",{cx:X(x),cy:y,r:6,fill:"none",stroke:"var(--m4)","stroke-width":2.5},svg));
+  txt(svg,W/2,144,boxVar==="value"?"Order value (RM)":"Delivery time (minutes)");
+  $("#boxNote").innerHTML=boxVar==="value"
+   ?`The box (middle 50% of orders) runs from RM${f(q1)} to RM${f(q3)}. Any order above RM${f(uf)} is an outlier by the boxplot rule: ${outs.length} order(s), including the catering order with z = ${f(z)}. Mean (RM${f(m)}) &gt; median (RM${f(q2)}), so order value is <b>skewed right</b>. Do <b>not</b> delete CE-1025: it is a real, correctly recorded order. Check outliers, then report them separately or use the median. Deleting real data hides real business, here a catering segment worth chasing.`
+   :`Delivery time: box ${f(q1,2)}–${f(q3,2)} min, upper fence ${f(uf,2)} min. The 39-minute delivery is ${mx>uf?"<b>beyond the fence</b>, so an outlier by the boxplot rule":"inside the fence"}, and its z-score is ${f(z)} ${Math.abs(z)>3?"(above 3, so also flagged by the z rule)":"(below 3, so the z rule misses it)"}. It was one of Mei's deliveries: look up the order before blaming the rider. Mean (${f(m,1)}) ≈ median (${f(q2,1)}), so delivery time is roughly symmetric.`;
+};
+document.addEventListener("click",e=>{const b=e.target.closest("#boxSeg button");if(!b)return;boxVar=b.dataset.v;document.querySelectorAll("#boxSeg button").forEach(x=>x.setAttribute("aria-pressed",x===b));RENDER.a5()});
+
+/* M6 */
+$("#panel-m6").innerHTML=`
+ <div class="eyebrow">Mission 6 · ${MISSIONS[5].sec}</div>
+ <h3>Does distance explain delivery time? Do ratings drive tips?</h3>
+ <div class="task"><b>Your task</b><ol>
+  <li>Make a scatter chart of <strong>Distance</strong> (x) against <strong>Delivery time</strong> (y). Find the covariance and correlation. <code>=COVARIANCE.S(F2:F41,G2:G41)</code> <code>=CORREL(F2:F41,G2:G41)</code></li>
+  <li>Now find r separately for Aiman and for Mei. What does the difference tell you?</li>
+  <li>Find r between <strong>Rating</strong> and <strong>Tip</strong>.</li></ol></div>
+ <div class="decision"><b>Decision:</b> A manager says: "Rating and tip are strongly correlated, so if we push customers to give 5 stars, riders will earn bigger tips." Is she right?</div>
+ ${revealBtn("a6")}
+ <div class="answer" id="a6" hidden>
+  <div class="row">
+   <div class="seg" role="group" aria-label="Pair" id="pairSeg"><button data-p="dt" aria-pressed="true">Distance → Time</button><button data-p="rt" aria-pressed="false">Rating → Tip</button></div>
+   <div class="seg" role="group" aria-label="Rider" id="rSeg"><button data-r="All" aria-pressed="true">All</button><button data-r="Aiman" aria-pressed="false">Aiman</button><button data-r="Mei" aria-pressed="false">Mei</button></div>
+  </div>
+  <div class="stats" id="corStats"></div>
+  <div class="chart"><svg id="corSvg" viewBox="0 0 720 320" role="img" aria-label="Scatter chart"></svg></div>
+  <p class="callout" id="corNote"></p>
+ </div>`;
+let pair="dt",rid="All";
+RENDER.a6=()=>{
+  const sel=D.filter(d=>rid==="All"||d.rider===rid);const xk=pair==="dt"?"dist":"rating",yk=pair==="dt"?"time":"tip";
+  const x=sel.map(d=>d[xk]),y=sel.map(d=>d[yk]);const c=cov(x,y),r=corr(x,y);
+  const strength=Math.abs(r)>=.7?"strong":Math.abs(r)>=.4?"moderate":"weak";
+  $("#corStats").innerHTML=stat("Covariance",f(c),pair==="dt"?"km × min":"stars × RM")+stat("Correlation r",f(r),`${strength} ${r>=0?"positive":"negative"}`)+stat("Orders",sel.length,rid);
+  const svg=$("#corSvg");svg.innerHTML="";const W=720,H=320,L=52,R=20,T=16,B=50;
+  const [x0,x1]=pair==="dt"?[0.5,4]:[0.5,5.5];const [y0,y1]=pair==="dt"?[5,45]:[0,4];
+  const X=v=>L+(v-x0)/(x1-x0)*(W-L-R),Y=v=>H-B-(v-y0)/(y1-y0)*(H-T-B);
+  niceTicks(y0,y1,5).forEach(t=>{el("line",{x1:L,x2:W-R,y1:Y(t),y2:Y(t),class:"svg-grid"},svg);txt(svg,L-8,Y(t)+4,t,"svg-text","end")});
+  (pair==="dt"?niceTicks(x0,x1,7):[1,2,3,4,5]).forEach(t=>txt(svg,X(t),H-B+18,t));
+  const mx=mean(x),my=mean(y);
+  el("line",{x1:X(mx),x2:X(mx),y1:T,y2:H-B,stroke:"var(--muted)","stroke-dasharray":"3 4"},svg);el("line",{x1:L,x2:W-R,y1:Y(my),y2:Y(my),stroke:"var(--muted)","stroke-dasharray":"3 4"},svg);
+  const seen={};sel.forEach(d=>{const key=d[xk]+"_"+d[yk];seen[key]=(seen[key]||0)+1;const j=pair==="rt"?(seen[key]-1)*7:0;el("circle",{cx:X(d[xk])+j,cy:Y(d[yk]),r:6,fill:d.rider==="Aiman"?"var(--m1)":"var(--m3)","fill-opacity":.85,stroke:"var(--surface)","stroke-width":1},svg)});
+  // legend
+  [["Aiman","var(--m1)"],["Mei","var(--m3)"]].forEach(([n,c],i)=>{el("circle",{cx:W-150+i*70,cy:T+8,r:6,fill:c},svg);txt(svg,W-140+i*70,T+12,n,"svg-label","start")});
+  txt(svg,(W+L)/2,H-12,pair==="dt"?"Distance (km)":"Rating (stars)");txt(svg,14,(H-B)/2,pair==="dt"?"Delivery time (min)":"Tip (RM)","svg-text","middle",{transform:`rotate(-90 14 ${(H-B)/2})`});
+  const ra=corr(D.filter(d=>d.rider==="Aiman").map(d=>d.dist),D.filter(d=>d.rider==="Aiman").map(d=>d.time)),rm=corr(D.filter(d=>d.rider==="Mei").map(d=>d.dist),D.filter(d=>d.rider==="Mei").map(d=>d.time));
+  $("#corNote").innerHTML=pair==="dt"
+   ?`All orders: r = ${f(corr(D.map(d=>d.dist),D.map(d=>d.time)))}, a moderate positive link. Split by rider and the story sharpens: for Aiman r = <b>${f(ra)}</b> (distance explains almost all of his time), for Mei r = <b>${f(rm)}</b> (something other than distance drives her time). This links back to Mission 4. The covariance is positive but its size depends on units (km × min), so use r, which always lies between −1 and +1.`
+   :`Rating and tip: r = <b>${f(corr(D.map(d=>d.rating),D.map(d=>d.tip)))}</b>, strong and positive. But correlation is not causation. Both are given at the same moment by a happy customer: good food and fast delivery cause high ratings <em>and</em> tips. Pushing for 5 stars will not create tips. To test cause and effect, Campus Eats would need an experiment, such as an A/B test of a tip prompt.`;
+};
+document.addEventListener("click",e=>{const p=e.target.closest("#pairSeg button"),r=e.target.closest("#rSeg button");if(p){pair=p.dataset.p;document.querySelectorAll("#pairSeg button").forEach(x=>x.setAttribute("aria-pressed",x===p));RENDER.a6()}if(r){rid=r.dataset.r;document.querySelectorAll("#rSeg button").forEach(x=>x.setAttribute("aria-pressed",x===r));RENDER.a6()}});
+
+let startTab="m1";try{const s=localStorage.getItem("ceTab");if(s&&MISSIONS.some(m=>m.key===s))startTab=s}catch(e){}
+showTab(startTab);
+
+/* ---------- exit ticket ---------- */
+const QUIZ=[
+ ["A café's daily sales have SD = RM40. What does that tell the owner?",["Sales are RM40 on a typical day","A typical day's sales are about RM40 away from the average day","Sales never move by more than RM40","The variance is RM20"],1,"SD is the typical distance from the mean, in the original unit. The variance would be 1,600 RM²."],
+ ["Why do analysts usually report standard deviation rather than variance?",["SD is always larger","Variance cannot be computed in Excel","SD is in the same unit as the data, so it is easier to interpret","Variance ignores outliers"],2,"Variance is in squared units (minutes², RM²). Taking the square root brings it back to the original unit."],
+ ["Two products: rice (mean 1,200 bags, SD 120) and durian boxes (mean 80, SD 40). Which demand is relatively more volatile?",["Rice, because its SD is bigger","Durian, because its CV is 50% against 10%","They are equal","Cannot tell without the median"],1,"Use the coefficient of variation when means differ: 40 ÷ 80 = 50% against 120 ÷ 1,200 = 10%."],
+ ["House prices in an area have mean RM620k and median RM410k. The distribution is most likely…",["Skewed left","Symmetric","Skewed right","Bimodal"],2,"A few very expensive houses pull the mean above the median: skewed right."],
+ ["Ice-cream sales and drowning cases have r = 0.88. The best conclusion is:",["Ice cream causes drowning","They move together, possibly because hot weather drives both","r is too high to be real","Covariance must be negative"],1,"Correlation shows that two variables move together. A hidden third factor (hot weather) can drive both."]];
+(function(){
+  const box=$("#quiz");let answered=0,score=0;
+  QUIZ.forEach((q,qi)=>{const d=document.createElement("div");d.className="q";
+    d.innerHTML=`<b>${qi+1}. ${q[0]}</b><div class="opts">${q[1].map((o,oi)=>`<button class="opt" data-q="${qi}" data-o="${oi}">${o}</button>`).join("")}</div><p class="fb" hidden></p>`;box.appendChild(d)});
+  box.addEventListener("click",e=>{const b=e.target.closest("button.opt");if(!b)return;const q=QUIZ[b.dataset.q],card=b.closest(".q");if(card.dataset.done)return;card.dataset.done=1;answered++;
+    const right=+b.dataset.o===q[2];if(right)score++;b.classList.add(right?"ok":"no");card.querySelectorAll("button.opt")[q[2]].classList.add("ok");
+    const fb=card.querySelector(".fb");fb.hidden=false;fb.textContent=(right?"Correct. ":"Not quite. ")+q[3];
+    $("#quizScore").textContent=answered===QUIZ.length?`You scored ${score} / ${QUIZ.length}.`:`${score} correct so far.`});
+})();
+</script>

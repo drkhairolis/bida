@@ -782,7 +782,7 @@ body.mobile .shapes,body.mobile .sylmap{grid-template-columns:1fr}
 <!-- 11 BAYES -->
 <section class="slide" data-title="Bayes' theorem" data-acc="orange">
   <div class="kicker">Topic 2 · Conditional Probability · Bayes' theorem <span class="tbref">textbook 5.3</span></div>
-  <h2>Bayes' theorem: a bad part arrived. Which supplier?</h2>
+  <h2>Bayes: a defective part arrived. Which supplier sent it?</h2>
   <div class="cols" style="grid-template-columns:1.45fr .75fr">
     <div class="panel">
       <div class="ctl"><span class="lab">S1 share</span><input type="range" id="byP" min="5" max="95" value="65" style="flex:1;accent-color:#ea580c"><b id="byPL" class="monob"></b>
@@ -791,10 +791,10 @@ body.mobile .shapes,body.mobile .sylmap{grid-template-columns:1fr}
       <div class="chart" id="byChart"></div>
     </div>
     <div>
-      <div class="syntax" style="font-size:13.5px;line-height:1.7">P(A₁ | B) = P(A₁)P(B | A₁) / P(B)<br>P(B) = P(A₁)P(B | A₁) + P(A₂)P(B | A₂)</div>
+      <div class="card tint" style="--acc:var(--orange);font-size:14.5px;line-height:1.55"><b>Count it: imagine 10,000 parts</b><br>Supplier 1: 6,500 parts × 2% = <b>130 defective</b><br>Supplier 2: 3,500 parts × 5% = <b>175 defective</b><br>All defective = <b>305</b><br>From Supplier 2: 175 ÷ 305 = <b>57%</b></div>
       <div class="out" id="byOut"></div>
-      <p class="note">Prior → new information (a bad part) → Bayes' theorem → posterior. Textbook default: 65% / 35% of parts; 2% / 5% bad.</p>
-      <div class="qp" style="--acc:var(--orange)"><b class="h">QUIZ PATTERN</b>Draw the tree: multiply along each branch, add the <b>bad</b> branches to get P(B), then divide the branch you want by P(B).</div>
+      <p class="note"><b>What we believed</b> (65% of parts are from Supplier 1) → <b>new fact</b> (the part is defective) → <b>updated belief</b> (Supplier 2 is now more likely). Business decision: audit Supplier 2 first.</p>
+      <div class="qp" style="--acc:var(--orange)"><b class="h">QUIZ PATTERN</b>Chance from a supplier = <b>its defective parts ÷ all defective parts</b>. Excel: <code>=0.65*0.02/(0.65*0.02+0.35*0.05)</code> = 0.4262.</div>
     </div>
   </div>
 </section>
@@ -1217,15 +1217,15 @@ const MD={M:[64,79],S:[116,41]};
   function draw(){const p1=+$("byP").value/100,b1=+$("byB1").value/100,b2=+$("byB2").value/100,p2=1-p1;$("byPL").textContent=(p1*100).toFixed(0)+"%";$("byB1L").textContent=(b1*100).toFixed(0)+"%";$("byB2L").textContent=(b2*100).toFixed(0)+"%";
     const j=[p1*(1-b1),p1*b1,p2*(1-b2),p2*b2],pB=j[1]+j[3],post1=j[1]/pB,post2=j[3]/pB;
     const W=680,H=400,s=svgIn($("byChart"),W,H);const X0=20,X1=190,X2=360,ys=[60,140,230,310],y1=[100,270];
-    T(s,X0+60,22,"Supplier",{"text-anchor":"middle","font-weight":800,fill:"#475569"});T(s,X1+90,22,"Part condition",{"text-anchor":"middle","font-weight":800,fill:"#475569"});T(s,X2+150,22,"Joint probability",{"text-anchor":"middle","font-weight":800,fill:"#475569"});
+    T(s,X0+60,22,"Supplier",{"text-anchor":"middle","font-weight":800,fill:"#475569"});T(s,X1+90,22,"Part condition",{"text-anchor":"middle","font-weight":800,fill:"#475569"});T(s,X2+150,22,"Share of all parts",{"text-anchor":"middle","font-weight":800,fill:"#475569"});
     mk("circle",{cx:X0,cy:185,r:6,fill:"#334155"},s);
-    [[p1,"A₁"],[p2,"A₂"]].forEach(([p,l],i)=>{mk("line",{x1:X0,y1:185,x2:X1,y2:y1[i],stroke:"#334155","stroke-width":1+p*6},s);mk("circle",{cx:X1,cy:y1[i],r:6,fill:"#334155"},s);T(s,(X0+X1)/2,(185+y1[i])/2+(i?16:-8),`P(${l}) = ${p.toFixed(2)}`,{"text-anchor":"middle","font-weight":700,fill:"#0f172a","font-size":12.5})});
-    const cond=[[1-b1,"G | A₁"],[b1,"B | A₁"],[1-b2,"G | A₂"],[b2,"B | A₂"]];
+    [[p1,"Supplier 1"],[p2,"Supplier 2"]].forEach(([p,l],i)=>{mk("line",{x1:X0,y1:185,x2:X1,y2:y1[i],stroke:"#334155","stroke-width":1+p*6},s);mk("circle",{cx:X1,cy:y1[i],r:6,fill:"#334155"},s);T(s,(X0+X1)/2,(185+y1[i])/2+(i?16:-8),`${l}: ${(p*100).toFixed(0)}%`,{"text-anchor":"middle","font-weight":700,fill:"#0f172a","font-size":12.5})});
+    const cond=[[1-b1,"Good"],[b1,"Defective"],[1-b2,"Good"],[b2,"Defective"]];
     cond.forEach(([p,l],i)=>{const from=y1[Math.floor(i/2)],bad=i%2===1,col=bad?C.o:"#16a34a";mk("line",{x1:X1,y1:from,x2:X2,y2:ys[i],stroke:col,"stroke-width":1+p*5},s);mk("circle",{cx:X2,cy:ys[i],r:5,fill:col},s);
-      T(s,(X1+X2)/2,(from+ys[i])/2+(bad?16:-8),`P(${l}) = ${p.toFixed(2)}`,{"text-anchor":"middle","font-size":12,fill:"#0f172a"});
+      T(s,(X1+X2)/2,(from+ys[i])/2+(bad?16:-8),`${l}: ${(p*100).toFixed(0)}%`,{"text-anchor":"middle","font-size":12,fill:"#0f172a"});
       mk("rect",{x:X2+20,y:ys[i]-16,width:Math.max(2,j[i]*300),height:32,rx:5,fill:col,"fill-opacity":bad?.9:.25},s);T(s,X2+28+Math.max(2,j[i]*300),ys[i]+5,j[i].toFixed(4),{"font-weight":800,fill:"#0f172a"})});
-    T(s,X2+20,385,`P(B) = ${j[1].toFixed(4)} + ${j[3].toFixed(4)} = ${pB.toFixed(4)}`,{"font-weight":800,fill:"#9a3412","font-size":13.5});
-    $("byOut").innerHTML=`Given a <b>bad</b> part: P(A₁ | B) = ${j[1].toFixed(4)}/${pB.toFixed(4)} = <b>${post1.toFixed(4)}</b>, P(A₂ | B) = <b>${post2.toFixed(4)}</b>. `+(post2>p2?`Supplier 2 supplies only ${(p2*100).toFixed(0)}% of parts, but it is now the <b>more likely</b> source, because its parts go bad more often.`:"")+`<br><span style="font-size:13px">Per 10,000 parts: ${fmt(Math.round(j[1]*1e4))} bad from S1 and ${fmt(Math.round(j[3]*1e4))} bad from S2.</span>`}
+    T(s,X2+20,385,`All defective = ${j[1].toFixed(4)} + ${j[3].toFixed(4)} = ${pB.toFixed(4)}`,{"font-weight":800,fill:"#9a3412","font-size":13.5});
+    $("byOut").innerHTML=`A defective part came from <b>Supplier 1</b>: ${j[1].toFixed(4)} ÷ ${pB.toFixed(4)} = <b>${(post1*100).toFixed(1)}%</b> · from <b>Supplier 2</b>: <b>${(post2*100).toFixed(1)}%</b>.`+(post2>p2?` Supplier 2 sends only ${(p2*100).toFixed(0)}% of parts, but it is now the <b>more likely</b> source.`:"")+`<br><span style="font-size:13px">Per 10,000 parts: ${fmt(Math.round(j[1]*1e4))} defective from Supplier 1 and ${fmt(Math.round(j[3]*1e4))} from Supplier 2.</span>`}
   ["byP","byB1","byB2"].forEach(i=>$(i).oninput=draw);draw();
 })();
 

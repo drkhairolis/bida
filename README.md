@@ -66,4 +66,4 @@ Near the top of the `<script>` block in `chapter2/index.html`, find `const DATA 
 
 ## Chapter 5 (two lectures in one module)
 
-`chapter5/index.html` has 27 slides. **Part A (lecture 1)** is slides 1–13 and **Part B (lecture 2)** is slides 14–27. For the second lecture, open `…/chapter5/#14`.
+`chapter5/index.html` has 27 slides, organised by the four syllabus topics. **Part A (lecture 1, Topics 1–2)** is slides 1–14 and **Part B (lecture 2, Topics 3–4)** is slides 15–27. For the second lecture, open `…/chapter5/#15`. Uniform, triangular and exponential are on one enrichment slide (#24) and are not in Quiz 2.

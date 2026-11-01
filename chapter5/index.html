@@ -533,6 +533,34 @@ body.mobile #rvGame,body.mobile #dsGame{grid-template-columns:minmax(0,1fr)!impo
 body.mobile .workers span{font-size:15px}
 
 .chk input.numin{width:72px;height:auto}
+
+/* syllabus alignment additions */
+[data-acc=slate]{--acc:#64748b}
+.mbin{width:58px;padding:4px 6px;border:1px solid var(--line);border-radius:8px;font:inherit;font-weight:700}
+.tbref{font-weight:600;opacity:.65;font-size:.85em;text-transform:none;letter-spacing:0}
+.qp{border:1.5px dashed var(--acc);background:color-mix(in srgb,var(--acc) 6%,#fff);border-radius:12px;padding:8px 12px;font-size:13.5px;line-height:1.45;color:#334155;margin-top:8px}
+.qp b.h{display:inline-block;background:var(--acc);color:#fff;border-radius:999px;padding:1px 9px;font-size:11.5px;margin-right:6px;letter-spacing:.02em}
+.enr{display:inline-block;background:#64748b;color:#fff;border-radius:999px;padding:2px 10px;font-size:12px;font-weight:800;vertical-align:middle;margin-left:8px}
+.shapes{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:6px}
+.shape{border:1px solid var(--line);border-radius:14px;background:#fff;padding:12px 14px;border-top:5px solid var(--c)}
+.shape h3{margin:0 0 4px;color:var(--c)}
+.shape .sv{height:118px}
+.shape .sv svg{width:100%;height:118px;display:block}
+.shape p{font-size:13.5px;margin:6px 0;color:#334155;line-height:1.45}
+.shape code{font-size:12.5px}
+.bag{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0;min-height:34px}
+.bag i{width:26px;height:26px;border-radius:50%;display:inline-block;box-shadow:inset -3px -4px 0 rgba(0,0,0,.15)}
+.bag i.gone{opacity:.18;outline:2px dashed #0f172a}
+.frac{font-family:var(--mono);font-size:18px;font-weight:800;color:var(--ink)}
+.sylmap{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:10px}
+.sylmap>div{border-radius:12px;padding:10px 12px;color:#fff;font-size:13px;line-height:1.4}
+.sylmap>div b{display:block;font-size:15px;margin-bottom:2px}
+.pat{width:100%;border-collapse:collapse;font-size:13.5px}
+.pat th{background:#0f172a;color:#fff;text-align:left;padding:6px 10px}
+.pat td{border-bottom:1px solid var(--line);padding:6px 10px;vertical-align:top}
+.pat td:first-child{font-weight:800;white-space:nowrap}
+.pat code{font-size:12.5px}
+body.mobile .shapes,body.mobile .sylmap{grid-template-columns:1fr}
 </style>
 </head>
 <body>
@@ -547,7 +575,7 @@ body.mobile .workers span{font-size:15px}
 <section class="slide title-slide d5" data-title="Probability Distributions & Data Modelling" data-acc="violet">
   <div class="kicker">BPMNK2033 · Chapter 5</div>
   <h1>Probability <span>Distributions</span> &amp; Data Modelling</h1>
-  <p>Put a number on uncertainty: events, conditional probability, Bayes' theorem, and the distributions businesses use to model demand, arrivals, lifetimes and risk. Roll, drag and simulate everything.</p>
+  <p>Put a number on uncertainty in four steps: <b>fundamentals of probability</b>, <b>conditional probability</b>, <b>random &amp; discrete variables</b>, and the <b>normal distribution</b>. Every slide is built around a business question, and Excel does the maths.</p>
   <div class="vizfloat" id="titleViz5"></div>
   <div class="title-meta">
     <div><b>Business Intelligence &amp; Data Analytics</b>School of Business Management, UUM</div>
@@ -559,23 +587,24 @@ body.mobile .workers span{font-size:15px}
 <!-- 2 ROADMAP -->
 <section class="slide" data-title="Roadmap: two lectures" data-acc="indigo">
   <div class="kicker">Roadmap</div>
-  <h2>Chapter 5 in two lectures: from events to distributions</h2>
-  <p class="lead" style="margin-bottom:6px">Based on Camm et al., <i>Business Analytics</i> 5e, Chapter 5. Click any block to jump there.</p>
+  <h2>Chapter 5 = 4 syllabus topics in two lectures</h2>
+  <p class="lead" style="margin-bottom:6px">Syllabus 5.0 · based on Camm et al., <i>Business Analytics</i>, Chapter 5. Click any block to jump there.</p>
   <div class="road">
-    <div class="rw"><h3><span class="pill" style="--acc:var(--indigo)">Part A</span> Lecture 1: Probability fundamentals <small>· 70 min · slides 4–13</small></h3>
+    <div class="rw"><h3><span class="pill" style="--acc:var(--indigo)">Part A</span> Lecture 1: Topics 1 &amp; 2 <small>· 70 min · slides 4–14</small></h3>
       <div class="blocks">
-        <div class="blk" data-go="4" style="flex:6;background:linear-gradient(160deg,#2563eb,#3b82f6)"><span class="t">00–06</span><span class="h">Warm-up</span><span class="d">Roll the die</span></div>
-        <div class="blk" data-go="5" style="flex:20;background:linear-gradient(160deg,#0d9488,#14b8a6)"><span class="t">06–26</span><span class="h">Events &amp; rules</span><span class="d">Sample space · complement · union · intersection · addition law</span></div>
-        <div class="blk" data-go="8" style="flex:20;background:linear-gradient(160deg,#7c3aed,#8b5cf6)"><span class="t">26–46</span><span class="h">Conditional probability</span><span class="d">Joint tables · independence · multiplication law</span></div>
-        <div class="blk" data-go="11" style="flex:12;background:linear-gradient(160deg,#ea580c,#f97316)"><span class="t">46–58</span><span class="h">Bayes' theorem</span><span class="d">Prior → posterior</span></div>
-        <div class="blk" data-go="12" style="flex:12;background:linear-gradient(160deg,#db2777,#ec4899)"><span class="t">58–70</span><span class="h">Check + exit</span></div>
+        <div class="blk" data-go="4" style="flex:5;background:linear-gradient(160deg,#2563eb,#3b82f6)"><span class="t">00–05</span><span class="h">Warm-up</span><span class="d">Roll the die</span></div>
+        <div class="blk" data-go="5" style="flex:20;background:linear-gradient(160deg,#0d9488,#14b8a6)"><span class="t">05–25</span><span class="h">Topic 1 · Fundamentals</span><span class="d">Sample space · complement · union · intersection · addition law</span></div>
+        <div class="blk" data-go="8" style="flex:23;background:linear-gradient(160deg,#7c3aed,#8b5cf6)"><span class="t">25–48</span><span class="h">Topic 2 · Conditional</span><span class="d">Joint tables · P(A | B) · independence · multiplication law</span></div>
+        <div class="blk" data-go="12" style="flex:10;background:linear-gradient(160deg,#ea580c,#f97316)"><span class="t">48–58</span><span class="h">Bayes' theorem</span><span class="d">Prior → posterior</span></div>
+        <div class="blk" data-go="13" style="flex:12;background:linear-gradient(160deg,#db2777,#ec4899)"><span class="t">58–70</span><span class="h">Check + exit</span></div>
       </div></div>
-    <div class="rw"><h3><span class="pill" style="--acc:var(--teal)">Part B</span> Lecture 2: Probability distributions <small>· 70 min · slides 14–27</small></h3>
+    <div class="rw"><h3><span class="pill" style="--acc:var(--teal)">Part B</span> Lecture 2: Topics 3 &amp; 4 <small>· 70 min · slides 15–27</small></h3>
       <div class="blocks">
-        <div class="blk" data-go="14" style="flex:5;background:linear-gradient(160deg,#0e7490,#0891b2)"><span class="t">00–05</span><span class="h">Recap</span><span class="d">Random variables</span></div>
-        <div class="blk" data-go="16" style="flex:23;background:linear-gradient(160deg,#2563eb,#3b82f6)"><span class="t">05–28</span><span class="h">Discrete</span><span class="d">Expected value · binomial · Poisson</span></div>
-        <div class="blk" data-go="20" style="flex:28;background:linear-gradient(160deg,#7c3aed,#a855f7)"><span class="t">28–56</span><span class="h">Continuous</span><span class="d">Uniform · triangular · normal · NORM.INV · exponential</span></div>
-        <div class="blk" data-go="25" style="flex:14;background:linear-gradient(160deg,#16a34a,#22c55e)"><span class="t">56–70</span><span class="h">Choose + exit</span><span class="d">Which distribution?</span></div>
+        <div class="blk" data-go="15" style="flex:4;background:linear-gradient(160deg,#0e7490,#0891b2)"><span class="t">00–04</span><span class="h">Recap</span></div>
+        <div class="blk" data-go="16" style="flex:24;background:linear-gradient(160deg,#2563eb,#3b82f6)"><span class="t">04–28</span><span class="h">Topic 3 · Random &amp; discrete</span><span class="d">Discrete vs continuous · E(x) · binomial · Poisson</span></div>
+        <div class="blk" data-go="21" style="flex:26;background:linear-gradient(160deg,#db2777,#ec4899)"><span class="t">28–54</span><span class="h">Topic 4 · Normal</span><span class="d">z-score · NORM.DIST · NORM.INV</span></div>
+        <div class="blk" data-go="24" style="flex:5;background:linear-gradient(160deg,#64748b,#94a3b8)"><span class="t">54–59</span><span class="h">Enrichment</span><span class="d">Other shapes</span></div>
+        <div class="blk" data-go="25" style="flex:11;background:linear-gradient(160deg,#16a34a,#22c55e)"><span class="t">59–70</span><span class="h">Choose + exit</span></div>
       </div></div>
   </div>
 </section>
@@ -585,20 +614,16 @@ body.mobile .workers span{font-size:15px}
   <div class="kicker">Learning outcomes</div>
   <h2>By the end, you will be able to…</h2>
   <div class="lo-wrap">
-    <div class="lo-col"><h3><span class="tag" style="background:#4f46e5">Part A · Lecture 1</span> Probability fundamentals</h3>
-      <div class="lo"><code style="background:#2563eb">LO 5-1</code><span>Count outcomes and assign probabilities to <b>events</b>.</span></div>
-      <div class="lo"><code style="background:#0d9488">LO 5-2</code><span>Use the <b>complement, union, intersection</b> and the <b>addition law</b>.</span></div>
-      <div class="lo"><code style="background:#7c3aed">LO 5-3/5</code><span>Build <b>joint probability tables</b> and compute <b>conditional probability</b>.</span></div>
-      <div class="lo"><code style="background:#db2777">LO 5-4</code><span>Tell <b>mutually exclusive</b> from <b>independent</b> events.</span></div>
-      <div class="lo"><code style="background:#ea580c">LO 5-6</code><span>Update <b>prior</b> to <b>posterior</b> probabilities with <b>Bayes' theorem</b>.</span></div>
+    <div class="lo-col"><h3><span class="tag" style="background:#4f46e5">Part A · Lecture 1</span> Topics 1 &amp; 2</h3>
+      <div class="lo"><code style="background:#0d9488">Topic 1</code><span><b>Fundamentals of probability</b>: sample space, events, <b>complement, union, intersection</b>, the <b>addition law</b>, mutually exclusive events.</span></div>
+      <div class="lo"><code style="background:#7c3aed">Topic 2</code><span><b>Conditional probability</b>: joint &amp; marginal probabilities from a crosstab, <b>P(A | B)</b>, independence, the <b>multiplication law</b>.</span></div>
+      <div class="lo"><code style="background:#ea580c">Topic 2</code><span>Update a <b>prior</b> to a <b>posterior</b> probability with <b>Bayes' theorem</b>.</span></div>
     </div>
-    <div class="lo-col"><h3><span class="tag" style="background:#0d9488">Part B · Lecture 2</span> Probability distributions</h3>
-      <div class="lo"><code style="background:#2563eb">LO 5-7/8</code><span>Build discrete distributions; compute <b>E(x)</b>, <b>Var(x)</b>, <b>σ</b>.</span></div>
-      <div class="lo"><code style="background:#0891b2">LO 5-9/10</code><span>Use the <b>binomial</b> and <b>Poisson</b> distributions.</span></div>
-      <div class="lo"><code style="background:#7c3aed">LO 5-11/12</code><span>Use the <b>uniform</b> and <b>triangular</b> distributions.</span></div>
-      <div class="lo"><code style="background:#db2777">LO 5-13/14</code><span>Find <b>normal</b> probabilities and values (<b>NORM.DIST, NORM.INV</b>).</span></div>
-      <div class="lo"><code style="background:#ea580c">LO 5-15</code><span>Use the <b>exponential</b> distribution for time between events.</span></div>
-      <div class="callout" style="--acc:var(--teal)"><b>Quiz link:</b> Chapter 5 is in <b>Quiz 2</b> (Week 12, Chapters 5–8).</div>
+    <div class="lo-col"><h3><span class="tag" style="background:#0d9488">Part B · Lecture 2</span> Topics 3 &amp; 4</h3>
+      <div class="lo"><code style="background:#2563eb">Topic 3</code><span><b>Random variables</b>: tell <b>discrete</b> from <b>continuous</b>; compute <b>E(x)</b>, Var(x), σ of a discrete distribution.</span></div>
+      <div class="lo"><code style="background:#0891b2">Topic 3</code><span>Recognise and use the <b>binomial</b> and <b>Poisson</b> distributions.</span></div>
+      <div class="lo"><code style="background:#db2777">Topic 4</code><span><b>Normal distribution</b>: properties, <b>z-scores</b>, probabilities with <b>NORM.DIST</b> and cut-off values with <b>NORM.INV</b>.</span></div>
+      <div class="callout" style="--acc:var(--teal)"><b>Quiz link:</b> Chapter 5 gives <b>10 of the 40 MCQs</b> in <b>Quiz 2</b> (Week 12). Look for the <b>Quiz pattern</b> boxes on the slides. Uniform, triangular and exponential are <b>enrichment</b> only.</div>
     </div>
   </div>
 </section>
@@ -623,7 +648,7 @@ body.mobile .workers span{font-size:15px}
 
 <!-- 5 SAMPLE SPACE / CP&L -->
 <section class="slide" data-title="Sample space & events (CP&L)" data-acc="teal">
-  <div class="kicker">5.1 · Events and probabilities</div>
+  <div class="kicker">Topic 1 · Fundamentals of Probability <span class="tbref">textbook 5.1</span></div>
   <h2>Events: add up the outcomes you care about</h2>
   <div class="cols" style="grid-template-columns:.85fr 1.3fr">
     <div class="mini-def">
@@ -642,7 +667,7 @@ body.mobile .workers span{font-size:15px}
 
 <!-- 6 VENN -->
 <section class="slide" data-title="Complement, union, intersection" data-acc="cyan">
-  <div class="kicker">5.2 · Basic relationships</div>
+  <div class="kicker">Topic 1 · Fundamentals of Probability <span class="tbref">textbook 5.2</span></div>
   <h2>Complement, union, intersection and the addition law</h2>
   <div class="cols" style="grid-template-columns:1.3fr .9fr">
     <div class="panel">
@@ -661,7 +686,7 @@ body.mobile .workers span{font-size:15px}
 
 <!-- 7 ADDITION LAW APPLICATION -->
 <section class="slide" data-title="Addition law in practice" data-acc="orange">
-  <div class="kicker">5.2 · Application of the addition law</div>
+  <div class="kicker">Topic 1 · Fundamentals of Probability · addition law <span class="tbref">textbook 5.2</span></div>
   <h2>50 workers: late, defective, or both?</h2>
   <div class="cols" style="grid-template-columns:1.2fr 1fr">
     <div class="panel">
@@ -673,13 +698,14 @@ body.mobile .workers span{font-size:15px}
       <p style="font-size:15px">A manager checks the work of <b>50 workers</b>: 5 finished late, 6 made defective products, and 2 did both. What is the probability that a worker is late <b>or</b> defective?</p>
       <div class="out" id="wkOut"></div>
       <div class="callout" style="--acc:var(--orange)"><b>Common mistake:</b> 5/50 + 6/50 = 0.22 counts the 2 "both" workers twice. The correct answer is 0.18.</div>
+      <div class="qp" style="--acc:var(--orange)"><b class="h">QUIZ PATTERN</b>“How many did <b>neither</b>?” First find A ∪ B = A + B − both, then <b>neither = total − (A ∪ B)</b>. Here: 50 − 9 = <b>41</b> workers.</div>
     </div>
   </div>
 </section>
 
 <!-- 8 JOINT TABLE -->
 <section class="slide" data-title="Crosstab → joint probability table" data-acc="violet">
-  <div class="kicker">5.3 · Conditional probability</div>
+  <div class="kicker">Topic 2 · Conditional Probability <span class="tbref">textbook 5.3</span></div>
   <h2>From a crosstab to a joint probability table</h2>
   <div class="cols" style="grid-template-columns:1.25fr .95fr">
     <div class="panel">
@@ -690,6 +716,7 @@ body.mobile .workers span{font-size:15px}
     <div>
       <p style="font-size:15px">Lancaster Savings &amp; Loan: does mortgage default depend on marital status? <span class="pill">DATAfile: mortgagedefault</span></p>
       <ul class="tidy" style="--acc:var(--violet)"><li><b>Joint probability</b>: both events together, e.g. P(M ∩ D).</li><li><b>Marginal probability</b>: in the margins, e.g. P(M) = 0.4767.</li><li><b>Conditional</b>: P(D | M) = P(M ∩ D) / P(M).</li></ul>
+      <div class="qp" style="--acc:var(--violet)"><b class="h">QUIZ PATTERN</b>“A randomly selected <b>married</b> customer defaults”: the word after “selected” is the <b>given</b>. Use <b>cell ÷ that row (or column) total</b>, not ÷ grand total: 79/143.</div>
       <div class="xlsteps" style="margin-top:8px"><h3>Excel PivotTable</h3><ol class="steps"><li>Rows: Marital Status · Columns: Default · Values: Count.</li><li><b>Show Values As ▸ % of Grand Total</b> gives the joint table.</li><li><b>Show Values As ▸ % of Row Total</b> gives P(D | M), P(D | S).</li></ol></div>
     </div>
   </div>
@@ -697,7 +724,7 @@ body.mobile .workers span{font-size:15px}
 
 <!-- 9 CONDITIONAL -->
 <section class="slide" data-title="Conditional probability" data-acc="pink">
-  <div class="kicker">5.3 · Conditional probability</div>
+  <div class="kicker">Topic 2 · Conditional Probability <span class="tbref">textbook 5.3</span></div>
   <h2>Conditional probability: zoom in on what you know</h2>
   <div class="cols" style="grid-template-columns:1.35fr .85fr">
     <div class="panel">
@@ -714,7 +741,7 @@ body.mobile .workers span{font-size:15px}
 
 <!-- 10 INDEPENDENCE -->
 <section class="slide" data-title="Independence & multiplication law" data-acc="indigo">
-  <div class="kicker">5.3 · Independent events · multiplication law</div>
+  <div class="kicker">Topic 2 · Conditional Probability · independence <span class="tbref">textbook 5.3</span></div>
   <h2>Independent or not? And the multiplication law</h2>
   <div class="cols" style="grid-template-columns:1fr 1fr">
     <div class="panel">
@@ -731,9 +758,30 @@ body.mobile .workers span{font-size:15px}
   </div>
 </section>
 
+<!-- NEW · MULTIPLICATION LAW: REPLACEMENT -->
+<section class="slide" data-title="Multiplication law: with vs without replacement" data-acc="indigo">
+  <div class="kicker">Topic 2 · Conditional Probability · multiplication law <span class="tbref">textbook 5.3</span></div>
+  <h2>Two picks in a row: does the first pick change the second?</h2>
+  <div class="cols" style="grid-template-columns:1.25fr .95fr">
+    <div class="panel">
+      <div class="ctl"><span class="lab">Red</span><input type="number" class="mbin" id="mbR" min="1" max="12" value="3"><span class="lab">Yellow</span><input type="number" class="mbin" id="mbY" min="0" max="12" value="2"><span class="lab">Purple</span><input type="number" class="mbin" id="mbP" min="1" max="12" value="5">
+        <div class="seg" id="mbMode"><button data-m="with" class="on">With replacement</button><button data-m="without">Without replacement</button></div></div>
+      <div class="lab" style="margin-top:6px">1st pick: <b>red</b></div><div class="bag" id="mbBag1"></div>
+      <div class="lab">2nd pick: <b>purple</b></div><div class="bag" id="mbBag2"></div>
+      <div class="out" id="mbOut"></div>
+    </div>
+    <div>
+      <p style="font-size:14.5px">A promotion box has <b>3 red</b>, <b>2 yellow</b> and <b>5 purple</b> vouchers. A customer draws two. What is P(red first <b>and</b> purple second)?</p>
+      <div class="syntax" style="font-size:14px;line-height:1.75">P(R ∩ P) = P(R) · P(P | R)</div>
+      <ul class="tidy" style="--acc:var(--indigo)"><li><b>With replacement</b>: the box is restored, so the picks are <b>independent</b>: P(P | R) = P(P).</li><li><b>Without replacement</b>: one voucher is gone, so the denominator drops by 1. The picks are <b>dependent</b>.</li></ul>
+      <div class="qp" style="--acc:var(--indigo)"><b class="h">QUIZ PATTERN</b>Count the total first. “Replaced” → same denominator twice. “Not replaced” → second denominator is one smaller.</div>
+    </div>
+  </div>
+</section>
+
 <!-- 11 BAYES -->
 <section class="slide" data-title="Bayes' theorem" data-acc="orange">
-  <div class="kicker">5.3 · Bayes' theorem</div>
+  <div class="kicker">Topic 2 · Conditional Probability · Bayes' theorem <span class="tbref">textbook 5.3</span></div>
   <h2>Bayes' theorem: a bad part arrived. Which supplier?</h2>
   <div class="cols" style="grid-template-columns:1.45fr .75fr">
     <div class="panel">
@@ -746,20 +794,21 @@ body.mobile .workers span{font-size:15px}
       <div class="syntax" style="font-size:13.5px;line-height:1.7">P(A₁ | B) = P(A₁)P(B | A₁) / P(B)<br>P(B) = P(A₁)P(B | A₁) + P(A₂)P(B | A₂)</div>
       <div class="out" id="byOut"></div>
       <p class="note">Prior → new information (a bad part) → Bayes' theorem → posterior. Textbook default: 65% / 35% of parts; 2% / 5% bad.</p>
+      <div class="qp" style="--acc:var(--orange)"><b class="h">QUIZ PATTERN</b>Draw the tree: multiply along each branch, add the <b>bad</b> branches to get P(B), then divide the branch you want by P(B).</div>
     </div>
   </div>
 </section>
 
 <!-- 12 QUICK CHECK A -->
 <section class="slide" data-title="Quick check: probability rules" data-acc="amber">
-  <div class="kicker">Quick check · 3 questions</div>
+  <div class="kicker">Quick check · Topic 1 · 3 questions</div>
   <h2>Quick check: probability rules</h2>
   <div class="quiz" data-quiz="qa"></div>
 </section>
 
 <!-- 13 EXIT A -->
 <section class="slide" data-title="Exit ticket: Part A" data-acc="violet">
-  <div class="kicker">Exit ticket · Part A · 5 questions</div>
+  <div class="kicker">Exit ticket · Part A · 6 questions</div>
   <h2>Exit ticket: Part A</h2>
   <div class="quiz" data-quiz="exitA"></div>
 </section>
@@ -768,26 +817,26 @@ body.mobile .workers span{font-size:15px}
 <section class="slide title-slide partb" data-title="Part B: second lecture starts" data-acc="teal">
   <div class="kicker">BPMNK2033 · Chapter 5 · Part B</div>
   <h1>Model uncertainty with <span>distributions</span></h1>
-  <p>How many customers will click? How many patients will arrive? How long will an engine last? Last time you computed probabilities of events. Today you model whole random variables.</p>
+  <p>How many customers will click? How many patients will arrive? How long will an engine last? Today: <b>Topic 3</b> random &amp; discrete variables and <b>Topic 4</b> the normal distribution.</p>
   <div class="vizfloat" id="partbViz5"></div>
   <div class="title-meta">
-    <div><b>Recap from Part A</b>Events · addition law · joint tables · conditional probability · Bayes</div>
+    <div><b>Recap from Part A</b>Topic 1 fundamentals · Topic 2 conditional probability &amp; Bayes</div>
     <div><b>Tip for the lecturer</b>Double-click the timer to reset it to 00:00</div>
   </div>
 </section>
 
 <!-- 15 RANDOM VARIABLES -->
 <section class="slide" data-title="Random variables: discrete or continuous?" data-acc="cyan">
-  <div class="kicker">5.4 · Random variables</div>
+  <div class="kicker">Topic 3 · Random &amp; Discrete Variables <span class="tbref">textbook 5.4</span></div>
   <h2>Discrete or continuous? <span class="pill" id="rvScore" style="font-size:16px;vertical-align:middle">0 / 8</span></h2>
   <p style="margin-bottom:10px">A <b>random variable</b> is a numerical description of an experiment's outcome. <b>Discrete</b> = countable values (0, 1, 2, …). <b>Continuous</b> = any value in an interval.</p>
   <div class="choose" id="rvGame"></div>
-  <div class="callout" style="margin-top:10px"><b>Line-segment test:</b> pick two possible values. If every point between them is also possible, the variable is continuous.</div>
+  <div class="callout" style="margin-top:10px"><b>Line-segment test:</b> pick two possible values. If every point between them is also possible, the variable is continuous. <b>Quiz pattern:</b> “number of …” → discrete; time, weight, speed, amount → continuous.</div>
 </section>
 
 <!-- 16 EXPECTED VALUE -->
 <section class="slide" data-title="Discrete distribution & expected value" data-acc="blue">
-  <div class="kicker">5.5 · Discrete probability distributions</div>
+  <div class="kicker">Topic 3 · Random &amp; Discrete Variables <span class="tbref">textbook 5.5</span></div>
   <h2>Expected value, variance and SD of a discrete variable</h2>
   <div class="cols" style="grid-template-columns:1.2fr 1fr">
     <div class="panel">
@@ -801,13 +850,14 @@ body.mobile .workers span{font-size:15px}
       <div class="kpis" id="evKpi"></div>
       <div class="out" id="evOut" style="margin-top:8px"></div>
       <p class="note">A valid distribution needs every f(x) ≥ 0 and Σ f(x) = 1. These are relative frequencies, so it is an <b>empirical (custom) discrete distribution</b>.</p>
+      <div class="qp" style="--acc:var(--blue)"><b class="h">QUIZ PATTERN</b>Given a table of x and f(x): multiply each row, then add. In Excel: <code>=SUMPRODUCT(x, f(x))</code>.</div>
     </div>
   </div>
 </section>
 
 <!-- 17 BINOMIAL -->
 <section class="slide" data-title="Binomial distribution" data-acc="teal">
-  <div class="kicker">5.5 · Binomial probability distribution</div>
+  <div class="kicker">Topic 3 · Random &amp; Discrete Variables · binomial <span class="tbref">textbook 5.5</span></div>
   <h2>Binomial: how many successes in n trials?</h2>
   <div class="cols" style="grid-template-columns:1.45fr .75fr">
     <div class="panel">
@@ -826,7 +876,7 @@ body.mobile .workers span{font-size:15px}
 
 <!-- 18 POISSON -->
 <section class="slide" data-title="Poisson distribution" data-acc="indigo">
-  <div class="kicker">5.5 · Poisson probability distribution</div>
+  <div class="kicker">Topic 3 · Random &amp; Discrete Variables · Poisson <span class="tbref">textbook 5.5</span></div>
   <h2>Poisson: how many arrivals in an interval?</h2>
   <div class="cols" style="grid-template-columns:1.45fr .75fr">
     <div class="panel">
@@ -845,51 +895,36 @@ body.mobile .workers span{font-size:15px}
 
 <!-- 19 QUICK CHECK B -->
 <section class="slide" data-title="Quick check: discrete distributions" data-acc="amber">
-  <div class="kicker">Quick check · 3 questions</div>
-  <h2>Quick check: discrete distributions</h2>
+  <div class="kicker">Quick check · Topic 3 · 3 questions</div>
+  <h2>Quick check: random &amp; discrete variables</h2>
   <div class="quiz" data-quiz="qb"></div>
 </section>
 
-<!-- 20 UNIFORM -->
-<section class="slide" data-title="Uniform distribution: area = probability" data-acc="violet">
-  <div class="kicker">5.6 · Continuous probability distributions</div>
-  <h2>Uniform distribution: probability is <i>area</i></h2>
-  <div class="cols" style="grid-template-columns:1.45fr .75fr">
-    <div class="panel">
-      <div class="ctl"><span class="lab">From</span><input type="range" id="unA" min="110" max="150" value="120" style="flex:1;accent-color:#7c3aed"><span class="lab">to</span><input type="range" id="unB" min="110" max="150" value="130" style="flex:1;accent-color:#7c3aed"></div>
-      <div class="chart" id="unChart"></div>
-      <div class="out" id="unOut"></div>
-    </div>
-    <div>
-      <p style="font-size:14.5px">Flight time from Chicago to New York is <b>uniform between 120 and 140 minutes</b>: every minute in the range is equally likely.</p>
-      <div class="syntax" style="font-size:13.5px;line-height:1.7">f(x) = 1/(b − a) for a ≤ x ≤ b<br>E(x) = (a + b)/2<br>Var(x) = (b − a)²/12</div>
-      <ul class="tidy" style="--acc:var(--violet)"><li>For continuous variables, <b>P(x = exactly 130) = 0</b>. We only find probabilities of <b>intervals</b>.</li><li>The <b>total area</b> under f(x) is always 1.</li></ul>
-    </div>
-  </div>
-</section>
 
-<!-- 21 TRIANGULAR -->
-<section class="slide" data-title="Triangular distribution" data-acc="amber">
-  <div class="kicker">5.6 · Triangular probability distribution</div>
-  <h2>Triangular: when you only know min, most likely, max</h2>
-  <div class="cols" style="grid-template-columns:1.45fr .75fr">
+
+<!-- NEW · NORMAL PROPERTIES + Z -->
+<section class="slide" data-title="Normal distribution: shape and z-scores" data-acc="pink">
+  <div class="kicker">Topic 4 · Normal Distributions <span class="tbref">textbook 5.6</span></div>
+  <h2>The bell curve: shape, z-scores and the 68–95–99.7 rule</h2>
+  <div class="cols" style="grid-template-columns:1.4fr .8fr">
     <div class="panel">
-      <div class="ctl"><span class="lab">a</span><input type="range" id="trA" min="0" max="11" value="6" style="width:80px"><span class="lab">m</span><input type="range" id="trM" min="7" max="22" value="12" style="width:90px"><span class="lab">b</span><input type="range" id="trB" min="14" max="30" value="24" style="width:90px">
-        <span class="lab" style="margin-left:6px">Interval</span><input type="range" id="trX1" min="0" max="30" value="10" style="width:80px"><input type="range" id="trX2" min="0" max="30" value="18" style="width:80px"></div>
-      <div class="chart" id="trChart"></div>
-      <div class="out" id="trOut"></div>
+      <div class="ctl"><span class="lab">Daily sales x (RM)</span><input type="range" id="zsX" min="1100" max="2900" step="50" value="2300" style="flex:1;accent-color:#db2777"><b id="zsXL" class="monob"></b>
+        <div class="seg" id="zsBand"><button data-b="0" class="on">No band</button><button data-b="1">±1σ</button><button data-b="2">±2σ</button><button data-b="3">±3σ</button></div></div>
+      <div class="chart" id="zsChart"></div>
+      <div class="out" id="zsOut"></div>
     </div>
     <div>
-      <p style="font-size:14.5px">A project's assessment phase: experts say <b>at least 6 months (a)</b>, <b>most likely 12 (m)</b>, <b>at most 24 (b)</b>. That is a subjective but practical model, common in project and simulation work.</p>
-      <div class="syntax" style="font-size:13px;line-height:1.7">P(x ≤ c) = (c − a)² / ((b − a)(m − a)) for c ≤ m<br>P(x ≤ c) = 1 − (b − c)² / ((b − a)(b − m)) for c &gt; m</div>
-      <p class="note">Check: with a = 6, m = 12, b = 24, P(10 ≤ x ≤ 18) = 0.8333 − 0.1481 = 0.6852. The pptx slide states 0.6111, which does not match these parameters.</p>
+      <p style="font-size:14.5px">Daily sales at a campus café are normal with <b>μ = RM 2,000</b> and <b>σ = RM 300</b>.</p>
+      <ul class="tidy" style="--acc:var(--pink)"><li>Bell-shaped and <b>symmetric</b>: <b>mean = median = mode</b>, at the centre.</li><li><b>Total area = 1</b>; 0.5 on each side of μ.</li><li>μ can be negative, zero or positive; σ can be any positive value (not only 1).</li></ul>
+      <div class="syntax" style="font-size:14px;line-height:1.7">z = (x − μ) / σ<br>=<span class="f">STANDARDIZE</span>(<span class="a">x</span>,<span class="a">μ</span>,<span class="a">σ</span>)</div>
+      <div class="qp" style="--acc:var(--pink)"><b class="h">QUIZ PATTERN</b>z = 0 → x is the <b>mean</b>. The <b>50th percentile</b> is the mean. z tells you “how many σ from the mean”.</div>
     </div>
   </div>
 </section>
 
 <!-- 22 NORMAL -->
 <section class="slide" data-title="Normal distribution (NORM.DIST)" data-acc="pink">
-  <div class="kicker">5.6 · Normal probability distribution</div>
+  <div class="kicker">Topic 4 · Normal Distributions · NORM.DIST <span class="tbref">textbook 5.6</span></div>
   <h2>Normal distribution: Grear aircraft engines</h2>
   <div class="cols" style="grid-template-columns:1.45fr .75fr">
     <div class="panel">
@@ -901,14 +936,14 @@ body.mobile .workers span{font-size:15px}
       <p style="font-size:14.5px">Engine lifetime (flight hours) is normal with <b>μ = 36,500</b>, <b>σ = 5,000</b>. What share of engines last <b>40,000+ hours</b>?</p>
       <div class="syntax" style="font-size:13px">=1-<span class="f">NORM.DIST</span>(<span class="a">40000</span>,<span class="a">36500</span>,<span class="a">5000</span>,<span class="s">TRUE</span>)</div>
       <div class="out" id="nmOut"></div>
-      <ul class="tidy" style="--acc:var(--pink);margin-top:6px"><li><b>μ</b> moves the curve; <b>σ</b> makes it wider and flatter.</li><li>Symmetric: 0.5 on each side of μ. Tails never touch the axis.</li></ul>
+      <div class="qp" style="--acc:var(--pink)"><b class="h">QUIZ PATTERN</b>“<b>exceed / more than / or better</b>” → <code>=1-NORM.DIST(x,μ,σ,TRUE)</code>.<br>“<b>less than / percentile of x</b>” → <code>=NORM.DIST(x,μ,σ,TRUE)</code>.</div>
     </div>
   </div>
 </section>
 
 <!-- 23 NORM.INV -->
 <section class="slide" data-title="NORM.INV: from probability to value" data-acc="rose">
-  <div class="kicker">5.6 · Finding a value for a probability</div>
+  <div class="kicker">Topic 4 · Normal Distributions · NORM.INV <span class="tbref">textbook 5.6</span></div>
   <h2>NORM.INV: set the warranty guarantee</h2>
   <div class="cols" style="grid-template-columns:1.45fr .75fr">
     <div class="panel">
@@ -920,25 +955,27 @@ body.mobile .workers span{font-size:15px}
       <p style="font-size:14.5px">Grear will give a discount on a new engine if the old one fails before a <b>guaranteed number of hours</b>. Only <b>10%</b> of engines should qualify. What guarantee should it offer?</p>
       <div class="syntax" style="font-size:13px">=<span class="f">NORM.INV</span>(<span class="a">0.1</span>,<span class="a">36500</span>,<span class="a">5000</span>)</div>
       <div class="callout"><b>NORM.DIST</b>: value → probability.<br><b>NORM.INV</b>: probability → value.</div>
+      <div class="qp" style="--acc:var(--rose)"><b class="h">QUIZ PATTERN</b>“Cut-off for the <b>top 5%</b>” → <code>=NORM.INV(0.95,μ,σ)</code>.<br>“<b>75th percentile</b>” → <code>=NORM.INV(0.75,μ,σ)</code>. Excel always wants the area to the <b>left</b>.</div>
     </div>
   </div>
 </section>
 
-<!-- 24 EXPONENTIAL -->
-<section class="slide" data-title="Exponential distribution" data-acc="green">
-  <div class="kicker">5.6 · Exponential probability distribution</div>
-  <h2>Exponential: time between events</h2>
-  <div class="cols" style="grid-template-columns:1.45fr .75fr">
-    <div class="panel">
-      <div class="ctl"><span class="lab">Mean μ (months)</span><input type="range" id="exM" min="3" max="30" value="15" style="flex:1;accent-color:#16a34a"><b id="exML" class="monob"></b><span class="lab">Interval</span><input type="range" id="exX1" min="0" max="45" value="6" style="width:90px"><input type="range" id="exX2" min="0" max="45" value="18" style="width:90px"></div>
-      <div class="chart" id="exChart"></div>
-      <div class="out" id="exOut"></div>
-    </div>
-    <div>
-      <p style="font-size:14.5px">The time between business-loan defaults at a bank is exponential with a mean of <b>15 months</b>. What is the probability that the next gap is between 6 and 18 months?</p>
-      <div class="syntax" style="font-size:13px;line-height:1.7">P(x ≤ x₀) = 1 − e^(−x₀/μ)<br>=<span class="f">EXPON.DIST</span>(<span class="a">18</span>,<span class="a">1/15</span>,<span class="s">TRUE</span>)</div>
-      <p class="note">Note: Excel takes the <b>rate 1/μ</b>, not the mean. Exponential (time between events) pairs with Poisson (number of events).</p>
-    </div>
+
+<!-- NEW · ENRICHMENT SHAPES -->
+<section class="slide" data-title="Enrichment: other shapes you may meet" data-acc="slate">
+  <div class="kicker">Enrichment<span class="enr">not in Quiz 2</span> <span class="tbref">textbook 5.6</span></div>
+  <h2>Other continuous shapes you will meet in analytics</h2>
+  <p class="lead" style="margin-bottom:4px">The syllabus focuses on the normal curve. These three appear in the textbook and in simulation work, so you should recognise them.</p>
+  <div class="shapes">
+    <div class="shape" style="--c:#7c3aed"><h3>Uniform</h3><div class="sv" id="shU"></div>
+      <p><b>Every value in [a, b] is equally likely.</b> Delivery arrives any minute between 2:00 and 2:30.</p>
+      <p>P = width × 1/(b − a) · mean = (a + b)/2</p></div>
+    <div class="shape" style="--c:#d97706"><h3>Triangular</h3><div class="sv" id="shT"></div>
+      <p><b>Only min, most likely and max are known.</b> Project takes 6, most likely 12, at most 24 months.</p>
+      <p>mean = (a + m + b)/3 · good for <b>skewed</b> guesses</p></div>
+    <div class="shape" style="--c:#16a34a"><h3>Exponential</h3><div class="sv" id="shE"></div>
+      <p><b>Time between events.</b> Minutes until the next customer arrives (pairs with Poisson counts).</p>
+      <p><code>=EXPON.DIST(x, 1/μ, TRUE)</code></p></div>
   </div>
 </section>
 
@@ -951,28 +988,32 @@ body.mobile .workers span{font-size:15px}
 
 <!-- 26 EXIT B -->
 <section class="slide" data-title="Exit ticket: Part B" data-acc="green">
-  <div class="kicker">Exit ticket · Part B · 6 questions</div>
+  <div class="kicker">Exit ticket · Part B · 7 questions</div>
   <h2>Exit ticket: Part B</h2>
   <div class="quiz" data-quiz="exitB"></div>
 </section>
 
-<!-- 27 WRAP-UP -->
-<section class="slide" data-title="Wrap-up: Excel cheat sheet" data-acc="indigo">
-  <div class="kicker">Wrap-up</div>
-  <h2>Your probability toolkit in Excel</h2>
-  <div class="recap">
-    <div class="rc" style="background:#7c3aed"><b>PivotTable % of Grand / Row</b><span>Joint and conditional probabilities.</span></div>
-    <div class="rc" style="background:#2563eb"><b>SUMPRODUCT</b><span>E(x) and Var(x) of a discrete distribution.</span></div>
-    <div class="rc" style="background:#0d9488"><b>BINOM.DIST</b><span>Successes in n independent trials.</span></div>
-    <div class="rc" style="background:#4f46e5"><b>POISSON.DIST</b><span>Occurrences in an interval.</span></div>
-    <div class="rc" style="background:#a855f7"><b>Uniform · Triangular</b><span>Area formulas: equal likelihood / min-mode-max.</span></div>
-    <div class="rc" style="background:#db2777"><b>NORM.DIST</b><span>Normal: value → probability.</span></div>
-    <div class="rc" style="background:#e11d48"><b>NORM.INV</b><span>Normal: probability → value.</span></div>
-    <div class="rc" style="background:#16a34a"><b>EXPON.DIST(x, 1/μ, TRUE)</b><span>Time between events.</span></div>
-  </div>
-  <div class="cols even" style="margin-top:18px">
-    <div class="card tint"><h3>📝 Practise in Excel</h3><p style="margin:0">Rebuild the <b>mortgagedefault</b> joint table with a PivotTable, then compute P(D | M) and P(D | S). Check: P(x ≥ 40,000) = 0.2420 and NORM.INV(0.1, …) = 30,092 hours.</p></div>
-    <div class="card"><h3>🎯 Remember</h3><p style="margin:0">Overlap? Subtract it (addition law). New information? Condition on it (Bayes). Counting successes → binomial. Counting arrivals → Poisson. Measuring time or size → continuous.</p></div>
+<!-- WRAP-UP -->
+<section class="slide" data-title="Wrap-up: quiz patterns & Excel" data-acc="indigo">
+  <div class="kicker">Wrap-up · Quiz 2 preparation</div>
+  <h2>If the question says…, reach for…</h2>
+  <table class="pat">
+    <thead><tr><th>Topic</th><th>The question says…</th><th>Do this</th></tr></thead>
+    <tbody>
+      <tr><td style="color:#0d9488">1 · Fundamentals</td><td>“not A” · “A or B” · “neither”</td><td>1 − P(A) · P(A) + P(B) − P(A ∩ B) · total − (A ∪ B)</td></tr>
+      <tr><td style="color:#7c3aed">2 · Conditional</td><td>“a randomly selected <i>X</i> who is <i>Y</i>” from a crosstab</td><td>cell ÷ the <b>given</b> row/column total (PivotTable ▸ % of Row Total)</td></tr>
+      <tr><td style="color:#7c3aed">2 · Conditional</td><td>two picks “with / without replacement”</td><td>P(A) × P(B | A); without replacement → denominator − 1</td></tr>
+      <tr><td style="color:#ea580c">2 · Bayes</td><td>“given the part is defective, which supplier?”</td><td>tree: branch ÷ P(B), where P(B) = sum of the defective branches</td></tr>
+      <tr><td style="color:#2563eb">3 · Random variables</td><td>“number of …” vs time / weight / speed</td><td>discrete vs continuous</td></tr>
+      <tr><td style="color:#2563eb">3 · Discrete</td><td>table of x and f(x): “mean / expected value”</td><td><code>=SUMPRODUCT(x, f(x))</code></td></tr>
+      <tr><td style="color:#0891b2">3 · Binomial / Poisson</td><td>successes in n trials / arrivals per hour</td><td><code>BINOM.DIST</code> / <code>POISSON.DIST</code> (Poisson: mean = variance = μ)</td></tr>
+      <tr><td style="color:#db2777">4 · Normal</td><td>“exceed”, “or better” / “percentile of x”</td><td><code>=1-NORM.DIST(x,μ,σ,TRUE)</code> / <code>=NORM.DIST(x,μ,σ,TRUE)</code></td></tr>
+      <tr><td style="color:#e11d48">4 · Normal</td><td>“top 5% cut-off”, “75th percentile”</td><td><code>=NORM.INV(0.95,μ,σ)</code> / <code>=NORM.INV(0.75,μ,σ)</code></td></tr>
+    </tbody>
+  </table>
+  <div class="cols even" style="margin-top:12px">
+    <div class="card tint"><h3>📝 Practise in Excel</h3><p style="margin:0">Rebuild the <b>mortgagedefault</b> joint table with a PivotTable, then compute P(D | M) and P(D | S). Check: P(x ≥ 40,000) = 0.2420 and NORM.INV(0.1, 36500, 5000) = 30,092 hours.</p></div>
+    <div class="card"><h3>🎯 Remember</h3><p style="margin:0">Overlap? Subtract it. “Given”? Shrink the sample space. Counting → discrete. Measuring → continuous. Bell curve → NORM.DIST for probabilities, NORM.INV for cut-offs.</p></div>
   </div>
 </section>
 
@@ -1240,29 +1281,6 @@ cardGame("rvGame","rvScore",[["Number of customers who place an order (out of 5 
   $("psM").oninput=draw;seg("psC",d=>{mode=d.c;draw()});draw();
 })();
 
-/* 20 · uniform */
-(function(){
-  function draw(){let a=+$("unA").value,b=+$("unB").value;if(a>b)[a,b]=[b,a];const W=660,H=280,L=50,R=640,Tp=20,B=230,s=svgIn($("unChart"),W,H),x=lin(110,150,L,R),y=lin(0,.07,B,Tp);
-    const lo=Math.max(a,120),hi=Math.min(b,140);if(hi>lo)mk("rect",{x:x(lo),y:y(.05),width:x(hi)-x(lo),height:B-y(.05),fill:"#7c3aed","fill-opacity":.35},s);
-    mk("path",{d:`M${x(110)},${B} H${x(120)} V${y(.05)} H${x(140)} V${B} H${x(150)}`,fill:"none",stroke:"#7c3aed","stroke-width":2.8},s);
-    [a,b].forEach(v=>mk("line",{x1:x(v),x2:x(v),y1:Tp,y2:B,stroke:C.o,"stroke-width":2,"stroke-dasharray":"5 4"},s));
-    [110,115,120,125,130,135,140,145,150].forEach(v=>T(s,x(v),B+18,v,{"text-anchor":"middle"}));T(s,L-6,y(.05)+4,"1/20",{"text-anchor":"end","font-weight":800,fill:"#7c3aed"});T(s,(L+R)/2,B+40,"Flight time (minutes)",{"text-anchor":"middle","font-weight":700,fill:"#475569"});
-    const p=Math.max(0,hi-lo)/20;$("unOut").innerHTML=`P(${a} ≤ x ≤ ${b}) = width × height = ${Math.max(0,hi-lo)} × 1/20 = <b>${p.toFixed(2)}</b>.`+(a===120&&b===130?" Textbook: 0.50.":"")+` E(x) = 130 min, σ = ${Math.sqrt(400/12).toFixed(2)} min.`+(a<120||b>140?" Outside 120–140 the height is 0, so it adds no probability.":"")}
-  ["unA","unB"].forEach(i=>$(i).oninput=draw);draw();
-})();
-
-/* 21 · triangular */
-(function(){
-  function cdf(c,a,m,b){if(c<=a)return 0;if(c>=b)return 1;return c<=m?(c-a)**2/((b-a)*(m-a)):1-(b-c)**2/((b-a)*(b-m))}
-  function draw(){let a=+$("trA").value,m=+$("trM").value,b=+$("trB").value;if(m<=a)m=a+1;if(b<=m)b=m+1;let x1=+$("trX1").value,x2=+$("trX2").value;if(x1>x2)[x1,x2]=[x2,x1];
-    const h=2/(b-a),f=t=>t<a||t>b?0:t<=m?h*(t-a)/(m-a):h*(b-t)/(b-m);const W=660,H=300,L=50,R=640,Tp=20,B=250,s=svgIn($("trChart"),W,H),x=lin(0,30,L,R),y=lin(0,Math.max(h,.12)*1.15,B,Tp);
-    shade(s,f,Math.max(x1,a),Math.min(x2,b),x,y,"#d97706");mk("path",{d:`M${x(0)},${B} H${x(a)} L${x(m)},${y(h)} L${x(b)},${B} H${x(30)}`,fill:"none",stroke:"#d97706","stroke-width":2.8},s);
-    [x1,x2].forEach(v=>mk("line",{x1:x(v),x2:x(v),y1:Tp,y2:B,stroke:"#0f172a","stroke-width":1.6,"stroke-dasharray":"5 4"},s));
-    for(let v=0;v<=30;v+=3)T(s,x(v),B+18,v,{"text-anchor":"middle"});[[a,"a"],[m,"m"],[b,"b"]].forEach(([v,l])=>T(s,x(v),B+36,`${l} = ${v}`,{"text-anchor":"middle","font-weight":800,fill:"#92400e"}));T(s,x(m),y(h)-8,`f(m) = 2/(b−a) = ${h.toFixed(3)}`,{"text-anchor":"middle","font-size":12,fill:"#92400e","font-weight":700});
-    const p=cdf(x2,a,m,b)-cdf(x1,a,m,b);$("trOut").innerHTML=`P(${x1} ≤ x ≤ ${x2}) = P(x ≤ ${x2}) − P(x ≤ ${x1}) = ${cdf(x2,a,m,b).toFixed(4)} − ${cdf(x1,a,m,b).toFixed(4)} = <b>${p.toFixed(4)}</b>`+(a===6&&m===12&&b===24&&x1===10&&x2===18?". The pptx slide states 0.6111, but the formula with a = 6, m = 12, b = 24 gives 0.6852.":"")}
-  ["trA","trM","trB","trX1","trX2"].forEach(i=>$(i).oninput=draw);draw();
-})();
-
 /* 22 · normal */
 (function(){
   let t="ge";
@@ -1291,15 +1309,42 @@ cardGame("rvGame","rvScore",[["Number of customers who place an order (out of 5 
   $("niP").oninput=draw;draw();
 })();
 
-/* 24 · exponential */
+
+/* NEW · multiplication law balls */
 (function(){
-  function draw(){const m=+$("exM").value;let x1=+$("exX1").value,x2=+$("exX2").value;if(x1>x2)[x1,x2]=[x2,x1];$("exML").textContent=m;
-    const f=t=>t<0?0:Math.exp(-t/m)/m,F=t=>1-Math.exp(-t/m),W=660,H=300,L=50,R=640,Tp=20,B=250,s=svgIn($("exChart"),W,H),x=lin(0,45,L,R),y=lin(0,Math.max(f(0),.07)*1.08,B,Tp);
-    shade(s,f,x1,x2,x,y,C.up);curve(s,f,0,45,x,y,{c:C.up});mk("line",{x1:L,x2:R,y1:B,y2:B,stroke:"#94a3b8"},s);mk("line",{x1:L,x2:L,y1:Tp,y2:B,stroke:"#94a3b8"},s);
-    [x1,x2].forEach(v=>mk("line",{x1:x(v),x2:x(v),y1:Tp,y2:B,stroke:"#0f172a","stroke-dasharray":"5 4","stroke-width":1.6},s));
-    for(let v=0;v<=45;v+=6)T(s,x(v),B+18,v,{"text-anchor":"middle"});T(s,(L+R)/2,B+40,"Months between defaults",{"text-anchor":"middle","font-weight":700,fill:"#475569"});
-    const p=F(x2)-F(x1);$("exOut").innerHTML=`P(${x1} ≤ x ≤ ${x2}) = (1 − e<sup>−${x2}/${m}</sup>) − (1 − e<sup>−${x1}/${m}</sup>) = ${F(x2).toFixed(4)} − ${F(x1).toFixed(4)} = <b>${p.toFixed(4)}</b>`+(m===15&&x1===6&&x2===18?". ✓ Textbook 0.3691.":".")+" The curve is right-skewed: short gaps are most likely."}
-  ["exM","exX1","exX2"].forEach(i=>$(i).oninput=draw);draw();
+  let mode="with";const col={R:"#e11d48",Y:"#eab308",P:"#7c3aed"};
+  function g(f){return(a,b)=>{let x=a,y=b;while(y){[x,y]=[y,x%y]}return x}}
+  const gcd=(a,b)=>{while(b){[a,b]=[b,a%b]}return a};
+  const red=(n,d)=>{const k=gcd(n,d);return k>1?` = ${n/k}/${d/k}`:""};
+  function balls(r,y,p,goneR){let h="";for(let i=0;i<r;i++)h+=`<i style="background:${col.R}" class="${goneR&&i===0?"gone":""}"></i>`;for(let i=0;i<y;i++)h+=`<i style="background:${col.Y}"></i>`;for(let i=0;i<p;i++)h+=`<i style="background:${col.P}"></i>`;return h}
+  function draw(){const r=Math.max(1,+$("mbR").value||1),y=Math.max(0,+$("mbY").value||0),p=Math.max(1,+$("mbP").value||1),n=r+y+p,n2=mode==="with"?n:n-1;
+    $("mbBag1").innerHTML=balls(r,y,p,false);$("mbBag2").innerHTML=balls(r,y,p,mode!=="with");
+    const num=r*p,den=n*n2;
+    $("mbOut").innerHTML=`<span class="frac">P(R) = ${r}/${n}</span> &nbsp;×&nbsp; <span class="frac">P(P | R) = ${p}/${n2}</span><br>P(red, then purple) = ${r}/${n} × ${p}/${n2} = <b>${num}/${den}${red(num,den)} = ${(num/den).toFixed(4)}</b>`+(mode==="with"?" · picks are <b>independent</b>.":" · the red voucher was not returned, so the picks are <b>dependent</b>.")}
+  ["mbR","mbY","mbP"].forEach(i=>$(i).oninput=draw);seg("mbMode",d=>{mode=d.m;draw()});draw();
+})();
+
+/* NEW · normal shape + z */
+(function(){
+  let band=0;const m=2000,sd=300;
+  function draw(){const xv=+$("zsX").value;$("zsXL").textContent="RM "+fmt(xv);
+    const W=660,H=300,L=30,R=640,Tp=16,B=240,s=svgIn($("zsChart"),W,H),x=lin(900,3100,L,R),y=lin(0,npdf(m,m,sd)*1.08,B,Tp),f=v=>npdf(v,m,sd);
+    if(band){shade(s,f,m-band*sd,m+band*sd,x,y,"#a855f7");T(s,x(m),y(f(m))+40,[0,"≈ 68%","≈ 95%","≈ 99.7%"][band]+" within ±"+band+"σ",{"text-anchor":"middle","font-weight":800,fill:"#6b21a8","font-size":15})}
+    shade(s,f,900,xv,x,y,"#db2777");curve(s,f,900,3100,x,y,{c:"#db2777"});mk("line",{x1:L,x2:R,y1:B,y2:B,stroke:"#94a3b8"},s);
+    mk("line",{x1:x(m),x2:x(m),y1:y(f(m)),y2:B,stroke:"#9d174d","stroke-dasharray":"4 3"},s);
+    mk("line",{x1:x(xv),x2:x(xv),y1:Tp+18,y2:B,stroke:"#0f172a","stroke-width":2},s);
+    for(let k=-3;k<=3;k++){const v=m+k*sd;T(s,x(v),B+18,"RM "+fmt(v),{"text-anchor":"middle","font-size":11});T(s,x(v),B+36,"z = "+k,{"text-anchor":"middle","font-weight":800,fill:k===0?"#9d174d":"#64748b","font-size":12})}
+    const z=(xv-m)/sd,c=normCdf(xv,m,sd);T(s,x(xv),Tp+10,`z = ${z.toFixed(2)}`,{"text-anchor":"middle","font-weight":800,fill:"#0f172a","font-size":14});
+    $("zsOut").innerHTML=`z = (${fmt(xv)} − 2,000) / 300 = <b>${z.toFixed(2)}</b>. Shaded area = P(x ≤ RM ${fmt(xv)}) = <code>=NORM.DIST(${xv},2000,300,TRUE)</code> = <b>${c.toFixed(4)}</b>, so this day is at the <b>${(c*100).toFixed(1)}th percentile</b>.`+(Math.abs(z)<1e-9?" z = 0: the mean is also the median (50th percentile).":"")}
+  $("zsX").oninput=draw;seg("zsBand",d=>{band=+d.b;draw()});draw();
+})();
+
+/* NEW · enrichment mini shapes */
+(function(){
+  function box(id){return svgIn($(id),260,110)}
+  let s=box("shU");mk("path",{d:"M10,96 H60 V30 H200 V96 H250",fill:"none",stroke:"#7c3aed","stroke-width":3},s);mk("rect",{x:60,y:30,width:140,height:66,fill:"#7c3aed","fill-opacity":.18},s);T(s,60,108,"a",{"text-anchor":"middle","font-weight":800});T(s,200,108,"b",{"text-anchor":"middle","font-weight":800});
+  s=box("shT");mk("path",{d:"M10,96 H40 L100,14 L240,96 H250 Z",fill:"#d97706","fill-opacity":.18,stroke:"#d97706","stroke-width":3},s);[[40,"a"],[100,"m"],[240,"b"]].forEach(([v,l])=>T(s,v,108,l,{"text-anchor":"middle","font-weight":800}));
+  s=box("shE");const pts=[];for(let i=0;i<=60;i++)pts.push((14+i*4)+","+(96-82*Math.exp(-i/14)));mk("path",{d:"M14,96 L"+pts.join(" L")+" L254,96Z",fill:"#16a34a","fill-opacity":.18,stroke:"#16a34a","stroke-width":3},s);T(s,14,108,"0",{"text-anchor":"middle","font-weight":800});
 })();
 
 /* 25 · distribution chooser */
@@ -1311,29 +1356,31 @@ cardGame("dsGame","dsScore",[["Number of defective items in a sample of 20, each
   ["Project duration: experts give min 6, most likely 12, max 24 months","Triangular",["Binomial","Poisson","Uniform","Triangular","Normal","Exponential"],"Min, mode and max only: the triangular distribution."]],6);
 const QUIZ={
   qa:[
-    {q:"P(A) = 0.30. What is P(Aᶜ)?",o:["0.30","0.70","1.30","0"],a:1,w:"Complement: P(Aᶜ) = 1 − P(A) = 0.70."},
-    {q:"P(A) = 0.5, P(B) = 0.4, P(A ∩ B) = 0.2. What is P(A ∪ B)?",o:["0.9","0.7","0.2","0.1"],a:1,w:"Addition law: 0.5 + 0.4 − 0.2 = 0.7."},
-    {q:"Of 157 single customers, 41 defaulted. P(D | S) is…",o:["41/300","41/120","41/157 = 0.2611","157/300"],a:2,w:"Given S, the sample space shrinks to the 157 single customers: 41/157 = 0.2611."}
+    {q:"A RM 0.10 coin and a RM 0.20 coin are tossed together. How many outcomes are in the sample space?",o:["2","4","8","16"],a:1,w:"Each coin has 2 outcomes: 2 × 2 = 4 → {HH, HT, TH, TT}."},
+    {q:"Two dice are rolled (36 equally likely outcomes). What is the probability that the sum is 7?",o:["1/6","1/12","5/6","1/2"],a:0,w:"Six pairs give 7: (1,6),(2,5),(3,4),(4,3),(5,2),(6,1). 6/36 = 1/6."},
+    {q:"Which pair of events is <b>mutually exclusive</b>?",o:["Rolling an even number and rolling a 3 on one die","Buying a product and returning it","Being a final-year student and being under 23","Owning a car and owning a motorbike"],a:0,w:"3 is odd, so one roll cannot be both even and 3. The others can happen together."}
   ],
   exitA:[
-    {q:"CP&L: P(8) = 0.15, P(9) = 0.25, P(10) = 0.30. P(finish in ≤ 10 months) is…",o:["0.30","0.55","0.70","1.00"],a:2,w:"Add the outcomes in the event: 0.15 + 0.25 + 0.30 = 0.70."},
-    {q:"Two events that <b>cannot occur together</b> are…",o:["independent","mutually exclusive","complements of S","conditional"],a:1,w:"Mutually exclusive: P(A ∩ B) = 0."},
-    {q:"If P(A | B) = P(A), then A and B are…",o:["mutually exclusive","independent","complements","impossible"],a:1,w:"Knowing B does not change the probability of A, so they are independent."},
-    {q:"In the joint probability table, the <b>marginal</b> probability P(Married) is…",o:["0.2633","0.5524","0.4767","143"],a:2,w:"Marginal = row total of joint probabilities: 0.2133 + 0.2633 = 0.4767 (143/300)."},
-    {q:"Supplier 1 makes 65% of parts (2% bad); Supplier 2 makes 35% (5% bad). A bad part arrives. Which supplier is more likely?",o:["Supplier 1 (0.65)","Supplier 2 (posterior ≈ 0.57)","Equal","Cannot tell"],a:1,w:"P(A₂ | B) = 0.0175/0.0305 = 0.5738. The new information reverses the prior."}
+    {q:"In this joint probability table, which value is a <b>marginal</b> probability?<br><table class='dt' style='font-size:13px;margin-top:6px'><tr><th></th><th>No</th><th>Yes</th><th>Total</th></tr><tr><td>Challenging</td><td>0.4</td><td>0.3</td><td>0.7</td></tr><tr><td>Easy</td><td>0.1</td><td>0.2</td><td>0.3</td></tr><tr><td>Total</td><td>0.5</td><td>0.5</td><td>1.0</td></tr></table>",o:["0.4","0.1","0.5","1.0"],a:2,w:"Marginal probabilities sit in the margins (row or column totals): 0.5, 0.7, 0.3. The inner cells are joint probabilities; 1.0 is the grand total."},
+    {q:"Of 24,134 engineers in a firm, 8,399 are under 35. A randomly selected <b>engineer</b> is under 35 with probability…",o:["0.20","0.35","0.65","0.80"],a:1,w:"“Given engineer”: 8,399 / 24,134 = 0.348 ≈ 0.35. Divide by the engineer total, not by all employees."},
+    {q:"P(A) = 0.3, P(A | B) = 0.4, P(B) = 0.5. Compute P(A and B).",o:["0.15","0.12","0.20","0.30"],a:2,w:"Multiplication law: P(A ∩ B) = P(B) · P(A | B) = 0.5 × 0.4 = 0.20."},
+    {q:"P(A) = 0.3, P(B) = 0.4 and P(A and B) = 0.2. Are A and B independent?",o:["Yes, because they occur together","No, because 0.2 ≠ 0.12","Yes, because P(A ∩ B) = P(A)·P(B)","No, because P(A) &lt; P(B)"],a:1,w:"If independent, P(A ∩ B) would be 0.3 × 0.4 = 0.12. It is 0.2, so they are dependent."},
+    {q:"A box has 2 red, 4 yellow and 5 purple balls. One is drawn and <b>replaced</b>, then another is drawn. P(red then purple)?",o:["10/121","10/110","7/121","7/110"],a:0,w:"11 balls each time: 2/11 × 5/11 = 10/121."},
+    {q:"Machine A makes 60% of units (1% defective); Machine B makes 40% (2% defective). P(a unit is defective)?",o:["0.012","0.014","0.016","0.020"],a:1,w:"Add the defective branches: 0.60 × 0.01 + 0.40 × 0.02 = 0.006 + 0.008 = 0.014. This P(B) is the denominator in Bayes' theorem."}
   ],
   qb:[
-    {q:"x = 4, 12, 24 with f(x) = 0.15, 0.60, 0.25. E(x) is…",o:["13.33","13.80","12","40"],a:1,w:"Σx·f(x) = 0.60 + 7.20 + 6.00 = 13.80."},
-    {q:"Binomial n = 3, p = 0.30. P(x = 0) is…",o:["0.000","0.300","0.343","0.700"],a:2,w:"(1 − 0.3)³ = 0.7³ = 0.343. In Excel: =BINOM.DIST(0,3,0.3,FALSE)."},
-    {q:"Which Excel formula gives P(exactly 5 arrivals) when arrivals average 10 per hour?",o:["=POISSON.DIST(5,10,FALSE)","=POISSON.DIST(10,5,TRUE)","=BINOM.DIST(5,10,0.5,FALSE)","=NORM.DIST(5,10,1,FALSE)"],a:0,w:"POISSON.DIST(x, mean, FALSE) gives P(x = 5). TRUE would give P(x ≤ 5)."}
+    {q:"Car speeds on a highway are measured with radar. The random variable is…",o:["discrete","continuous","categorical","complex"],a:1,w:"Speed can take any value in an interval, so it is continuous."},
+    {q:"Which statement is correct?",o:["Binomial and normal are both continuous","Binomial and normal are both discrete","Binomial is discrete; normal is continuous","Binomial is continuous; normal is discrete"],a:2,w:"Binomial counts successes (0, 1, 2, …). Normal measures values on a continuous scale."},
+    {q:"A Poisson variable has λ = 3. Its expected value and variance are…",o:["E = 6, Var = 3","E = 3, Var = 3","E = 3, Var = 9","E = 9, Var = 3"],a:1,w:"For Poisson, mean = variance = λ = 3."}
   ],
   exitB:[
-    {q:"Flight time is uniform on 120–140 min. P(120 ≤ x ≤ 130) is…",o:["0.25","0.50","0.10","1/20"],a:1,w:"Area = width × height = 10 × 1/20 = 0.50."},
-    {q:"For a continuous random variable, P(x = exactly 130) equals…",o:["1/20","0","0.5","it depends on σ"],a:1,w:"A single point has no width, so no area. We only find probabilities of intervals."},
-    {q:"Engine life ~ Normal(36,500, 5,000). P(x ≥ 40,000) is…",o:["0.7580","0.2420","0.5000","0.1000"],a:1,w:"1 − NORM.DIST(40000,36500,5000,TRUE) = 1 − 0.7580 = 0.2420."},
-    {q:"To find the guarantee that only 10% of engines fall below, use…",o:["NORM.DIST","NORM.INV","EXPON.DIST","PERCENTILE.EXC"],a:1,w:"NORM.INV turns a probability into a value: NORM.INV(0.1,36500,5000) = 30,092."},
-    {q:"In <code>=EXPON.DIST(18, ?, TRUE)</code> with a mean of 15 months, the second argument is…",o:["15","1/15","18","0.5"],a:1,w:"Excel takes the rate λ = 1/μ = 1/15."},
-    {q:"“Minutes between customer arrivals” is best modelled by the…",o:["Poisson","binomial","exponential","uniform"],a:2,w:"Time between events = exponential. The <i>number</i> of arrivals in an interval would be Poisson."}
+    {q:"In a normal distribution, which is greater: the mean or the median?",o:["The mean","The median","Neither: they are equal","Cannot be determined"],a:2,w:"The normal curve is symmetric, so mean = median = mode."},
+    {q:"What is the total area under a normal curve?",o:["100","1","It depends on μ and σ","It must be calculated"],a:1,w:"The total probability is always 1."},
+    {q:"Mileage is normal with μ = 75 and σ = 10 mpg. P(100 mpg or better)?",o:["6%","2.5%","0.6%","25%"],a:2,w:"z = (100 − 75)/10 = 2.5. =1-NORM.DIST(100,75,10,TRUE) = 0.0062 ≈ 0.6%."},
+    {q:"Mileage is normal with μ = 75 and σ = 10 mpg. The 50th percentile is…",o:["85","75","95","105"],a:1,w:"The 50th percentile of a symmetric curve is the mean: 75."},
+    {q:"Test scores are normal with μ = 18 and σ = 3. Your score is at the 75th percentile. Your score is about…",o:["16","18","20","22"],a:2,w:"=NORM.INV(0.75,18,3) = 18 + 0.674 × 3 = 20.0."},
+    {q:"Which Excel formula gives the cut-off for the <b>top 5%</b> when μ = 500 and σ = 40?",o:["=NORM.INV(0.05,500,40)","=NORM.INV(0.95,500,40)","=NORM.DIST(0.95,500,40,TRUE)","=1-NORM.DIST(500,0.95,40,TRUE)"],a:1,w:"Top 5% means 95% of the area is to the left: =NORM.INV(0.95,500,40) = 565.8."},
+    {q:"Which distribution best models the <b>number of vehicles</b> passing an intersection during lunch hour?",o:["Binomial","Normal","Triangular","Poisson"],a:3,w:"A count of occurrences in a time interval → Poisson."}
   ]
 };
 function buildQuiz(el){
